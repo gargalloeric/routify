@@ -2,15 +2,21 @@
 import L from 'leaflet';
 import { ref } from "vue";
 import Leaflet from './components/Leaflet.vue';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { databaseFirestore } from './firebase'
 
 const initLatLng: L.LatLngExpression = [39.994085693674144, -0.0692056309560943] // UJI Coordinates
 
 let data = ref();
 let cleanData = ref();
 let leafletChild = ref(null);
+let dbIndex = ref()
 async function makeRequestGeocode() {
+  // make request
   const resp = await fetch(`https://api.openrouteservice.org/geocode/reverse?api_key=${import.meta.env.VITE_API_KEY}&point.lon=-0.068830&point.lat=39.993881`);
   const tmp = await resp.json();
+
+  // prepare final data
   data.value = tmp;
   cleanData.value = tmp.features[0].properties.name;
   leafletChild.value.drawMarkers([initLatLng]);
@@ -45,6 +51,46 @@ async function makeRequestRoute() {
   }
 }
 
+// Firebase manage variable
+fetchFirebaseData()
+async function addEntryToFirebase() {
+  const registroBotonDBRef = doc(databaseFirestore, "general-tests", "registro_boton");
+  await setDoc(registroBotonDBRef, {
+    name: "veces_pulsado",
+    value: 0
+  });
+}
+
+async function fetchFirebaseData() {
+  const registroBotonDBRef = doc(databaseFirestore, "general-tests", "registro_boton");
+  const registroBotonSnap = await getDoc(registroBotonDBRef);
+  if (!registroBotonSnap) {
+    dbIndex.value = 0
+    await addEntryToFirebase()
+  } else {
+    dbIndex.value = registroBotonSnap.get("value")
+  }
+}
+
+async function addOneToFirebaseIndex() {
+  const registroBotonDBRef = doc(databaseFirestore, "general-tests", "registro_boton");
+  await setDoc(registroBotonDBRef, {
+    name: "veces_pulsado",
+    value: dbIndex.value + 1
+  });
+  await fetchFirebaseData()
+}
+
+async function subOneToFirebaseIndex() {
+  const registroBotonDBRef = doc(databaseFirestore, "general-tests", "registro_boton");
+  await setDoc(registroBotonDBRef, {
+    name: "veces_pulsado",
+    value: dbIndex.value - 1
+  });
+  await fetchFirebaseData()
+}
+
+
 </script>
 
 <template>
@@ -53,8 +99,11 @@ async function makeRequestRoute() {
     <Leaflet ref="leafletChild" :init-lat-lng="initLatLng" :zoom="12"></Leaflet>
   </div>
   <div>
+    <button @click="addOneToFirebaseIndex">Increase DB-Saved Index</button>
+    <button @click="subOneToFirebaseIndex">Substract DB-Saved Index</button>
     <button @click="makeRequestGeocode">Make Request</button>
     <button @click="makeRequestRoute">Make Route Request</button>
+    <p>Current Firebase Index: {{ dbIndex }}</p>
     <p>Responses:</p>
     <p>Geocode Clean Data:<br>{{ cleanData }}</p>
     <p>Geocode Raw Data:<br>{{ data }}</p>
