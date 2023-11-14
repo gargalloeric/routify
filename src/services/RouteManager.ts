@@ -1,0 +1,20 @@
+// no - ponedlo en un paquete modelo o algo asi
+import {Transport} from "../model/Transport.ts";
+
+export class RouteManager {
+    private static routeManager: RouteManager;
+
+    private constructor() {
+        // TODO
+    }
+
+    static getRouteManager(): RouteManager {
+        if (!this.routeManager) this.routeManager = new RouteManager()
+        return this.routeManager;
+    }
+
+    getRouteFromPlacesNames(origin, destiny, transport: Transport) {
+        // TODO
+        throw new Error("Not Implemented")
+    }
+}
