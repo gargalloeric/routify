@@ -15,4 +15,9 @@ export class UserManager { // Singleton
         // TODO
         throw new Error("Not Implemented")
     }
+    logIn(email, password){
+        // TODO
+        throw new Error("Not Implemented")
+    }
+
 }
