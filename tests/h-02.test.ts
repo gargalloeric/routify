@@ -9,7 +9,7 @@ test('logInUser_ValidInputs_logInUser', () => {
     userManager.logIn(email, password)
 })
 
-test('logInUser_InvalidPassword_logInUser', () => {
+test('logInUser_InvalidPassword_notLogInUser', () => {
     let email: string = 'jose@gmail.com',
         password: string = 'S438w'
 
