@@ -9,10 +9,9 @@ test('getRoute_ApiOnline_routeIsObtained', () => {
         transport = Transport.Car;
 
     const routeManager = RouteManager.getManager();
-    let route: Route;
-    expect(() => route = routeManager.getRouteFromPlacesNames(origin, destiny, transport)).not.toThrowError();
-    expect(() => route.distance).toBeLessThan(1000);
-    expect(() => route.distance).toBeGreaterThan(30);
+    const route: Route = routeManager.getRouteFromPlacesNames(origin, destiny, transport);
+    expect(route.distance).toBeLessThan(1000);
+    expect(route.distance).toBeGreaterThan(30);
 
 })
 
