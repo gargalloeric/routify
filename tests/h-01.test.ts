@@ -1,14 +1,13 @@
 import { expect, test } from "vitest";
-import {UserManager} from "../src/services/UserManager";
+import {UserManager, getUserManager} from "../src/services/UserManager";
 
 test('registerUser_ValidInputs_RegisterUser', () => {
-    let name: string = 'Jose',
+    const name: string = 'Jose',
         email: string = 'jose@gmail.com',
         password: string = 'aS0@28Y?',
         repPassword: string = 'aS0@28Y?'
 
-    let userManager: UserManager = UserManager.getManager()
-    userManager.register(name, email, password, repPassword)
+    expect(getUserManager().register(name, email, password, repPassword)).toBe(email)
 })
 
 test('registerUser_InvalidPassword_ThrowPasswordNotValidException', () => {
@@ -17,6 +16,5 @@ test('registerUser_InvalidPassword_ThrowPasswordNotValidException', () => {
         password: string = 'S438w',
         repPassword: string = 'S438w'
 
-    let userManager: UserManager = UserManager.getManager()
-    expect(() => userManager.register(name, email, password, repPassword)).toThrowError('password not valid')
+    expect(() => getUserManager().register(name, email, password, repPassword)).toThrowError('password not valid')
 })
