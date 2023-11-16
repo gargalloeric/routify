@@ -6,7 +6,10 @@ export class UserManager { // Singleton
 
     register(name, email, password, repPassword): string { // returns the mail of the user
         // TODO
-        throw new Error("Not Implemented")
+        throw new Error("Not Implemented");
+    }
+    logIn(email, password): string{ // returns the mail of the user
+        throw new Error("Not Implemented");
     }
 }
 
