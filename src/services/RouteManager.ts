@@ -8,7 +8,7 @@ export class RouteManager {
         // TODO
     }
 
-    static getRouteManager(): RouteManager {
+    static getManager(): RouteManager {
         if (!this.routeManager) this.routeManager = new RouteManager()
         return this.routeManager;
     }
