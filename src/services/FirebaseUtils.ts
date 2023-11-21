@@ -1,14 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = { // TODO revisar - poner en env...
-    apiKey: process.env.FIREBASE_API_KEY,
+    apiKey: import.meta.env.FIREBASE_API_KEY,
     authDomain: 'routify-be2cf.firebaseapp.com',
     projectId: 'routify-be2cf',
     storageBucket: 'routify-be2cf.appspot.com',
@@ -23,5 +23,6 @@ const firebaseAuth = getAuth()
 
 export {
     databaseFirestore,
-    firebaseAuth
+    firebaseAuth,
+    createUserWithEmailAndPassword
 }
