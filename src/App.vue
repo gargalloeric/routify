@@ -44,7 +44,6 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100%;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -56,9 +55,5 @@ export default {
   flex-grow: 1;
   width: 200vh;
 }
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+
 </style>

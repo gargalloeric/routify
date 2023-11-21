@@ -16,7 +16,7 @@ export default {
   color: black;
   padding: 10px;
   text-align: center;
-  width: 100%;
+  width: 200vh;
 }
 
 h1 {

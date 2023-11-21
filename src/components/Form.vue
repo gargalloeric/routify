@@ -8,7 +8,7 @@
           v-model="origin"
           placeholder="Escribe el nombre o la dirección del lugar de origen"
       />
-      <label for="origin">Lugar de origen</label>
+      <label for="origin">Lugar de destino</label>
       <input
           type="text"
           id="destination"

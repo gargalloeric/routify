@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <p>© 2023 Mi Aplicación | Hecho con <span class="heart">&hearts;</span> y Vue.js</p>
+    <p>© 2023 Routify | Hecho con <span class="heart">&hearts;</span> y Vue.js</p>
   </div>
 </template>
 
@@ -17,6 +17,7 @@ export default {
   padding: 15px;
   font-family: Arial, sans-serif;
   text-align: center;
+  width: 200vh;
 }
 
 p {
