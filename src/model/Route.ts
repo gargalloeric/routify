@@ -1,7 +1,12 @@
-export class Route {
-    distance: Number;
+import {GeoJSON} from "leaflet";
 
-    constructor(distance: Number) {
-        this.distance = distance;
+export class Route {
+    puntos: GeoJSON;
+    distance: number = 0;
+    constructor(puntos: GeoJSON) {
+        this.puntos = puntos;
+    }
+    getPuntos(): GeoJSON{
+        return this.puntos;
     }
 }

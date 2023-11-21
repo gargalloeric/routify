@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
+import { getRouteFromPlacesNames } from "../src/services/ORSAdapter";
+import {Transport} from "../src/model/Transport";
 import { Route } from "../src/model/Route";
-import { Transport } from "../src/model/Transport";
-import { getRouteFromPlacesNames } from "../src/services/RouteManager";
 
 test('getRoute_ApiOnline_routeIsObtained', async () => {
     const origin = 'Castellón',
