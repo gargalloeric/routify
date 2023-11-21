@@ -1,3 +1,3 @@
 export enum Transport {
-    Car
+    Car = 'driving-car'
 }
