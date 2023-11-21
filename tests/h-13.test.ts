@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getRouteFromPlacesNames } from "../src/services/RouteManager";
+import { getRouteFromPlacesNames } from "../src/services/ORSAdapter";
 import {Transport} from "../src/model/Transport";
 import { Route } from "../src/model/Route";
 
