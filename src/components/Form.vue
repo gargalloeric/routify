@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import {Transport} from "../model/Transport.ts";
+
+const destination : string = "";
+const origin : string = "";
+const mode : Transport = Transport.Car;
+
+const emit = defineEmits(['route-requested'])
+function getRoute() {
+  // Emisión del evento route-requested
+  emit("route-requested", {
+    origin: origin,
+    destination: destination,
+    mode: mode
+  });
+
+  alert(
+      `La ruta solicitada es desde ${origin} hasta ${destination} en ${mode}`
+  );
+}
+
+</script>
+
 <template>
   <div class="form">
     <div class="form-group">
@@ -22,34 +45,6 @@
     </div>
   </div>
 </template>
-
-<script>
-
-export default {
-  name: "Form",
-  data() {
-    return {
-      origin: "",
-      destination: "",
-      mode: "coche",
-    };
-  },
-  methods: {
-    getRoute() {
-      // Emisión del evento route-requested
-      this.$emit("route-requested", {
-        origin: this.origin,
-        destination: this.destination,
-        mode: this.mode,
-      });
-      // Alerta temporal para demostración
-      alert(
-          `La ruta solicitada es desde ${this.origin} hasta ${this.destination} en ${this.mode}`
-      );
-    },
-  },
-};
-</script>
 
 <style scoped>
 .form {
@@ -93,4 +88,5 @@ button {
   cursor: pointer;
 }
 </style>
+
 

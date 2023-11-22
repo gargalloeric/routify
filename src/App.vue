@@ -1,4 +1,27 @@
 <!-- App.vue -->
+<script setup lang="ts">
+import Header from "./components/Header.vue";
+import Map from "./components/Map.vue";
+import Footer from "./components/Footer.vue";
+import Form from "./components/Form.vue";
+
+const route = {
+  origin: null,
+  destination: null,
+  mode: null
+}
+
+function handleRouteRequested(data) {
+  // Aquí se recibe el evento personalizado con los datos del formulario
+  // y se asigna a la propiedad route
+  console.log(data);
+  route.origin = data.origin;
+  route.destination = data.destination;
+  route.mode = data.mode;
+}
+
+</script>
+
 <template>
   <div id="app">
     <Header />
@@ -9,35 +32,6 @@
     <Footer />
   </div>
 </template>
-
-<script>
-import Header from "./components/Header.vue";
-import Form from "./components/Form.vue";
-import Map from "./components/Map.vue";
-import Footer from "./components/Footer.vue";
-
-export default {
-  name: "App",
-  components: {
-    Header,
-    Form,
-    Map,
-    Footer,
-  },
-  data() {
-    return {
-      route: null, // Aquí se almacena la ruta solicitada por el usuario
-    };
-  },
-  methods: {
-    handleRouteRequested(data) {
-      // Aquí se recibe el evento personalizado con los datos del formulario
-      // y se asigna a la propiedad route
-      this.route = data;
-    },
-  },
-};
-</script>
 
 <style>
 #app {
@@ -55,5 +49,5 @@ export default {
   flex-grow: 1;
   width: 200vh;
 }
-
 </style>
+
