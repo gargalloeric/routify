@@ -1,5 +1,3 @@
-# Routify
-
 <p align="center">
    <img src="routify_logo.svg" alt="Routify logo" />
 </p>
