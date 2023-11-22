@@ -1,30 +1,59 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
+<!-- App.vue -->
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <Header />
+    <div class="content">
+      <Form @route-requested="handleRouteRequested" />
+      <Map :route="route" />
+    </div>
+    <Footer />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script>
+import Header from "./components/Header.vue";
+import Form from "./components/Form.vue";
+import Map from "./components/Map.vue";
+import Footer from "./components/Footer.vue";
+
+export default {
+  name: "App",
+  components: {
+    Header,
+    Form,
+    Map,
+    Footer,
+  },
+  data() {
+    return {
+      route: null, // Aquí se almacena la ruta solicitada por el usuario
+    };
+  },
+  methods: {
+    handleRouteRequested(data) {
+      // Aquí se recibe el evento personalizado con los datos del formulario
+      // y se asigna a la propiedad route
+      this.route = data;
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.content {
+  display: flex;
+  flex-grow: 1;
+  width: 200vh;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
