@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import {Transport} from "../model/Transport.ts";
+import {ref} from "vue";
 
-const destination : string = "";
-const origin : string = "";
-const mode : Transport = Transport.Car;
+const destination = ref();
+const origin = ref();
+const mode = ref();
 
 const emit = defineEmits(['route-requested'])
 function getRoute() {
   // Emisión del evento route-requested
   emit("route-requested", {
-    origin: origin,
-    destination: destination,
-    mode: mode
+    origin: origin.value,
+    destination: destination.value,
+    mode: mode.value
   });
 
   alert(
-      `La ruta solicitada es desde ${origin} hasta ${destination} en ${mode}`
+      `La ruta solicitada es desde ${origin.value} hasta ${destination.value} en ${mode.value}`
   );
 }
-
+//<input v-model="mode" list="transport" name="transport" id="transport">
 </script>
 
 <template>
@@ -36,8 +37,15 @@ function getRoute() {
           type="text"
           id="destination"
           v-model="destination"
-          placeholder="Escribe el nombre o la dirección del lugar de origen"
+          placeholder="Escribe el nombre o la dirección del lugar de destino"
       />
+
+      <select id="transport" v-model="mode">
+        <option value="driving-car" selected>Coche</option>
+          <option value="foot-walking">A pie</option>
+            <option value="cycling-regular">Bicicleta</option>
+      </select>
+
     </div>
     <!-- Resto del formulario ... -->
     <div class="form-group">

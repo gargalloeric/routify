@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import L from "leaflet";
+import L, {GeoJSON} from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import {onMounted, ref} from 'vue';
-
-const props = defineProps<{
-  route: Object;
-}>();
+import {Transport} from "../model/Transport.ts";
 
 const map = ref();
 onMounted(() => {
@@ -21,17 +18,21 @@ onMounted(() => {
     maxZoom: 18,
   }).addTo(map.value);
 
-  L.marker([39.95033330877234, -0.10324382781982422])
-      .addTo(map.value)
-      .bindPopup("<b>Museo de Cerámica de l'Alcora</b>")
-      .openPopup();
+  //L.marker([39.95033330877234, -0.10324382781982422])
+      //.addTo(map.value)
+      //.bindPopup("<b>Museo de Cerámica de l'Alcora</b>")
+      //.openPopup();
 });
+async function drawRoute(origin: string, destination: string, mode: Transport){
+  let ruta = await getRouteFromPlacesNames(origin, destination, mode);
+  const puntos: GeoJSON = ruta.getPuntos();
+  L.geoJSON(puntos.features).addTo(map.value);
 
-if (props.route) {
-  //let ruta = await getRouteFromPlacesNames(props.route.origin, props.route.value.destination, props.route.value.mode);
-  //console.log(route);
-  //ruta.getPuntos().addTo(map);
 }
+
+defineExpose({
+  drawRoute
+});
 </script>
 
 <template>

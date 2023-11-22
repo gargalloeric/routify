@@ -4,22 +4,19 @@ import Header from "./components/Header.vue";
 import Map from "./components/Map.vue";
 import Footer from "./components/Footer.vue";
 import Form from "./components/Form.vue";
+import {ref} from "vue";
 
-const route = {
-  origin: null,
-  destination: null,
-  mode: null
-}
-
-function handleRouteRequested(data) {
+const map = ref(null);
+async function handleRouteRequested(data) {
   // Aquí se recibe el evento personalizado con los datos del formulario
   // y se asigna a la propiedad route
   console.log(data);
-  route.origin = data.origin;
-  route.destination = data.destination;
-  route.mode = data.mode;
-}
+  if(map.value)
+    await map.value.drawRoute(data.origin, data.destination, data.mode);
 
+
+}
+defineExpose()
 </script>
 
 <template>
@@ -27,7 +24,7 @@ function handleRouteRequested(data) {
     <Header />
     <div class="content">
       <Form @route-requested="handleRouteRequested" />
-      <Map :route="route" />
+      <Map ref="map" />
     </div>
     <Footer />
   </div>
