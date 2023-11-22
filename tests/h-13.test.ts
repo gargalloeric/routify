@@ -19,5 +19,5 @@ test("getRoute_ApiOnlineAndPlaceNameNotValid_ThorwPlaceNotValidException", async
         destiny = 'jldhkjha',
         transport = Transport.Car;
 
-    expect(() => getRouteFromPlacesNames(origin, destiny, transport)).toThrowError('Place name not valid');
+    await expect(() => getRouteFromPlacesNames(origin, destiny, transport)).rejects.toThrowError('Place name not valid');
 })
