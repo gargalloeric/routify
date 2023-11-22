@@ -10,7 +10,7 @@ const passwdRep = ref("")
 function submitRegistration() {
   getUserManager().register(name.value, mail.value, passwd.value, passwdRep.value)
       .catch((error) => {
-        console.log("notify dom¿?")
+        console.log(`Message: ${error.message}, notify dom¿?`)
       });
 }
 </script>
