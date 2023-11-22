@@ -17,7 +17,7 @@ export async function obtainCoordsFromName(placeName: string): Promise<L.LatLngE
     
    
     const data = await resp.json();
-    if (data.features.length == 0) {
+    if (data.features.length === 0) {
         throw new Error("Place name not valid");
     }
 
