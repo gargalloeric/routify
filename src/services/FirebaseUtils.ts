@@ -7,14 +7,15 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = { // TODO revisar - poner en env...
-    apiKey: import.meta.env.FIREBASE_API_KEY,
-    authDomain: 'routify-be2cf.firebaseapp.com',
-    projectId: 'routify-be2cf',
-    storageBucket: 'routify-be2cf.appspot.com',
-    messagingSenderId: '308509363226',
-    appId: '1:308509363226:web:2a0eb0eb113152d01555a3'
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: "routify-be2cf.firebaseapp.com",
+    projectId: "routify-be2cf",
+    storageBucket: "routify-be2cf.appspot.com",
+    messagingSenderId: "308509363226",
+    appId: "1:308509363226:web:2a0eb0eb113152d01555a3"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
