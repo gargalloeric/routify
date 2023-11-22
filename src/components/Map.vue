@@ -23,10 +23,27 @@ onMounted(() => {
       //.bindPopup("<b>Museo de Cerámica de l'Alcora</b>")
       //.openPopup();
 });
+
 async function drawRoute(origin: string, destination: string, mode: Transport){
+
   let ruta = await getRouteFromPlacesNames(origin, destination, mode);
-  const puntos: GeoJSON = ruta.getPuntos();
-  L.geoJSON(puntos.features).addTo(map.value);
+  const geoJSON: GeoJSON = ruta.getPuntos();
+
+  const puntos = geoJSON.features[0].geometry.coordinates
+  let feature = L.geoJSON(geoJSON).addTo(map.value);
+
+  L.marker(puntos[0].reverse())
+  .addTo(map.value)
+  .bindPopup(origin)
+  .openPopup();
+
+  map.value.fitBounds(feature.getBounds());
+
+  const size = puntos.length;
+  L.marker(puntos[size -1].reverse())
+      .addTo(map.value)
+      .bindPopup(destination)
+      .openPopup();
 
 }
 

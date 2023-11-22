@@ -15,9 +15,6 @@ function getRoute() {
     mode: mode.value
   });
 
-  alert(
-      `La ruta solicitada es desde ${origin.value} hasta ${destination.value} en ${mode.value}`
-  );
 }
 //<input v-model="mode" list="transport" name="transport" id="transport">
 </script>
@@ -39,7 +36,7 @@ function getRoute() {
           v-model="destination"
           placeholder="Escribe el nombre o la dirección del lugar de destino"
       />
-
+      <label for="transport">Método de transporte</label>
       <select id="transport" v-model="mode">
         <option value="driving-car" selected>Coche</option>
           <option value="foot-walking">A pie</option>
