@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import {getUserManager, UserManager} from "../services/UserManager.ts";
 
 const name = ref("")
 const mail = ref("")
@@ -7,7 +8,10 @@ const passwd = ref("")
 const passwdRep = ref("")
 
 function submitRegistration() {
-  console.log(`${name.value}, ${mail.value}, ${passwd.value}, ${passwdRep.value}`)
+  getUserManager().register(name.value, mail.value, passwd.value, passwdRep.value)
+      .catch((error) => {
+        console.log("notify dom¿?")
+      });
 }
 </script>
 
