@@ -10,19 +10,16 @@ export class UserManager { // Singleton
         this.userInfo = null  // maybe change on login¿?
     }
 
-    async register(name: string, email: string, password: string, repPassword: string): Promise<string> { // returns the mail of the user
-        // validate values
+    async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
         validateRegistrationInfo(name, email, password, repPassword)
-        // create user (in auth + bbdd) // TODO bbdd register user
-        // assign values to userInfo
+
         const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password)
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(`ERROR [UserManager] Code: ${errorCode}, Message: ${errorMessage}`)
-                throw new Error("User was already registered or mail is invalid") // User is already registered or invalid mail
-            });
+            .catch(() => {throw new Error("User was already registered or mail is invalid")})
+
         this.userInfo = new UserInfo(userCredential.user, name)
+
+        // TODO REGISTER - bbdd save user info
+
         if (this.userInfo.mail) return this.userInfo.mail
         else return "No mail¿?"
     }
