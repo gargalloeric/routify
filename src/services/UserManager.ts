@@ -1,6 +1,6 @@
 import {UserInfo} from "../model/UserInfo.ts";
-import {firebaseAuth, createUserWithEmailAndPassword} from "./FirebaseUtils.ts";
-import {validateRegistrationInfo} from "./Validators.ts";
+import {firebaseAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "./FirebaseUtils.ts";
+import {validateLogInInfo, validateRegistrationInfo} from "./Validators.ts";
 
 export class UserManager { // Singleton
 
@@ -24,7 +24,24 @@ export class UserManager { // Singleton
             });
         this.userInfo = new UserInfo(userCredential.user, name)
         if (this.userInfo.mail) return this.userInfo.mail
-        else return "No mail¿?"
+        else return "No mail¿?" // TODO manage if users are saved without mail¿?
+    }
+
+    async logIn(email: string, password: string) {
+        // validate values
+        validateLogInInfo(email, password)
+        // fetch user data (in auth + bbdd) // TODO bbdd login user
+        // assign values to userInfo
+        const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(`ERROR [UserManager] Code: ${errorCode}, Message: ${errorMessage}`)
+                throw new Error("Incorrect logIn info")
+            });
+        this.userInfo = new UserInfo(userCredential.user, "tmp-name")
+        if (this.userInfo.mail) return this.userInfo.mail
+        else return "No mail¿?" // TODO manage if users are saved without mail¿?
     }
 }
 

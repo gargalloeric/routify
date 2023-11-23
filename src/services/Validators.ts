@@ -8,6 +8,14 @@ export function validateRegistrationInfo(name: string, email: string, password: 
     return null
 } // TODO validate mail is not implemented
 
+export function validateLogInInfo(email : string, password : string) {
+    if (!email || !password)
+        throw new Error("Fill all fields")
+    if (password.length < 8 || !validatePassword(password))
+        throw new Error("Password not valid")
+    return null
+}
+
 export function validatePassword(password: string): boolean  {
     const regexMayuscula = /[A-Z]/,
         regexMinuscula = /[a-z]/,

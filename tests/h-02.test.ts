@@ -1,18 +1,17 @@
 import { expect, test } from "vitest";
 import {UserManager, getUserManager} from "../src/services/UserManager";
 
-test('logInUser_ValidInputs_logInUser', () => {
+test('logInUser_ValidInputs_logInUser', async () => {
     let email: string = 'jose@gmail.com',
         password: string = 'aS0@28Y?';
 
-    let userManager: UserManager = getUserManager();
-    expect(userManager.logIn(email, password)).toBe(email);
+    let mail = await getUserManager().logIn(email, password)
+    expect(mail).toBe(email);
 })
 
-test('logInUser_InvalidPassword_notLogInUser', () => {
+test('logInUser_InvalidPassword_notLogInUser', async () => {
     let email: string = 'jose@gmail.com',
         password: string = 'S438w'
 
-    let userManager: UserManager = getUserManager();
-    expect(() => userManager.logIn(email, password)).toThrowError('password not valid')
+    await expect(() => getUserManager().logIn(email, password)).rejects.toThrowError('Password not valid')
 })
