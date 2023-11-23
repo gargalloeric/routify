@@ -28,20 +28,17 @@ export class UserManager { // Singleton
     }
 
     async logIn(email: string, password: string) {
-        // validate values
         validateLogInInfo(email, password)
-        // fetch user data (in auth + bbdd) // TODO bbdd login user
-        // assign values to userInfo
+
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(`ERROR [UserManager] Code: ${errorCode}, Message: ${errorMessage}`)
-                throw new Error("Incorrect logIn info")
-            });
+            .catch(() => {throw new Error("Incorrect logIn info")});
+
+        // TODO LOGIN - bbdd obtain user info
+
         this.userInfo = new UserInfo(userCredential.user, "tmp-name")
+
         if (this.userInfo.mail) return this.userInfo.mail
-        else return "No mail¿?" // TODO manage if users are saved without mail¿?
+        else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 }
 
