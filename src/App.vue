@@ -5,6 +5,7 @@
   <div id="nav">
     <router-link class="nav-link" to="/">Home</router-link>
     <router-link class="nav-link" to="/register">Register</router-link>
+    <router-link class="nav-link" to="/logIn">LogIn</router-link>
   </div>
   <router-view />
 
