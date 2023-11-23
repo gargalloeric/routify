@@ -4,7 +4,7 @@ import {ref} from "vue";
 
 const destination = ref();
 const origin = ref();
-const mode = ref();
+const mode = ref('driving-car');
 
 const emit = defineEmits(['route-requested'])
 function getRoute() {
@@ -23,12 +23,14 @@ function getRoute() {
   <div class="form">
     <div class="form-group">
       <label for="origin">Lugar de origen</label>
+
       <input
           type="text"
           id="origin"
           v-model="origin"
           placeholder="Escribe el nombre o la dirección del lugar de origen"
       />
+
       <label for="origin">Lugar de destino</label>
       <input
           type="text"
@@ -37,10 +39,11 @@ function getRoute() {
           placeholder="Escribe el nombre o la dirección del lugar de destino"
       />
       <label for="transport">Método de transporte</label>
+
       <select id="transport" v-model="mode">
         <option value="driving-car" selected>Coche</option>
-          <option value="foot-walking">A pie</option>
-            <option value="cycling-regular">Bicicleta</option>
+        <option value="foot-walking">A pie</option>
+        <option value="cycling-regular">Bicicleta</option>
       </select>
 
     </div>
