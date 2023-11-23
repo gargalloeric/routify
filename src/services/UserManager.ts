@@ -1,5 +1,5 @@
 import {UserInfo} from "../model/UserInfo.ts";
-import {firebaseAuth, createUserWithEmailAndPassword} from "./FirebaseUtils.ts";
+import {firebaseAuth, createUserWithEmailAndPassword, databaseFirestore, doc, setDoc} from "./FirebaseUtils.ts";
 import {validateRegistrationInfo} from "./Validators.ts";
 
 export class UserManager { // Singleton
@@ -18,7 +18,7 @@ export class UserManager { // Singleton
 
         this.userInfo = new UserInfo(userCredential.user, name)
 
-        // TODO REGISTER - bbdd save user info
+        await setDoc(doc(databaseFirestore, "users", this.userInfo.userId), this.userInfo.getDataForDb()); // TODO refactor in separate file¿?
 
         if (this.userInfo.mail) return this.userInfo.mail
         else return "No mail¿?"
