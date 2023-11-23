@@ -2,18 +2,28 @@
 </script>
 
 <template>
-  <p>This is the homepage, it has a component view in it and links to render them</p>
-
   <div id="nav">
-    <router-link to="/">Home</router-link><span> | </span>
-    <router-link to="/helloWorld">Showcase Component</router-link><span> | </span>
-    <router-link to="/register">Register</router-link>
+    <router-link class="nav-link" to="/">Home</router-link>
+    <router-link class="nav-link" to="/register">Register</router-link>
   </div>
-
-  <span>Component is placed here: </span><br>
   <router-view />
 
 </template>
 
 <style scoped>
+* {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+#nav {
+  width: 100vw;
+}
+
+.nav-link {
+  padding: 5pt;
+  text-decoration: none;
+  font-weight: bold;
+}
 </style>
