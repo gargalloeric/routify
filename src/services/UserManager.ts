@@ -21,7 +21,7 @@ export class UserManager { // Singleton
         await setDoc(doc(databaseFirestore, "users", this.userInfo.userId), this.userInfo.getDataForDb()); // TODO refactor in separate file¿?
 
         if (this.userInfo.mail) return this.userInfo.mail
-        else return "No mail¿?"
+        else throw new Error("Unexpected error: user registered without mail")
     }
 }
 
