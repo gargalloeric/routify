@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import L, {GeoJSON} from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import {getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import {onMounted, ref} from 'vue';
-import {Transport} from "../model/Transport.ts";
+import { Route } from "../model/Route";
+
+const props = defineProps<{
+  initLatLang: L.LatLngExpression,
+  zoom: number
+}>();
 
 const map = ref();
+const layerGroup = ref();
+
 onMounted(() => {
    map.value = L.map("map", {
-    center: [39.95033330877234, -0.10324382781982422],
-    zoom: 17,
+    center: props.initLatLang,
+    zoom: props.zoom,
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -18,38 +24,31 @@ onMounted(() => {
     maxZoom: 18,
   }).addTo(map.value);
 
-  //L.marker([39.95033330877234, -0.10324382781982422])
-      //.addTo(map.value)
-      //.bindPopup("<b>Museo de Cerámica de l'Alcora</b>")
-      //.openPopup();
+  layerGroup.value = L.layerGroup().addTo(map.value);
 });
 
-async function drawRoute(origin: string, destination: string, mode: Transport){
-
-  let ruta = await getRouteFromPlacesNames(origin, destination, mode);
-  const geoJSON: GeoJSON = ruta.getPuntos();
+function drawRoute(route: Route) {
+  const geoJSON = route.geoJSON;
 
   const puntos = geoJSON.features[0].geometry.coordinates
-  let feature = L.geoJSON(geoJSON).addTo(map.value);
+
+  layerGroup.value.clearLayers();
+
+  let geoJSONLayer = L.geoJSON(geoJSON).addTo(layerGroup.value);
 
   L.marker(puntos[0].reverse())
-  .addTo(map.value)
-  .bindPopup(origin)
-  .openPopup();
+  .addTo(geoJSONLayer);
 
-  map.value.fitBounds(feature.getBounds());
+  L.marker(puntos[puntos.length - 1].reverse())
+      .addTo(geoJSONLayer);
 
-  const size = puntos.length;
-  L.marker(puntos[size -1].reverse())
-      .addTo(map.value)
-      .bindPopup(destination)
-      .openPopup();
-
+  map.value.fitBounds(geoJSONLayer.getBounds());
 }
 
 defineExpose({
   drawRoute
 });
+
 </script>
 
 <template>
