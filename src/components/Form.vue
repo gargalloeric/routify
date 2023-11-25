@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import {Transport} from "../model/Transport.ts";
-import {ref} from "vue";
 
-const destination = ref();
-const origin = ref();
-const mode = ref();
+let destination = "";
+let origin = "";
+let mode = "";
 
 const emit = defineEmits(['route-requested'])
 function getRoute() {
   // Emisión del evento route-requested
   emit("route-requested", {
-    origin: origin.value,
-    destination: destination.value,
-    mode: mode.value
+    origin: origin,
+    destination: destination,
+    mode: mode
   });
-
 }
-//<input v-model="mode" list="transport" name="transport" id="transport">
 </script>
 
 <template>
@@ -39,8 +35,8 @@ function getRoute() {
       <label for="transport">Método de transporte</label>
       <select id="transport" v-model="mode">
         <option value="driving-car" selected>Coche</option>
-          <option value="foot-walking">A pie</option>
-            <option value="cycling-regular">Bicicleta</option>
+        <option value="foot-walking">A pie</option>
+        <option value="cycling-regular">Bicicleta</option>
       </select>
 
     </div>
