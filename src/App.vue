@@ -5,28 +5,28 @@ import Map from "./components/Map.vue";
 import Footer from "./components/Footer.vue";
 import Form from "./components/Form.vue";
 import {ref} from "vue";
+import { Transport } from "./model/Transport";
+import { getRouteFromPlacesNames } from "./services/ORSAdapter";
 
-const map = ref(null);
-async function handleRouteRequested(data) {
-  // Aquí se recibe el evento personalizado con los datos del formulario
-  // y se asigna a la propiedad route
-  console.log(data);
-  if(map.value)
-    await map.value.drawRoute(data.origin, data.destination, data.mode);
+// TODO: Make initialLatLang the user location or a default coordinates fallback.
+const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
+const initZoom: number = 17;
+const map = ref();
 
-
+async function handleRouteRequest(data: {origin: string, destination: string, mode: Transport}) {
+  const route = await getRouteFromPlacesNames(data.origin, data.destination, data.mode)
+  map.value.drawRoute(route);
 }
-defineExpose()
 </script>
 
 <template>
   <div id="app">
-    <Header />
+    <Header></Header>
     <div class="content">
-      <Form @route-requested="handleRouteRequested" />
-      <Map ref="map" />
+      <Form @route-requested="handleRouteRequest"></Form>
+      <Map :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
     </div>
-    <Footer />
+    <Footer></Footer>
   </div>
 </template>
 
