@@ -12,12 +12,15 @@ import { getRouteFromPlacesNames } from "./services/ORSAdapter";
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
 const initZoom: number = 17;
 const map = ref();
+let isRequestingRoute = ref(false);
 
 async function handleRouteRequest(data: { origin: string, destination: string, mode: Transport }) {
+  isRequestingRoute.value = true;
   try {
     const route = await getRouteFromPlacesNames(data.origin, data.destination, data.mode);
     map.value.clear();
     map.value.drawRoute(route);
+    isRequestingRoute.value = false;
   } catch (error) {
     // TODO: Make appear a popup with the error saying a route couldn't be found.
     console.log(error)
@@ -28,8 +31,8 @@ async function handleRouteRequest(data: { origin: string, destination: string, m
 <template>
   <Header></Header>
   <div class="m-5">
-    <div class="flex flex-row h-fit">
-      <Form class="mr-5" @route-requested="handleRouteRequest"></Form>
+    <div class="flex md:flex-row sm:flex-col">
+      <Form class="mr-5" @route-requested="handleRouteRequest" :is-requesting-route="isRequestingRoute"></Form>
       <Map :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
     </div>
   </div>
