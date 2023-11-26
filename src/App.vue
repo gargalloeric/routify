@@ -14,8 +14,14 @@ const initZoom: number = 17;
 const map = ref();
 
 async function handleRouteRequest(data: {origin: string, destination: string, mode: Transport}) {
-  const route = await getRouteFromPlacesNames(data.origin, data.destination, data.mode)
-  map.value.drawRoute(route);
+  try {
+    const route = await getRouteFromPlacesNames(data.origin, data.destination, data.mode);
+    map.value.clear();
+    map.value.drawRoute(route);
+  } catch (error) {
+    // TODO: Make appear a popup with the error saying a route couldn't be found.
+    console.log(error)
+  }
 }
 </script>
 
