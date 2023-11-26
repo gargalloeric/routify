@@ -55,5 +55,5 @@ defineExpose({
 </script>
 
 <template>
-  <div id="map" class="h-auto w-full"></div>
+  <div id="map" style="height: 80vh; width: 100%;"></div>
 </template>
