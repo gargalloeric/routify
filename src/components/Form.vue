@@ -2,7 +2,7 @@
 
 let destination = "";
 let origin = "";
-let mode = "";
+let mode = "driving-car";
 
 const emit = defineEmits(['route-requested'])
 function getRoute() {
@@ -34,7 +34,7 @@ function getRoute() {
       />
       <label for="transport">Método de transporte</label>
       <select id="transport" v-model="mode">
-        <option value="driving-car" selected>Coche</option>
+        <option value="driving-car">Coche</option>
         <option value="foot-walking">A pie</option>
         <option value="cycling-regular">Bicicleta</option>
       </select>
