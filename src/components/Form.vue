@@ -11,7 +11,10 @@ const props = defineProps<{
 const emit = defineEmits(['route-requested'])
 
 function getRoute() {
-  // Emisión del evento route-requested
+  // Don't make the request if one of the two fields is empty
+  if (origin.trim().length === 0 || destination.trim().length === 0) {
+    return
+  }
   emit("route-requested", {
     origin: origin,
     destination: destination,
