@@ -32,21 +32,24 @@ function drawRoute(route: Route) {
 
   const puntos = geoJSON.features[0].geometry.coordinates
 
-  layerGroup.value.clearLayers();
-
   let geoJSONLayer = L.geoJSON(geoJSON).addTo(layerGroup.value);
 
   L.marker(puntos[0].reverse())
-  .addTo(geoJSONLayer);
+    .addTo(geoJSONLayer);
 
   L.marker(puntos[puntos.length - 1].reverse())
-      .addTo(geoJSONLayer);
+    .addTo(geoJSONLayer);
 
   map.value.fitBounds(geoJSONLayer.getBounds());
 }
 
+function clear() {
+  layerGroup.value.clearLayers();
+}
+
 defineExpose({
-  drawRoute
+  drawRoute,
+  clear
 });
 
 </script>
