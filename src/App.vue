@@ -34,7 +34,7 @@ async function handleRouteRequest(data: { origin: string, destination: string, m
 <template>
   <Header></Header>
   <div class="m-5">
-    <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="Unable to find a route."></Alert>
+    <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
     <div class="flex md:flex-row sm:flex-col">
       <Form class="mr-5" @route-requested="handleRouteRequest" :is-requesting-route="isRequestingRoute"></Form>
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
