@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import router from "./router.ts";
+import {getUserManager} from "./services/UserManager.ts";
+import HelloWorld from "./components/HelloWorld.vue";
+
+function handleUserButton() {
+  if (getUserManager().isLoggedIn()) {
+    router.push({path: '/profile'})
+  } else {
+    router.push({path: '/register'})
+  }
+}
 </script>
 
 <template>
   <div id="nav">
     <router-link class="nav-link" to="/">Home</router-link>
-    <router-link class="nav-link" to="/register">Register</router-link>
+    <span id="profile-btn" @click="handleUserButton">🙋‍♂️</span>
   </div>
-  <router-view />
-
+  <router-view id="router-view"/>
 </template>
 
 <style scoped>
@@ -25,5 +35,12 @@
   padding: 5pt;
   text-decoration: none;
   font-weight: bold;
+}
+
+#router-view {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
 }
 </style>

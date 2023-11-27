@@ -10,6 +10,11 @@ export class UserManager { // Singleton
         this.userInfo = null  // maybe change on login¿?
     }
 
+    isLoggedIn() : boolean {
+        if (this.userInfo) return true
+        return false
+    }
+
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
         validateRegistrationInfo(name, email, password, repPassword)
 
