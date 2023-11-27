@@ -1,13 +1,21 @@
 import {UserInfo} from "../model/UserInfo.ts";
-import {firebaseAuth, createUserWithEmailAndPassword, databaseFirestore, doc, setDoc} from "./FirebaseUtils.ts";
+import {databaseFirestore, doc, setDoc} from "./FirebaseUtils.ts";
 import {validateRegistrationInfo} from "./Validators.ts";
+import {AuthService} from "./AuthService.ts";
+import {FirebaseAuthService} from "./FirebaseAuthService.ts";
 
-export class UserManager { // Singleton
+export class UserManager {
 
     userInfo : UserInfo | null;
+    private _authService: AuthService;
 
     constructor() {
         this.userInfo = null  // maybe change on login¿?
+        this._authService = new FirebaseAuthService()
+    }
+
+    set authService(value: AuthService) {
+        this._authService = value;
     }
 
     isLoggedIn() : boolean {
@@ -18,10 +26,7 @@ export class UserManager { // Singleton
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
         validateRegistrationInfo(name, email, password, repPassword)
 
-        const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password)
-            .catch(() => {throw new Error("User was already registered or mail is invalid")})
-
-        this.userInfo = new UserInfo(userCredential.user, name)
+        this.userInfo = await this._authService.register(name, email, password)
 
         await setDoc(doc(databaseFirestore, "users", this.userInfo.userId), this.userInfo.getDataForDb()); // TODO refactor in separate file¿?
 
