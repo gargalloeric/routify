@@ -3,7 +3,6 @@ import {AuthService} from "./AuthService.ts";
 import {DBService} from "./DBService.ts";
 import {FirebaseAuthService} from "./FirebaseAuthService.ts";
 import {FirebaseDBService} from "./FirebaseDBService.ts";
-import {firebaseAuth, signInWithEmailAndPassword} from "./FirebaseUtils.ts";
 import {validateLogInInfo, validateRegistrationInfo} from "./Validators.ts";
 
 
@@ -45,14 +44,11 @@ export class UserManager {
         const validationMessage = validateLogInInfo(email, password)
         if (validationMessage) throw new Error(validationMessage)
 
-        const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
-            .catch(() => {throw new Error("Incorrect logIn info")});
+        this.userInfo = await this._authService.logIn(email, password)
 
         // TODO LOGIN - bbdd obtain user info
 
-        this.userInfo = new UserInfo(userCredential.user, "tmp-name")
-
-        if (this.userInfo.mail) return this.userInfo.mail
+        if (this.userInfo && this.userInfo.mail) return this.userInfo.mail
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 
