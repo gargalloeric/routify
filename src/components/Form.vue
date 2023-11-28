@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 
 let destination = "";
 let origin = "";
 let mode = "driving-car";
+
+const errorInDestiny = ref(false);
+const errorInOrigin = ref(false);
 
 const props = defineProps<{
   isRequestingRoute: boolean
@@ -11,10 +16,21 @@ const props = defineProps<{
 const emit = defineEmits(['route-requested'])
 
 function getRoute() {
-  // Don't make the request if one of the two fields is empty
-  if (origin.trim().length === 0 || destination.trim().length === 0) {
-    return
+  let someFieldEmpty = false;  
+  if (origin.trim().length === 0) {
+    someFieldEmpty = true;
+    errorInOrigin.value = true;
+  } else {
+    errorInOrigin.value = false;
   }
+  if (destination.trim().length === 0) {
+    someFieldEmpty = true;
+    errorInDestiny.value = true;
+  } else {
+    errorInDestiny.value = false;
+  }
+  // Don't make the request if one of the two fields is empty
+  if (someFieldEmpty) return;
   emit("route-requested", {
     origin: origin,
     destination: destination,
@@ -27,15 +43,19 @@ function getRoute() {
   <div>
     <div class="mb-5">
       <label for="origin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Origen</label>
-      <input v-model="origin" type="text" id="origin"
+      <input v-if="!errorInOrigin" v-model="origin" type="text" id="origin"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Madrid">
+      <input v-if="errorInOrigin"  v-model="origin" type="text" id="destiny" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"  placeholder="Madrid">
+      <p v-if="errorInOrigin" class="mt-2 text-sm text-red-600 dark:text-red-500">Origen vacío.</p>
     </div>
     <div class="mb-5">
       <label for="destiny" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Destino</label>
-      <input v-model="destination" type="text" id="destiny"
+      <input v-if="!errorInDestiny" v-model="destination" type="text" id="destiny"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Lisboa">
+        <input v-if="errorInDestiny"  v-model="destination" type="text" id="destiny" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"  placeholder="Lisboa">
+        <p v-if="errorInDestiny" class="mt-2 text-sm text-red-600 dark:text-red-500">Destino vacío.</p>
     </div>
     <div class="mb-5">
       <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transporte</label>
