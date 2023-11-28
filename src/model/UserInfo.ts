@@ -9,4 +9,10 @@ export class UserInfo {
         this.mail = user.email
         this.userId = user.uid
     }
+
+    getDataForDb():Object {
+        return {
+            name: this.name
+        };
+    }
 }

@@ -3,6 +3,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 import Home from "./components/Home.vue";
 import RegisterForm from "./components/RegisterForm.vue";
 import LogInForm from "./components/LogInForm.vue";
+import NotFound from "./components/NotFound.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/logIn",
         name: "LogInForm",
         component: LogInForm,
+    },
+    {
+        path: "/profile",
+        name: "Profile",
+        component: NotFound,
     },
 ];
 
