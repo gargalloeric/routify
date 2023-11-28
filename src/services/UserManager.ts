@@ -41,17 +41,9 @@ export class UserManager {
         else throw new Error("Unexpected error: user registered without mail")
     }
 
-    async deleteAccount(): Promise<void> {
-        if (this.userInfo) {
-            await this._dbService.deleteUser(this.userInfo)
-            await this._authService.deleteSignedInUser(this.userInfo)
-            this.userInfo = null
-
-        } else throw Error("Can't delete account if user is not logged")
-    }
-
-    async logIn(email: string, password: string) {
-        validateLogInInfo(email, password)
+    async logIn(email: string, password: string): Promise<string> {
+        const validationMessage = validateLogInInfo(email, password)
+        if (validationMessage) throw new Error(validationMessage)
 
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
             .catch(() => {throw new Error("Incorrect logIn info")});
@@ -62,6 +54,15 @@ export class UserManager {
 
         if (this.userInfo.mail) return this.userInfo.mail
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
+    }
+
+    async deleteAccount(): Promise<void> {
+        if (this.userInfo) {
+            await this._dbService.deleteUser(this.userInfo)
+            await this._authService.deleteSignedInUser(this.userInfo)
+            this.userInfo = null
+
+        } else throw Error("Can't delete account if user is not logged")
     }
 }
 

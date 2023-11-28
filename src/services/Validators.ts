@@ -16,11 +16,11 @@ export function validateMail(mail: string): boolean {
     return regex.test(mail);
 }
 
-export function validateLogInInfo(email : string, password : string) {
+export function validateLogInInfo(email : string, password : string): string | null {
     if (!email || !password)
-        throw new Error("Fill all fields")
+        return "Fill all fields"
     if (password.length < 8 || !validatePassword(password))
-        throw new Error("Password not valid")
+        return "Password not valid"
     return null
 }
 
