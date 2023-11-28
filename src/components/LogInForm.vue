@@ -36,7 +36,10 @@ async function submitRegistration() {
         <td colspan="2" class="error-message">{{errorMessage}}</td>
       </tr>
       <tr>
-        <td colspan="2"><button @click="submitRegistration">Register</button></td>
+        <td colspan="2"><button @click="submitRegistration">Log In</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><span>Don't have an account? <span class="link" @click="router.push({path: '/register'})">Register</span></span></td>
       </tr>
     </table>
   </div>
@@ -44,6 +47,11 @@ async function submitRegistration() {
 </template>
 
 <style scoped>
+.link {
+  text-decoration: underline;
+  color: blue;
+}
+
 .error-message {
   color: red;
   font-weight: bold;

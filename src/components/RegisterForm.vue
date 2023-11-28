@@ -48,12 +48,20 @@ async function submitRegistration() {
       <tr>
         <td colspan="2"><button @click="submitRegistration">Register</button></td>
       </tr>
+      <tr>
+        <td colspan="2"><span>Already have an account? <span class="link" @click="router.push({path: '/logIn'})">LogIn</span></span></td>
+      </tr>
     </table>
   </div>
 
 </template>
 
 <style scoped>
+.link {
+  text-decoration: underline;
+  color: blue;
+}
+
 .error-message {
   color: red;
   font-weight: bold;

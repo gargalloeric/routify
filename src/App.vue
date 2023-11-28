@@ -7,7 +7,7 @@ function handleUserButton() {
   if (getUserManager().isLoggedIn()) {
     router.push({path: '/profile'})
   } else {
-    router.push({path: '/register'})
+    router.push({path: '/logIn'})
   }
 }
 </script>
