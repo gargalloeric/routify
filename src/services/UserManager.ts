@@ -46,9 +46,9 @@ export class UserManager {
 
         this.userInfo = await this._authService.logIn(email, password)
 
-        // TODO LOGIN - bbdd obtain user info
+        await this._dbService.fetchUserInfo(this.userInfo)
 
-        if (this.userInfo && this.userInfo.mail) return this.userInfo.mail
+        if (this.userInfo.mail) return this.userInfo.mail
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 

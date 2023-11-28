@@ -18,7 +18,7 @@ export class FirebaseAuthService implements AuthService {
         })
     }
 
-    async logIn(email: string, password: string): Promise<UserInfo | null> {
+    async logIn(email: string, password: string): Promise<UserInfo> {
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
             .catch(() => {throw new Error("Incorrect logIn info")});
         return new UserInfo(userCredential.user, "")
