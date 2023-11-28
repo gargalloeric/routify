@@ -1,6 +1,8 @@
 import { expect, test } from "vitest";
-import {UserManager, getUserManager} from "../src/services/UserManager";
+import {getUserManager} from "../src/services/UserManager";
 
+// TODO reimplement with
+// TODO integration tests
 test('registerUser_ValidInputs_RegisterUser', async () => {
     const name: string = 'Jose',
         email: string = 'jose@gmail.com',
