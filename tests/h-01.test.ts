@@ -1,9 +1,6 @@
 import { expect, test } from "vitest";
 import {getUserManager} from "../src/services/UserManager";
-import {FirebaseDBService} from "../src/services/FirebaseDBService";
 
-// TODO reimplement with
-// TODO integration tests
 test('registerUser_ValidInputs_RegisterUser', async () => {
     const name: string = 'Jose',
         email: string = 'fake.jose@notamail.not',

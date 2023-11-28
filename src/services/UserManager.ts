@@ -29,7 +29,8 @@ export class UserManager {
     }
 
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
-        validateRegistrationInfo(name, email, password, repPassword)
+        const validationMessage = validateRegistrationInfo(name, email, password, repPassword)
+        if (validationMessage) throw new Error(validationMessage)
 
         this.userInfo = await this._authService.register(name, email, password)
 

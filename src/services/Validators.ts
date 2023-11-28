@@ -1,12 +1,20 @@
 export function validateRegistrationInfo(name: string, email: string, password: string, repPassword: string): string | null {
     if (!name || !email || !password || !repPassword)
-        throw new Error("Fill all fields")
+        return "Fill all fields"
     if (password != repPassword)
-        throw new Error("Passwords must match")
+        return "Passwords must match"
     if (password.length < 8 || !validatePassword(password))
-        throw new Error("Password not valid")
+        return "Password not valid"
+    if (!validateMail(email))
+        return "Mail not valid"
     return null
-} // TODO validate mail is not implemented
+}
+
+export function validateMail(mail: string): boolean {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    return regex.test(mail);
+}
 
 export function validatePassword(password: string): boolean  {
     const regexMayuscula = /[A-Z]/,
