@@ -2,6 +2,9 @@
 import router from "./router.ts";
 import {getUserManager} from "./services/UserManager.ts";
 import HelloWorld from "./components/HelloWorld.vue";
+import ObtainRoute from "./components/ObtainRoute.vue";
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
 
 function handleUserButton() {
   if (getUserManager().isLoggedIn()) {
@@ -10,6 +13,7 @@ function handleUserButton() {
     router.push({path: '/logIn'})
   }
 }
+
 </script>
 
 <template>
@@ -18,6 +22,9 @@ function handleUserButton() {
     <span id="profile-btn" @click="handleUserButton">🙋‍♂️</span>
   </div>
   <router-view id="router-view"/>
+  <Header></Header>
+    <ObtainRoute></ObtainRoute>
+  <Footer></Footer>
 </template>
 
 <style scoped>
