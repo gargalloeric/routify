@@ -1,8 +1,6 @@
 <!-- App.vue -->
 <script setup lang="ts">
-import Header from "./Header.vue";
 import Map from "./Map.vue";
-import Footer from "./Footer.vue";
 import Form from "./Form.vue";
 import { ref } from "vue";
 import { Transport } from "../model/Transport";
@@ -32,7 +30,6 @@ async function handleRouteRequest(data: { origin: string, destination: string, m
 </script>
 
 <template>
-  <Header></Header>
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
     <div class="flex md:flex-row sm:flex-col">
@@ -40,5 +37,5 @@ async function handleRouteRequest(data: { origin: string, destination: string, m
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
   </div>
 </div>
-<Footer></Footer></template>
+</template>
 
