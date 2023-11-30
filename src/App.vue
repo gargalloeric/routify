@@ -1,18 +1,46 @@
 <script setup lang="ts">
+import router from "./router.ts";
+import {getUserManager} from "./services/UserManager.ts";
+import HelloWorld from "./components/HelloWorld.vue";
+
+function handleUserButton() {
+  if (getUserManager().isLoggedIn()) {
+    router.push({path: '/profile'})
+  } else {
+    router.push({path: '/logIn'})
+  }
+}
 </script>
 
 <template>
-  <p>This is the homepage, it has a component view in it and links to render them</p>
-
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/helloWorld">Showcase Component</router-link>
+    <router-link class="nav-link" to="/">Home</router-link>
+    <span id="profile-btn" @click="handleUserButton">🙋‍♂️</span>
   </div>
-
-  <span>Component is placed here: </span><br>
-  <router-view />
-
+  <router-view id="router-view"/>
 </template>
 
 <style scoped>
+* {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+#nav {
+  width: 100vw;
+}
+
+.nav-link {
+  padding: 5pt;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#router-view {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+}
 </style>
