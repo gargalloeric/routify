@@ -21,8 +21,7 @@ async function submitRegistration() {
 </script>
 
 <template>
-  <div class="max-w-sm mx-auto">
-    <h1 class="font-bold text-2xl mb-4">Inicia sesion:</h1>
+  <div class="mt-20 mb-20 max-w-sm mx-auto">
     <div class="mb-5">
       <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Tu correo electrónico</label>
@@ -37,7 +36,7 @@ async function submitRegistration() {
       {{errorMessage}}</p>
     <p class="mb-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
       ¿No tienes cuenta? <span class="link" @click="router.push({path: '/register'})">Registrate</span></p>
-    <button @click="submitRegistration" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <button @click="submitRegistration" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
       Inicia Sesión</button>
   </div>
 </template>

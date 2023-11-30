@@ -8,9 +8,9 @@ router.push({path: '/'});
 </script>
 <router-view id="router-view"/>
 <template>
-  <Header></Header>
-  <router-view id="router-view"/>
-  <Footer></Footer>
+    <Header class="drop-shadow-md"></Header>
+    <router-view id="router-view"/>
+    <Footer></Footer>
 </template>
 
 <style scoped>
