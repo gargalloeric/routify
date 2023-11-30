@@ -1,11 +1,11 @@
 <!-- App.vue -->
 <script setup lang="ts">
-import Map from "./Map.vue";
-import Form from "./Form.vue";
+import Map from "../components/Map.vue";
+import Form from "../components/Form.vue";
 import { ref } from "vue";
-import { Transport } from "../model/Transport";
-import { getRouteFromPlacesNames } from "../services/ORSAdapter";
-import Alert from "./Alert.vue";
+import { Transport } from "../model/Transport.ts";
+import { getRouteFromPlacesNames } from "../services/ORSAdapter.ts";
+import Alert from "../components/Alert.vue";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];

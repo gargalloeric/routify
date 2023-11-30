@@ -1,15 +1,15 @@
 import { createWebHistory, createRouter } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
-import Home from "./components/Home.vue";
-import RegisterForm from "./components/RegisterForm.vue";
-import LogInForm from "./components/LogInForm.vue";
-import NotFound from "./components/NotFound.vue";
+import RegisterForm from "./views/RegisterForm.vue";
+import LogInForm from "./views/LogInForm.vue";
+import NotFound from "./views/NotFound.vue";
+import ObtainRoute from "./views/ObtainRoute.vue";
 
 const routes = [
     {
         path: "/",
         name: "Home",
-        component: Home,
+        component: ObtainRoute,
     },
     {
         path: "/helloWorld",
@@ -27,8 +27,8 @@ const routes = [
         component: LogInForm,
     },
     {
-        path: "/profile",
-        name: "Profile",
+        path: "/notFound",
+        name: "Not Found",
         component: NotFound,
     },
 ];
