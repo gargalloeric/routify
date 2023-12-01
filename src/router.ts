@@ -1,5 +1,4 @@
 import { createWebHistory, createRouter } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
 import RegisterForm from "./views/RegisterForm.vue";
 import LogInForm from "./views/LogInForm.vue";
 import NotFound from "./views/NotFound.vue";
@@ -10,11 +9,6 @@ const routes = [
         path: "/",
         name: "Home",
         component: ObtainRoute,
-    },
-    {
-        path: "/helloWorld",
-        name: "HelloWorld",
-        component: HelloWorld,
     },
     {
         path: "/register",
