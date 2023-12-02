@@ -1,4 +1,3 @@
-// no - ponedlo en un paquete modelo o algo asi
 import { Route } from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
 import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.ts";
@@ -11,7 +10,8 @@ export async function getRouteFromPlacesNames(origin: string, destiny: string, t
         const destinyName =  dataDestiny.properties.name;
 
         const r = await obtainRoute(dataOrigin.geometry.coordinates, dataDestiny.geometry.coordinates, transport);
-        return new Route(r, originName, destinyName);
+        const distance = r.features[0].properties.summary.distance / 1000;
+        return new Route(r, originName, destinyName, transport, distance);
 }
 
 export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport): Promise<Route> {
@@ -26,5 +26,6 @@ export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, tr
         console.log(err)
     }
     const r = await obtainRoute(origin, destiny, transport);
-    return new Route(r, originName, destinyName);
+    const distance = r.features[0].properties.summary.distance / 1000;
+    return new Route(r, originName, destinyName, transport, distance);
 }
