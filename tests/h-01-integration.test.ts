@@ -1,4 +1,4 @@
-import {expect, test, beforeAll, vi} from "vitest";
+import {expect, test, vi, afterAll} from "vitest";
 import {getUserManager, UserManager} from "../src/services/UserManager";
 import {UserInfo} from "../src/model/UserInfo";
 
@@ -16,6 +16,12 @@ vi.mock('../src/services/FirebaseDBService.ts', () => {
     return { FirebaseDBService }
 })
 
+
+afterAll(() => {
+    vi.clearAllMocks()
+    vi.resetAllMocks()
+});
+
 test('registerUser_ValidInputs_RegisterUser', async () => {
     const name: string = 'Jose',
         email: string = 'fake.jose@notamail.not',
@@ -24,6 +30,9 @@ test('registerUser_ValidInputs_RegisterUser', async () => {
 
     const mail = await getUserManager().register(name, email, password, repPassword)
     expect(mail).toBe(email)
+
+    // delete saved data on db and auth - not needed in integration
+    // await getUserManager().deleteAccount()
 })
 
 test('registerUser_InvalidPassword_ThrowPasswordNotValidException', async () => {
