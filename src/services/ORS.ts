@@ -47,7 +47,7 @@ export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
     return data.features[0];
 }
 
-export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport): Promise<L.GeoJSON> {
+export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport): Promise<JSON> {
     const target = new URL(URL_DIRECTIONS + transport, BASE_URL);
     const resp = await fetch(target.toString()+ "?" + new URLSearchParams({
         api_key: import.meta.env.VITE_ORS_API,
