@@ -3,9 +3,8 @@ import { ref } from 'vue';
 import {formRoute} from "../main.ts";
 
 
-//let destination = formRoute.destination.toString();
-//let origin = formRoute.origin.toString();
-
+formRoute.origin = "";
+formRoute.destination = "";
 let mode = "driving-car";
 
 const errorInDestiny = ref(false);

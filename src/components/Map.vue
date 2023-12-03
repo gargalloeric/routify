@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import L, {latLng} from "leaflet";
+import L, {latLng, LeafletMouseEvent} from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {onMounted, ref} from 'vue';
 import { Route } from "../model/Route";
@@ -29,9 +29,9 @@ onMounted(() => {
 
   map.value.on('click', onMapClick);
 });
-let click = 1;
+
 let markers : L.Marker[] = [L.marker(latLng([0, 0, 0])), L.marker([0, 0, 0])];
-let counter = 0;
+
 function drawRoute(route: Route) {
   const geoJSON = route.geoJSON;
 
@@ -52,8 +52,9 @@ function clear() {
   layerGroup.value.clearLayers();
 }
 
-
-function onMapClick(e) { // first 2 clicks will set the markers on each position, the rest will substitute the initial markers
+let click = 1;
+let counter = 0;
+function onMapClick(e: LeafletMouseEvent) { // first 2 clicks will set the markers on each position, the rest will substitute the initial markers
   let index;
   if (counter < 2){
     index = counter;
@@ -63,8 +64,8 @@ function onMapClick(e) { // first 2 clicks will set the markers on each position
     index = click;
   }
   markers[index].setLatLng(e.latlng).addTo(map.value);
-  if (index == 0) formRoute.origin = latLng(e.latlng.lng, e.latlng.lat);
-  else formRoute.destination = latLng(e.latlng.lng, e.latlng.lat)
+  if (index == 0) formRoute.origin = [e.latlng.lng, e.latlng.lat];
+  else formRoute.destination = [e.latlng.lng, e.latlng.lat];
   counter++;
 }
 

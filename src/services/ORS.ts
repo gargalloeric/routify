@@ -29,6 +29,7 @@ export async function obtainCoordsFromName(placeName: string): Promise<JSON> {
 }
 
 export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
+
     const { lat, lng } = coords
     const target = new URL(URL_GEOCODE_REVERSE, BASE_URL);
     const resp = await fetch(target.toString() + new URLSearchParams({
@@ -47,7 +48,6 @@ export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
 }
 
 export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport): Promise<L.GeoJSON> {
-    console.log(start);
     const target = new URL(URL_DIRECTIONS + transport, BASE_URL);
     const resp = await fetch(target.toString()+ "?" + new URLSearchParams({
         api_key: import.meta.env.VITE_ORS_API,

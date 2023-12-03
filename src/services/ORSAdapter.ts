@@ -2,10 +2,9 @@
 import { Route } from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
 import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.ts";
-import L, {LatLng, LatLngExpression} from "leaflet";
+import L from "leaflet";
 
 export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport): Promise<Route> {
-        console.log("nombre");
         const dataOrigin = await obtainCoordsFromName(origin);
         const dataDestiny = await obtainCoordsFromName(destiny);
 
@@ -17,7 +16,6 @@ export async function getRouteFromPlacesNames(origin: string, destiny: string, t
 }
 
 export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport): Promise<Route> {
-    console.log("coord");
     let originName = "";
     let destinyName = "";
     try {
