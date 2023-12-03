@@ -1,5 +1,6 @@
 import {afterAll, expect, test, vi} from "vitest";
 import {getUserManager} from "../src/services/UserManager";
+import {UserInfo} from "../src/model/UserInfo";
 
 
 vi.mock('../src/services/FirebaseAuthService.ts', () => {
