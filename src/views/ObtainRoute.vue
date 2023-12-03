@@ -4,8 +4,9 @@ import Map from "../components/Map.vue";
 import Form from "../components/Form.vue";
 import { ref } from "vue";
 import { Transport } from "../model/Transport.ts";
-import { getRouteFromPlacesNames } from "../services/ORSAdapter.ts";
+import {getRouteFromCoords, getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import Alert from "../components/Alert.vue";
+import {LatLng} from "leaflet";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
@@ -14,10 +15,13 @@ const map = ref();
 const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
 
-async function handleRouteRequest(data: { origin: string, destination: string, mode: Transport }) {
+async function handleRouteRequest(data: { origin: LatLng, destination: LatLng, mode: Transport }) {
   isRequestingRoute.value = true;
+  let route;
   try {
-    const route = await getRouteFromPlacesNames(data.origin, data.destination, data.mode);
+    if ("LatLng" != data.origin.toString().substring(0, 6))
+      route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode);
+    else route = await getRouteFromCoords(data.origin.wrap(), data.destination, data.mode)
     map.value.clear();
     map.value.drawRoute(route);
   } catch (error) {
@@ -27,6 +31,7 @@ async function handleRouteRequest(data: { origin: string, destination: string, m
   }
   isRequestingRoute.value = false;
 }
+
 </script>
 
 <template>

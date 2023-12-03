@@ -1,4 +1,5 @@
 import { Transport } from "../model/Transport";
+import L from "leaflet";
 
 const BASE_URL = "https://api.openrouteservice.org";
 
@@ -46,6 +47,7 @@ export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
 }
 
 export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport): Promise<L.GeoJSON> {
+    console.log(start);
     const target = new URL(URL_DIRECTIONS + transport, BASE_URL);
     const resp = await fetch(target.toString()+ "?" + new URLSearchParams({
         api_key: import.meta.env.VITE_ORS_API,
