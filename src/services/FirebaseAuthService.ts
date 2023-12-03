@@ -8,7 +8,7 @@ export class FirebaseAuthService implements AuthService {
             .catch(() => {
                 throw new Error("User was already registered or mail is invalid")
             })
-        return new UserInfo(userCredential.user, name)
+        return new UserInfo(userCredential.user.uid, userCredential.user.email, name)
     }
 
     async deleteSignedInUser(): Promise<void> {
@@ -21,6 +21,7 @@ export class FirebaseAuthService implements AuthService {
     async logIn(email: string, password: string): Promise<UserInfo> {
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
             .catch(() => {throw new Error("Incorrect logIn info")});
-        return new UserInfo(userCredential.user, "")
+        return new UserInfo(userCredential.user.uid, userCredential.user.email, "")
     }
+
 }

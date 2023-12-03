@@ -17,10 +17,10 @@ export class UserManager {
         this._authService = new FirebaseAuthService()
         this._dbService = new FirebaseDBService()
     }
-    set authService(value: AuthService) {
+    public set authService(value: AuthService) {
         this._authService = value;
     }
-    set dbService(value: DBService) {
+    public set dbService(value: DBService) {
         this._dbService = value;
     }
 

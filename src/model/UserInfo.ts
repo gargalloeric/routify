@@ -1,13 +1,11 @@
-import {User} from 'firebase/auth'
-
 export class UserInfo {
     name: string
     mail: string | null
     userId: string
-    constructor(user : User, name : string) {
+    constructor(userId: string, email: string | null, name : string) {
         this.name = name
-        this.mail = user.email
-        this.userId = user.uid
+        this.mail = email
+        this.userId = userId
     }
 
     getDataForDb():Object {
