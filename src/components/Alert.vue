@@ -27,7 +27,6 @@
     const props = defineProps<{
         msg: string,
     }>();
-
     const emit = defineEmits(['handle-close']);
 
     function handleClick() {
