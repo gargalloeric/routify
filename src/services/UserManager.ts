@@ -60,6 +60,15 @@ export class UserManager {
 
         } else throw Error("Can't delete account if user is not logged")
     }
+
+    async registerVehicle(matricula: string, nombre: string, tipoMotor: string, consumo100Km: number): Promise<boolean> {
+        throw new Error("not implemented yet")
+        // check if user is logged
+        // validate values
+        // craete vehicle
+        // save vehicle on userInfo (may imply creating some collection on userInfo for vehicles or smth¿?)
+        // save user info -- method already implemented, only change userInfo save values method¿?
+    }
 }
 
 let instance: UserManager;
