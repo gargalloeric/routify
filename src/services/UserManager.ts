@@ -69,6 +69,13 @@ export class UserManager {
         // save vehicle on userInfo (may imply creating some collection on userInfo for vehicles or smth¿?)
         // save user info -- method already implemented, only change userInfo save values method¿?
     }
+
+    async getListOfVehicles(): Promise<Array<{matricula: string, nombre: string, tipoMotor: string, consumo100Km: number}>> {
+        // check if user is logged
+        // get vehicles
+        // return vehicles
+        throw new Error("Not implemented yet");
+    }
 }
 
 let instance: UserManager;
