@@ -12,11 +12,12 @@ export class FirebaseDBService implements DBService {
         await deleteDoc(doc(databaseFirestore, "users", userInfo.userId));
     }
 
-    async fetchUserInfo(userInfo: UserInfo): Promise<void> {
+    async fetchUserInfo(userInfo: UserInfo): Promise<void> { // TODO add fetch vehicles functionality
         const docRef = doc(databaseFirestore, "users", userInfo.userId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             userInfo.name = docSnap.get('name');
+            // fetch vehicles
             return;
         }
         throw new Error("Unable to find user in DB");
