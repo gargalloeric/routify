@@ -47,5 +47,5 @@ test('registerVehicle_UserAlreadyHasVehicle_ThrowVehicleAlreadyStoredException',
     // tests methods
     const userManager = getUserManager()
     await userManager.logIn(email, password);
-    await expect(() => userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km)).rejects.toThrowError('VehicleAlreadyStoredException')
+    await expect(() => userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km)).rejects.toThrowError('Vehicle already stored')
 })
