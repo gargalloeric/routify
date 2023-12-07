@@ -84,11 +84,10 @@ export class UserManager {
         } else throw new Error("User must be logged in to register a vehicle")
     }
 
-    async getListOfVehicles(): Promise<Array<{matricula: string, nombre: string, tipoMotor: string, consumo100Km: number}>> {
-        // check if user is logged
-        // get vehicles
-        // return vehicles
-        throw new Error("Not implemented yet");
+    getListOfVehicles() {
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.vehicles
+        } else throw new Error("User must be logged in to list vehicles");
     }
 }
 
