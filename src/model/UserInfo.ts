@@ -15,10 +15,6 @@ export class UserInfo {
     getDataForDb():Object {
         const vehiclesData: { [id: string]: any } = {};
         for (const [key, vehicle] of Object.entries(this.vehicles)) vehiclesData[key] = vehicle.toJSON();
-        console.log({
-            name: this.name,
-            vehicles: vehiclesData
-        })
         return {
             name: this.name,
             vehicles: vehiclesData
