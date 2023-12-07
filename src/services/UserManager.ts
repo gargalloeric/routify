@@ -3,7 +3,8 @@ import {AuthService} from "./AuthService.ts";
 import {DBService} from "./DBService.ts";
 import {FirebaseAuthService} from "./FirebaseAuthService.ts";
 import {FirebaseDBService} from "./FirebaseDBService.ts";
-import {validateLogInInfo, validateRegistrationInfo} from "./Validators.ts";
+import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
+import {Vehicle} from "../model/Vehicle.ts";
 
 
 export class UserManager {
@@ -62,12 +63,25 @@ export class UserManager {
     }
 
     async registerVehicle(matricula: string, nombre: string, tipoMotor: string, consumo100Km: number): Promise<boolean> {
-        throw new Error("not implemented yet")
-        // check if user is logged
-        // validate values
-        // craete vehicle
-        // save vehicle on userInfo (may imply creating some collection on userInfo for vehicles or smth¿?)
-        // save user info -- method already implemented, only change userInfo save values method¿?
+        if (this.userInfo && this.isLoggedIn()) {
+            const validationMessage = validateVehicleInfo(matricula, nombre, tipoMotor, consumo100Km)
+            if (validationMessage) throw new Error(validationMessage)
+
+            const v: Vehicle = new Vehicle(matricula, nombre, tipoMotor, consumo100Km)
+
+            this.userInfo.addVehicle(v)
+
+            await this._dbService.saveUserInfo(this.userInfo)
+            return true
+
+        } else throw new Error("User must be logged in to register a vehicle")
+    }
+
+    async deleteVehicle(matricula: string) {
+        if (this.userInfo && this.isLoggedIn()) {
+            this.userInfo.removeVehicle(matricula)
+            await this._dbService.saveUserInfo(this.userInfo)
+        } else throw new Error("User must be logged in to register a vehicle")
     }
 
     async getListOfVehicles(): Promise<Array<{matricula: string, nombre: string, tipoMotor: string, consumo100Km: number}>> {
