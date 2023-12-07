@@ -25,7 +25,7 @@ test('registerVehicle_UserRegisteredDBAvailableValidInputs_RegisterVehicle', asy
     expect(registered).toBe(true)
 
     // delete what is done
-    // await getUserManager().deleteVehicle(matricula) // TODO necesario para el given - revisar¿?
+    await getUserManager().deleteVehicle(matricula)
 })
 
 // E03 - Inválido

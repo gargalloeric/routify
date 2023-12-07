@@ -21,12 +21,18 @@ export class UserInfo {
         };
     }
 
-    hasVehicle(v: Vehicle) {
-        return !!this.vehicles[v.matricula];
+    hasVehicle(matricula: string) {
+        return !!this.vehicles[matricula];
     }
 
     addVehicle(v: Vehicle): void {
-        if (this.hasVehicle(v)) throw new Error("Vehicle already stored")
+        if (this.hasVehicle(v.matricula)) throw new Error("Vehicle already stored")
         this.vehicles[v.matricula] = v
+    }
+
+    removeVehicle(matricula: string) {
+        if (!this.hasVehicle(matricula)) return false
+        delete this.vehicles[matricula]
+        return true
     }
 }
