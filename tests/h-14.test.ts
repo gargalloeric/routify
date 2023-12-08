@@ -30,13 +30,14 @@ test('obtainRouteCost_UserHasVehicleCostApiOnline_ObtainCost', async () => {
     const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
     // tests methods
-    const price: number = calculateRoutePriceWithCar(route, vehicle)
+    const price: number = await calculateRoutePriceWithCar(route, vehicle)
     expect(price).toBeLessThan(20)
     expect(price).toBeGreaterThan(1)
 
     // cleanup - remove user - logOut
     userManager.logOut()
-})
+},
+    15000) // wait up to 10s - long-running test
 
 // E03 -    Inválido
 // Given:   el usuario de la aplicación no ha elegido ninguna ruta.
@@ -54,7 +55,7 @@ test('obtainRouteCost_NoRouteSelected_ThrowsInvalidRouteException', async () => 
     const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
     // tests methods
-    await expect(() => calculateRoutePriceWithCar(null, vehicle)).rejects.toThrowError('Invalid route')
+    await expect(() => calculateRoutePriceWithCar(null, vehicle)).rejects.toThrowError('Provide a route')
 
     // cleanup - remove user - logOut
     userManager.logOut()
