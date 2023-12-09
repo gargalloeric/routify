@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {formRoute} from "../main.ts";
-
+import {formRoute, isPriceRequested} from "../main.ts";
+import {Transport} from "../model/Transport"
+import {getUserManager} from "../services/UserManager"
+import {Vehicle} from "../model/Vehicle.ts";
 
 formRoute.origin = "";
 formRoute.destination = "";
+const userManager = getUserManager();
 let mode = "driving-car";
+let vehicles = ref({});
+let size = 0;
+if (userManager.isLoggedIn()){
+  vehicles.value = userManager.getListOfVehicles();
+  for (let v in vehicles.value){
+    if (size == 1)
+      mode = userManager.getUserVehicle(v);
+    size++;
+  }
+  console.log(mode);
+}
+let vehicle : Vehicle;
 
 const errorInDestiny = ref(false);
 const errorInOrigin = ref(false);
@@ -33,10 +48,15 @@ function getRoute() {
   }
   // Don't make the request if one of the two fields is empty
   if (someFieldEmpty) return;
+  if (!(mode in ["driving-car", "foot-walking", "cycling-regular"])){
+    vehicle = mode;
+    mode = "driving-car"
+  }
   emit("route-requested", {
     origin: formRoute.origin,
     destination: formRoute.destination,
-    mode: mode
+    mode: mode,
+    vehicle: vehicle
   });
 }
 </script>
@@ -63,7 +83,8 @@ function getRoute() {
       <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transporte</label>
       <select v-model="mode" id="transport"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option value="driving-car">🚗 Coche</option>
+        <option v-if="userManager.isLoggedIn() && size > 0" v-for="vehicle in vehicles" :value="vehicle">🚗 {{vehicle.nombre}}</option>
+        <option v-else value="driving-car">🚗 Coche</option>
         <option value="foot-walking">🚶 A Pie</option>
         <option value="cycling-regular">🚴 Bicicleta</option>
       </select>
@@ -84,6 +105,10 @@ function getRoute() {
         <span v-if="props.isRequestingRoute">Loading...</span>
         <span v-else>Obtener Ruta</span>
       </button>
+    </div>
+    <div>
+      <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}</span>
+      <span v-if="isPriceRequested.value && isPriceRequested.transport == Transport.Car">€</span>
     </div>
   </div>
 </template>
