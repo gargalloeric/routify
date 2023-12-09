@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {formRoute, isPriceRequested} from "../main.ts";
-import {Transport} from "../model/Transport"
 import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
 
@@ -59,7 +58,7 @@ function getRoute() {
     mode: mode,
     vehicle: vehicle
   });
-
+  // Manteinig previous state of list after requesting route
   mode = vehicle;
   isPriceRequested.value = false;
 }
