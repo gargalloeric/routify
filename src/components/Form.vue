@@ -48,7 +48,7 @@ function getRoute() {
   // Don't make the request if one of the two fields is empty
   if (someFieldEmpty) return;
   // Defining a vehicle if a custom one is selected
-  if (mode.toString() != ("driving-car" || "foot-walking" || "cycling-regular")){
+  if (mode.toString() != "driving-car" && mode.toString() != "foot-walking" && mode.toString() != "cycling-regular"){
     vehicle = mode;
     mode = "driving-car"
   }
@@ -59,8 +59,10 @@ function getRoute() {
     vehicle: vehicle
   });
   // Manteinig previous state of list after requesting route
-  mode = vehicle;
+  if (vehicle != undefined)
+    mode = vehicle;
   isPriceRequested.value = false;
+  vehicle = undefined;
 }
 </script>
 
