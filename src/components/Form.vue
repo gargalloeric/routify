@@ -107,8 +107,7 @@ function getRoute() {
       </button>
     </div>
     <div>
-      <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}</span>
-      <span v-if="isPriceRequested.value && isPriceRequested.transport == Transport.Car">€</span>
+      <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}€</span>
     </div>
   </div>
 </template>
