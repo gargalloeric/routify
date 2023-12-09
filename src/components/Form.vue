@@ -48,7 +48,7 @@ function getRoute() {
   }
   // Don't make the request if one of the two fields is empty
   if (someFieldEmpty) return;
-  if (!(mode in ["driving-car", "foot-walking", "cycling-regular"])){
+  if (mode.toString() != ("driving-car" || "foot-walking" || "cycling-regular")){
     vehicle = mode;
     mode = "driving-car"
   }
