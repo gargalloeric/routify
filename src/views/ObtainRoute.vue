@@ -22,7 +22,6 @@ const isRequestReturnedError = ref(false);
 async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle}) {
   isRequestingRoute.value = true;
   let route;
-  console.log(data.vehicle);
   try {
     if (/^[A-Za-z]/.test(data.origin.toString()))
       route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode);
