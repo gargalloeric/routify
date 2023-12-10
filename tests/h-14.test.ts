@@ -84,7 +84,6 @@ test('obtainRouteCost_UserHasVehicleVehicleIsElectricCostApiOnline_ObtainCost', 
         expect(price).toBeGreaterThan(0)
 
         // cleanup - remove user - logOut
-        await userManager.deleteVehicle(matricula).catch(() => {})
         userManager.logOut()
     },
     15000) // wait up to 10s - long-running test
