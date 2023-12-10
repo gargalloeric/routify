@@ -1,7 +1,7 @@
 export class Vehicle {
     matricula: string
     nombre: string
-    tipoMotor: string
+    tipoMotor: string // combustión | eléctrico
     consumo100Km: number
     constructor(matricula: string, nombre: string, tipoMotor: string, consumo100Km: number) {
         this.matricula = matricula
