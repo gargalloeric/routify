@@ -60,3 +60,30 @@ test('obtainRouteCost_NoRouteSelected_ThrowsInvalidRouteException', async () => 
     // cleanup - remove user - logOut
     userManager.logOut()
 })
+
+
+// Extra - same as E01 but vehicle is electric
+test('obtainRouteCost_UserHasVehicleVehicleIsElectricCostApiOnline_ObtainCost', async () => {
+        // given - log user
+        const email: string = 'edu2.jose@notamail.not', password: string = 'aS0@28Y?';
+        const userManager = getUserManager();
+        await userManager.logIn(email, password);
+
+        // given - create route +/-100km?
+        const origin = 'Castellón de la plana', destiny = 'Valencia, España', transport = Transport.Car;
+        const route: Route = await getRouteFromPlacesNames(origin, destiny, transport); // a route between 50 and 100 km
+
+        // given - user has vehicle
+        const matricula: string = "1212EEE", nombre: string = "nave eléctrica", tipoMotor: string = "eléctrico", consumo100Km: number = 10;
+        await userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km).catch(() => {});
+        const vehicle: Vehicle = userManager.getUserVehicle(matricula)
+
+        // tests methods
+        const price: number = await calculateRoutePriceWithCar(route, vehicle)
+        expect(price).toBeLessThan(5)
+        expect(price).toBeGreaterThan(0)
+
+        // cleanup - remove user - logOut
+        userManager.logOut()
+    },
+    15000) // wait up to 10s - long-running test
