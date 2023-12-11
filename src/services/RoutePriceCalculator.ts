@@ -17,19 +17,31 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
     return routeCost;
 }
 
+let instanceOfGasStations: string = '';
+let instanceOfGasStationsLastUpdateTime: number = 0;
+async function getGasStations() {
+    const currentTime = new Date().getTime();
+
+    if (!instanceOfGasStations || (!!instanceOfGasStationsLastUpdateTime &&  (currentTime - instanceOfGasStationsLastUpdateTime > 30 * 60 * 1000))) {
+        const target = new URL(GAS_PRICE_URL);
+        const resp = await fetch(target.toString());
+        const {ListaEESSPrecio} = await resp.json();
+        instanceOfGasStations = ListaEESSPrecio;
+        instanceOfGasStationsLastUpdateTime = currentTime;
+    }
+    return instanceOfGasStations;
+}
 
 async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
     const dataOrigin = await obtainCoordsFromName(route.origin);
     const latOrigin = dataOrigin.geometry.coordinates[1];
     const lonOrigin = dataOrigin.geometry.coordinates[0];
 
-    const target = new URL(GAS_PRICE_URL);
-    const resp = await fetch(target.toString())
-    const {ListaEESSPrecio} = await resp.json();
+    const gasStations = await getGasStations();
 
-    let nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 10);
-    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 20);
-    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 50);
+    let nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 10);
+    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 20);
+    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 50);
 
     const sortedGasStations = nearbyGasStations.sort((a, b) => {
         const distanceA = calculateDistance(latOrigin, lonOrigin, parseFloat(a['Latitud'].replace(',', '.')), parseFloat(a['Longitud (WGS84)'].replace(',', '.')));
