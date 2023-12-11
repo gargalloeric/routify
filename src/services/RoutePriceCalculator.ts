@@ -4,47 +4,53 @@ import {obtainCoordsFromName} from "./ORS.ts";
 
 
 const GAS_PRICE_URL = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/";
-const ELECTRICITY_PRICE_URL = "https://api.preciodelaluz.org/v1/prices/avg?zone=PCB";
-
+const ELECTRICITY_PRICE_URL = 'https://api.preciodelaluz.org/v1/prices/avg?zone=PCB';
 
 export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {
     if (!vehicle || !route) throw new Error("Provide a route and a vehicle")
 
+    let routeCost: number = -1
+    if (vehicle.tipoMotor == 'combustión') routeCost = await getPriceForCombustionCar(route, vehicle);
+    else if (vehicle.tipoMotor == 'eléctrico') routeCost = await getPriceForElectricCar(route, vehicle);
+    else throw new Error("Unadmited vehicle type, try to update your vehicle or choose another one")
+
+    return routeCost;
+}
+
+
+async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
     const dataOrigin = await obtainCoordsFromName(route.origin);
     const latOrigin = dataOrigin.geometry.coordinates[1];
     const lonOrigin = dataOrigin.geometry.coordinates[0];
 
-    let routeCost: number = -1
-    if (vehicle.tipoMotor == 'combustión') {
-        const target = new URL(GAS_PRICE_URL);
-        const resp = await fetch(target.toString())
-        const {ListaEESSPrecio} = await resp.json();
+    const target = new URL(GAS_PRICE_URL);
+    const resp = await fetch(target.toString())
+    const {ListaEESSPrecio} = await resp.json();
 
-        let nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 10);
-        if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 20);
-        if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 50);
+    let nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 10);
+    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 20);
+    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(ListaEESSPrecio, latOrigin, lonOrigin, 50);
 
-        const sortedGasStations = nearbyGasStations.sort((a, b) => {
-            const distanceA = calculateDistance(latOrigin, lonOrigin, parseFloat(a['Latitud'].replace(',', '.')), parseFloat(a['Longitud (WGS84)'].replace(',', '.')));
-            const distanceB = calculateDistance(latOrigin, lonOrigin, parseFloat(b['Latitud'].replace(',', '.')), parseFloat(b['Longitud (WGS84)'].replace(',', '.')));
-            return distanceA - distanceB;
-        });
+    const sortedGasStations = nearbyGasStations.sort((a, b) => {
+        const distanceA = calculateDistance(latOrigin, lonOrigin, parseFloat(a['Latitud'].replace(',', '.')), parseFloat(a['Longitud (WGS84)'].replace(',', '.')));
+        const distanceB = calculateDistance(latOrigin, lonOrigin, parseFloat(b['Latitud'].replace(',', '.')), parseFloat(b['Longitud (WGS84)'].replace(',', '.')));
+        return distanceA - distanceB;
+    });
 
-        const nearestGasStation = sortedGasStations[0]
-        const nearestFuelPrice = parseFloat(nearestGasStation['Precio Gasolina 95 E5'].replace(',', '.'))
+    const nearestGasStation = sortedGasStations[0]
+    const nearestFuelPrice = parseFloat(nearestGasStation['Precio Gasolina 95 E5'].replace(',', '.'))
 
-        routeCost = parseFloat(((route.distance / 100) * vehicle.consumo100Km * nearestFuelPrice).toFixed(2));
+    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * nearestFuelPrice).toFixed(2));
+}
 
-    } else if (vehicle.tipoMotor == 'eléctrico') {
-        const target = new URL(ELECTRICITY_PRICE_URL);
-        const resp = await fetch(target.toString())
-        const {price} = await resp.json();
 
-        routeCost = parseFloat(((route.distance / 100) * vehicle.consumo100Km * (parseFloat(price) / 1000)).toFixed(2));
+async function getPriceForElectricCar(route: Route, vehicle: Vehicle) {
+    const target = new URL(ELECTRICITY_PRICE_URL);
+    const resp = await fetch(target.toString()); // TODO proxy - failing request
+    console.log(resp)
+    const {price} = await resp.json();
 
-    } else throw new Error("Unadmited vehicle type, try to update your vehicle or choose another one")
-
-    return routeCost;
+    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * (parseFloat(price) / 1000)).toFixed(2));
 }
 
 
