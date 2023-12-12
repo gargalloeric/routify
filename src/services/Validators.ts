@@ -35,3 +35,16 @@ export function validatePassword(password: string): boolean  {
         regexNumero.test(password) &&
         regexEspecial.test(password);
 }
+
+export function validateVehicleInfo(matricula: string, nombre: string, tipoMotor: string, consumo100Km: number): string | null {
+    if (!matricula || !nombre || !tipoMotor || !consumo100Km ) return "Fill all fields"
+    if (matricula.length != 7 || !validateMatriculaEsp(matricula)) return "Instroduzca una matricula válida"
+    if (tipoMotor != "combustión" && tipoMotor != "eléctrico") return "El tipo de motor debe ser 'combustión' o 'eléctrico'.";
+    if (consumo100Km < 0 || consumo100Km > 1000) return "El consumo a los 100 km debe estar entre 0 y 1000.";
+    return null
+}
+
+export function validateMatriculaEsp(matricula: string): boolean {
+    const regexMatriculaEsp = /^[0-9]{4}[A-Z]{3}$/;
+    return regexMatriculaEsp.test(matricula);
+}
