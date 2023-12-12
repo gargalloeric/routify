@@ -2,8 +2,8 @@ import {Route} from "../model/Route.ts";
 import {Vehicle} from "../model/Vehicle.ts";
 import {obtainCoordsFromName} from "./ORS.ts";
 import {getGasStations} from "./GasStations.ts";
+import {getElectricityPrice} from "./ElectricityPrice.ts";
 
-const ELECTRICITY_PRICE_URL = 'https://api.preciodelaluz.org/v1/prices/avg?zone=PCB';
 
 export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {
     if (!vehicle || !route) throw new Error("Provide a route and a vehicle")
@@ -41,12 +41,9 @@ async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
 
 
 async function getPriceForElectricCar(route: Route, vehicle: Vehicle) {
-    const target = new URL(ELECTRICITY_PRICE_URL);
-    const resp = await fetch(target.toString()); // TODO proxy - failing request
-    console.log(resp)
-    const {price} = await resp.json();
+    const price: number = await getElectricityPrice();
 
-    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * (parseFloat(price) / 1000)).toFixed(2));
+    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * (price / 1000)).toFixed(2));
 }
 
 
