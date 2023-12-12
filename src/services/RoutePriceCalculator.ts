@@ -1,9 +1,8 @@
 import {Route} from "../model/Route.ts";
 import {Vehicle} from "../model/Vehicle.ts";
 import {obtainCoordsFromName} from "./ORS.ts";
+import {getGasStations} from "./GasStations.ts";
 
-
-const GAS_PRICE_URL = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/";
 const ELECTRICITY_PRICE_URL = 'https://api.preciodelaluz.org/v1/prices/avg?zone=PCB';
 
 export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {
@@ -15,21 +14,6 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
     else throw new Error("Unadmited vehicle type, try to update your vehicle or choose another one")
 
     return routeCost;
-}
-
-let instanceOfGasStations: string = '';
-let instanceOfGasStationsLastUpdateTime: number = 0;
-async function getGasStations() {
-    const currentTime = new Date().getTime();
-
-    if (!instanceOfGasStations || (!!instanceOfGasStationsLastUpdateTime &&  (currentTime - instanceOfGasStationsLastUpdateTime > 30 * 60 * 1000))) {
-        const target = new URL(GAS_PRICE_URL);
-        const resp = await fetch(target.toString());
-        const {ListaEESSPrecio} = await resp.json();
-        instanceOfGasStations = ListaEESSPrecio;
-        instanceOfGasStationsLastUpdateTime = currentTime;
-    }
-    return instanceOfGasStations;
 }
 
 async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
