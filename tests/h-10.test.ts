@@ -20,17 +20,24 @@ test('getListOfVehicles_TwoVehiclesStored_ObtainListOfVehicles', async () => {
     tipoMotor2: string = "combustión",
     consumo100Km2: number = 20;
 
+    const matricula3: string = "1212EEE",
+        nombre3: string = "nave eléctrica",
+        tipoMotor3: string = "eléctrico",
+        consumo100Km3: number = 10;
+
     // Try to register the vehicles if they don't exist
-    await userManager.registerVehicle(matricula1, nombre1, tipoMotor1, consumo100Km1).catch(() => console.log('Already registered'));
-    await userManager.registerVehicle(matricula2, nombre2, tipoMotor2, consumo100Km2).catch(() => console.log('Already registered'));
+    await userManager.registerVehicle(matricula1, nombre1, tipoMotor1, consumo100Km1).catch(() => console.log('Vehicle already registered'));
+    await userManager.registerVehicle(matricula2, nombre2, tipoMotor2, consumo100Km2).catch(() => console.log('Vehicle already registered'));
+    await userManager.registerVehicle(matricula3, nombre3, tipoMotor3, consumo100Km3).catch(() => console.log('Vehicle already registered'));
 
     // When: access the list of vehicles
     const listOfVehicles = userManager.getListOfVehicles();
 
     // Then: a list of the stored vehicles is obtained
-    expect(Object.keys(listOfVehicles).length).toBe(2);
+    expect(Object.keys(listOfVehicles).length).toBe(3);
     expect(listOfVehicles['1212XLX']).toBeDefined();
     expect(listOfVehicles['1414XLX']).toBeDefined();
+    expect(listOfVehicles['1212EEE']).toBeDefined();
 })
 
 test('getListOfVehicles_UserNotLoggedIn_ThrowUserNotLoggedInException', () => {

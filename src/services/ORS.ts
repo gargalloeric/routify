@@ -34,8 +34,8 @@ export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
     const target = new URL(URL_GEOCODE_REVERSE, BASE_URL);
     const resp = await fetch(target.toString() + new URLSearchParams({
         api_key: import.meta.env.VITE_ORS_API,
-        'point.lon': lng.toString(),
-        'point.lat': lat.toString(),
+        'point.lon': lat.toString(),
+        'point.lat': lng.toString(),
         size: SEARCH_RESULT_LIMIT.toString()
     }));
 

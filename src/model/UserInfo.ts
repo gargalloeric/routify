@@ -35,4 +35,8 @@ export class UserInfo {
         delete this.vehicles[matricula]
         return true
     }
+
+    getVehicle(matricula: string): Vehicle {
+        return this.vehicles[matricula]
+    }
 }
