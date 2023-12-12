@@ -11,3 +11,8 @@ export let formRoute = reactive({
     origin: Object(),
     destination: Object()
 });
+
+export  let isPriceRequested = reactive({
+    value: false,
+    price: 0
+});

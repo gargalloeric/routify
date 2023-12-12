@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+      <a @click="router.push({path: '/'})" class="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
         <img src="/logo_letters.svg" class="h-12 w-auto">
       </a>
       <button data-collapse-toggle="navbar-default" type="button"
@@ -23,12 +23,12 @@
               aria-current="page">Home</a>
           </li>
           <li>
-            <a @click="router.push({path: '/notFound'})"
+            <a @click="handleUserButton('/user/vehicle/list')"
               class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
               Mis Vehículos</a>
           </li>
           <li>
-            <a @click="handleUserButton"
+            <a @click="handleUserButton('/notFound')"
                class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
               Profile</a>
           </li>
@@ -49,9 +49,9 @@ import {getUserManager} from "../services/UserManager.ts";
     menu.value.classList.toggle('hidden');
   }
 
-  function handleUserButton() {
+  function handleUserButton(path: string) {
     if (getUserManager().isLoggedIn()) {
-      router.push({path: '/notFound'})
+      router.push({path: path})
     } else {
       router.push({path: '/logIn'})
     }
