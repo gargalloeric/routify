@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {formRoute} from "../main.ts";
-
+import {formRoute, isPriceRequested} from "../main.ts";
+import {getUserManager} from "../services/UserManager"
+import {Vehicle} from "../model/Vehicle.ts";
 
 formRoute.origin = "";
 formRoute.destination = "";
+const userManager = getUserManager();
 let mode = "driving-car";
+let vehicles = ref({});
+let size = 0;
+if (userManager.isLoggedIn()){
+  vehicles.value = userManager.getListOfVehicles();
+  for (let v in vehicles.value){
+    if (size == 1)
+      mode = userManager.getUserVehicle(v);
+    size++;
+  }
+  console.log(mode);
+}
+let vehicle : Vehicle;
 
 const errorInDestiny = ref(false);
 const errorInOrigin = ref(false);
@@ -33,11 +47,22 @@ function getRoute() {
   }
   // Don't make the request if one of the two fields is empty
   if (someFieldEmpty) return;
+  // Defining a vehicle if a custom one is selected
+  if (mode.toString() != "driving-car" && mode.toString() != "foot-walking" && mode.toString() != "cycling-regular"){
+    vehicle = mode;
+    mode = "driving-car"
+  }
   emit("route-requested", {
     origin: formRoute.origin,
     destination: formRoute.destination,
-    mode: mode
+    mode: mode,
+    vehicle: vehicle
   });
+  // Manteinig previous state of list after requesting route
+  if (vehicle != undefined)
+    mode = vehicle;
+  isPriceRequested.value = false;
+  vehicle = undefined;
 }
 </script>
 
@@ -48,7 +73,7 @@ function getRoute() {
       <input v-if="!errorInOrigin" v-model="formRoute.origin" type="text" id="origin"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Madrid">
-      <input v-if="errorInOrigin"  v-model="formRoute.destination" type="text" id="destiny" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"  placeholder="Madrid">
+      <input v-if="errorInOrigin"  v-model="formRoute.origin" type="text" id="destiny" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"  placeholder="Madrid">
       <p v-if="errorInOrigin" class="mt-2 text-sm text-red-600 dark:text-red-500">Origen vacío.</p>
     </div>
     <div class="mb-5">
@@ -63,7 +88,8 @@ function getRoute() {
       <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transporte</label>
       <select v-model="mode" id="transport"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option value="driving-car">🚗 Coche</option>
+        <option v-if="userManager.isLoggedIn() && size > 0" v-for="vehicle in vehicles" :value="vehicle">🚗 {{vehicle.nombre}}</option>
+        <option v-else value="driving-car">🚗 Coche</option>
         <option value="foot-walking">🚶 A Pie</option>
         <option value="cycling-regular">🚴 Bicicleta</option>
       </select>
@@ -84,6 +110,9 @@ function getRoute() {
         <span v-if="props.isRequestingRoute">Loading...</span>
         <span v-else>Obtener Ruta</span>
       </button>
+    </div>
+    <div>
+      <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}€</span>
     </div>
   </div>
 </template>

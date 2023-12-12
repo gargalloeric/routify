@@ -7,6 +7,10 @@ import { Transport } from "../model/Transport.ts";
 import {getRouteFromCoords, getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import Alert from "../components/Alert.vue";
 import {latLng, LatLng} from "leaflet";
+import {calculateRoutePriceWithCar} from "../services/RoutePriceCalculator.ts";
+import {isPriceRequested} from "../main.ts";
+import {getUserManager} from "../services/UserManager"
+import {Vehicle} from "../model/Vehicle.ts";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
@@ -15,15 +19,20 @@ const map = ref();
 const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
 
-async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport }) {
+async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle}) {
   isRequestingRoute.value = true;
   let route;
   try {
     if (/^[A-Za-z]/.test(data.origin.toString()))
       route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode);
-    else route = await getRouteFromCoords(latLng(data.origin), latLng(data.destination), data.mode)
+    else
+      route = await getRouteFromCoords(latLng(data.origin), latLng(data.destination), data.mode)
     map.value.clear();
     map.value.drawRoute(route);
+    if (data.vehicle != undefined){
+      isPriceRequested.price = await calculateRoutePriceWithCar(route, data.vehicle);
+      isPriceRequested.value = true;
+    }
   } catch (error) {
     // TODO: Make appear a popup with the error saying a route couldn't be found.
     console.log(error)

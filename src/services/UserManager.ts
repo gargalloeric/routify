@@ -83,6 +83,21 @@ export class UserManager {
             await this._dbService.saveUserInfo(this.userInfo)
         } else throw new Error("User must be logged in to register a vehicle")
     }
+
+    getListOfVehicles() {
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.vehicles
+        } else throw new Error("User must be logged in to list vehicles");
+    }
+
+    getUserVehicle(matricula: string) {
+        if (this.userInfo) return this.userInfo.getVehicle(matricula);
+        else throw new Error("User must be logged in to fetch a vehicle");
+    }
+
+    logOut() { // TODO following stories...
+        this.userInfo = null;
+    }
 }
 
 let instance: UserManager;

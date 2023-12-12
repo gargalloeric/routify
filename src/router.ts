@@ -4,6 +4,7 @@ import LogInForm from "./views/LogInForm.vue";
 import NotFound from "./views/NotFound.vue";
 import ObtainRoute from "./views/ObtainRoute.vue";
 import RegisterVehicle from "./views/RegisterVehicle.vue";
+import ListVehicleVue from "./views/ListVehicle.vue";
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
         path: "/registerVehicle",
         name: "Register Vehicle",
         component: RegisterVehicle,
+    },
+    {
+        path: "/user/vehicle/list",
+        name: "List Vehicles",
+        component: ListVehicleVue
     }
 ];
 
