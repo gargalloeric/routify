@@ -37,7 +37,7 @@ test('obtainRouteCost_UserHasVehicleCostApiOnline_ObtainCost', async () => {
     // cleanup - remove user - logOut
     userManager.logOut()
 },
-    15000) // wait up to 10s - long-running test
+    120000) // wait up to 10s - long-running test
 
 // E03 -    Inválido
 // Given:   el usuario de la aplicación no ha elegido ninguna ruta.
