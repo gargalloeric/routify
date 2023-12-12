@@ -5,7 +5,7 @@ import Alert from "../components/Alert.vue";
 
 let matricula = "";
 let nombre = "";
-let tipo_motor = "combustion";
+let tipo_motor = "combustión";
 let consumo = 5;
 
 const errorInNombre = ref(false);
@@ -69,9 +69,8 @@ async function register() {
       <label for="tipo_motor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de motor</label>
       <select v-model="tipo_motor" id="tipo_motor"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option value="combustion">Combustión</option>
-        <option value="electrico">Eléctrico</option>
-        <option value="analogo">Análogo</option>
+        <option value="combustión">Combustión</option>
+        <option value="eléctrico">Eléctrico</option>
       </select>
     </div>
     <div class="mb-5">
