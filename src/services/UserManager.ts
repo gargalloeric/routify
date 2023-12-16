@@ -5,6 +5,7 @@ import {FirebaseAuthService} from "./FirebaseAuthService.ts";
 import {FirebaseDBService} from "./FirebaseDBService.ts";
 import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
 import {Vehicle} from "../model/Vehicle.ts";
+import {Route} from "../model/Route.ts";
 
 
 export class UserManager {
@@ -93,6 +94,13 @@ export class UserManager {
     getUserVehicle(matricula: string) {
         if (this.userInfo) return this.userInfo.getVehicle(matricula);
         else throw new Error("User must be logged in to fetch a vehicle");
+    }
+
+    async saveRoute(route: Route, name: string) : Promise<boolean>{
+        //TODO
+    }
+    async deleteRoute(name: string){
+        //TODO
     }
 
     logOut() { // TODO following stories...
