@@ -7,7 +7,7 @@ import {Vehicle} from "../model/Vehicle.ts";
 formRoute.origin = "";
 formRoute.destination = "";
 const userManager = getUserManager();
-let mode = "driving-car";
+let mode: string | Vehicle = "driving-car";
 let vehicles = ref({});
 let size = 0;
 if (userManager.isLoggedIn()){
@@ -22,6 +22,9 @@ let vehicle : Vehicle;
 
 const errorInDestiny = ref(false);
 const errorInOrigin = ref(false);
+const errorInName = ref(false);
+
+let name = "";
 
 const props = defineProps<{
   isRequestingRoute: boolean
@@ -116,8 +119,14 @@ function getRoute() {
     <div>
       <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}€</span>
     </div>
-    <div>
-      <button @click="" type="button" v-if="getUserManager().isLoggedIn() && props.isRouteRequested"
+    <div v-if="getUserManager().isLoggedIn() && props.isRouteRequested">
+      <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+      <input v-if="!errorInName" v-model="name" type="text" id="name"
+             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+             placeholder="Mi ruta">
+      <input v-if="errorInName"  v-model="formRoute.origin" type="text" id="destiny" class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"  placeholder="Madrid">
+      <p v-if="errorInName" class="mt-2 text-sm text-red-600 dark:text-red-500">Una ruta con el mismo nombre ya esta guardada.</p>
+      <button @click="" type="button"
               class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">
         <span>Guardar ruta</span>
       </button>
