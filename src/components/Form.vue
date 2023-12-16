@@ -13,11 +13,10 @@ let size = 0;
 if (userManager.isLoggedIn()){
   vehicles.value = userManager.getListOfVehicles();
   for (let v in vehicles.value){
-    if (size == 1)
+    if (size == 0)
       mode = userManager.getUserVehicle(v);
     size++;
   }
-  console.log(mode);
 }
 let vehicle : Vehicle;
 
