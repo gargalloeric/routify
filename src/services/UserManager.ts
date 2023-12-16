@@ -107,7 +107,10 @@ export class UserManager {
         } else throw new Error("User must be logged in to save a route")
     }
     async deleteRoute(name: string){
-        //TODO
+        if (this.userInfo && this.isLoggedIn()) {
+            this.userInfo.removeRoute(name);
+            await this._dbService.saveUserInfo(this.userInfo);
+        } else throw new Error("User must be logged in to delete a vehicle")
     }
 
     logOut() { // TODO following stories...

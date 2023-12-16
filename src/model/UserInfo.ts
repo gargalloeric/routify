@@ -56,4 +56,10 @@ export class UserInfo {
         this.routes[route.name] = route;
     }
 
+    removeRoute(name: string){
+        if (!this.hasRoute(name)) return false;
+        delete this.routes[name];
+        return true;
+    }
+
 }

@@ -40,5 +40,5 @@ test('saveRoute_UserAlreadyHasTheSameRoute_ThrowAlreadySavedException', async ()
     // tests methods
     const userManager = getUserManager();
     await userManager.logIn(email, password);
-    await expect(() => userManager.saveRoute(route, "Test Route 2")).rejects.toThrowError('Route already exists');
+    await expect(() => userManager.saveRoute(route, "Test Route 2")).rejects.toThrowError('Route already saved');
 });

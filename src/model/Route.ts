@@ -1,4 +1,5 @@
 import {Transport} from "./Transport.ts";
+import {GeoJSON} from "leaflet";
 
 export class Route {
     geoJSON: JSON;
@@ -18,7 +19,7 @@ export class Route {
 
     toJSON(): Object {
         return {
-            //geoJSON : new Object(this.geoJSON),
+            //geoJSON : this.geoJSON,
             origin : this.origin,
             destiny : this.destiny,
             distance : this.distance,
