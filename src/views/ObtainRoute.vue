@@ -18,6 +18,7 @@ const initZoom: number = 17;
 const map = ref();
 const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
+const isRouteRequested = ref(false);
 
 async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle}) {
   isRequestingRoute.value = true;
@@ -39,6 +40,7 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
     isRequestReturnedError.value = true;
   }
   isRequestingRoute.value = false;
+  isRouteRequested.value = true;
 }
 
 </script>
@@ -47,7 +49,7 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
     <div class="flex md:flex-row sm:flex-col">
-      <Form class="mr-5" @route-requested="handleRouteRequest" :is-requesting-route="isRequestingRoute"></Form>
+      <Form class="mr-5" @route-requested="handleRouteRequest" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested"></Form>
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
   </div>
 </div>

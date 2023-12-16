@@ -26,6 +26,7 @@ const errorInOrigin = ref(false);
 
 const props = defineProps<{
   isRequestingRoute: boolean
+  isRouteRequested: boolean
 }>();
 
 const emit = defineEmits(['route-requested'])
@@ -64,6 +65,8 @@ function getRoute() {
   isPriceRequested.value = false;
   vehicle = undefined;
 }
+
+
 </script>
 
 <template>
@@ -113,6 +116,12 @@ function getRoute() {
     </div>
     <div>
       <span v-if="isPriceRequested.value">El precio de la ruta es: {{isPriceRequested.price}}€</span>
+    </div>
+    <div>
+      <button @click="" type="button" v-if="getUserManager().isLoggedIn() && props.isRouteRequested"
+              class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">
+        <span>Guardar ruta</span>
+      </button>
     </div>
   </div>
 </template>
