@@ -8,7 +8,6 @@ import {Route} from "../model/Route.ts";
 export class FirebaseDBService implements DBService {
     async saveUserInfo(userInfo: UserInfo): Promise<void> {
         const data = userInfo.getDataForDb();
-        console.log(data);
         await setDoc(doc(databaseFirestore, "users", userInfo.userId), data);
     }
 
