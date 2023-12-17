@@ -1,5 +1,4 @@
 import { expect, test } from "vitest";
-import { Vehicle } from "../src/model/Vehicle";
 import { Route, RouteType } from "../src/model/Route";
 import { Transport } from "../src/model/Transport";
 import { getRouteFromCoords } from "../src/services/ORSAdapter";
