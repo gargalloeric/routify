@@ -3,12 +3,13 @@ import { ref } from 'vue';
 import { formRoute, isPriceRequested } from "../main.ts";
 import { getUserManager } from "../services/UserManager"
 import { Vehicle } from "../model/Vehicle.ts";
+import { RouteType } from '../model/Route';
 
 formRoute.origin = "";
 formRoute.destination = "";
 const userManager = getUserManager();
 let mode = "driving-car";
-let routeType = "recommended";
+let routeType: RouteType = RouteType.Recommended;
 let vehicles = ref({});
 let size = 0;
 if (userManager.isLoggedIn()) {
@@ -39,7 +40,7 @@ function getRoute() {
     destination: formRoute.destination,
     mode: mode,
     vehicle: vehicle,
-    routeType: routeType
+    type: routeType
   });
   // Manteinig previous state of list after requesting route
   if (vehicle != undefined)
@@ -80,9 +81,9 @@ function getRoute() {
         <select id="route-type"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         v-model="routeType">
-          <option value="recommended">Recomendada</option>
-          <option value="shortest">Más corta</option>
-          <option value="fastets">Más rápida</option>
+          <option :value="RouteType.Recommended">Recomendada</option>
+          <option :value="RouteType.Shortest">Más corta</option>
+          <option :value="RouteType.Fastest">Más rápida</option>
         </select>
       </div>
       <div>
