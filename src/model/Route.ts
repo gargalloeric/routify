@@ -1,5 +1,11 @@
 import {Transport} from "./Transport.ts";
 
+export enum RouteType {
+    Recommended = 'recommended',
+    Fastest = 'fastest',
+    Shortest = 'shortest'
+}
+
 export class Route {
     geoJSON: JSON;
     distance: number;
