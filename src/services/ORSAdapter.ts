@@ -5,14 +5,14 @@ import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.t
 import type L from "leaflet";
 import { isLatLngValid } from "./Utils.ts";
 
-export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport): Promise<Route> {
+export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
         const dataOrigin = await obtainCoordsFromName(origin);
         const dataDestiny = await obtainCoordsFromName(destiny);
 
         const originName = dataOrigin.properties.name;
         const destinyName =  dataDestiny.properties.name;
 
-        const r = await obtainRoute(dataOrigin.geometry.coordinates, dataDestiny.geometry.coordinates, transport);
+        const r = await obtainRoute(dataOrigin.geometry.coordinates, dataDestiny.geometry.coordinates, transport, type);
         const distance = r.features[0].properties.summary.distance / 1000;
         return new Route(r, originName, destinyName, transport, distance);
 }
