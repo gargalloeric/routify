@@ -52,6 +52,7 @@ export class UserInfo {
         return !!this.routes[nombre];
     }
     addRoute(route: Route){
+        //console.log(this.hasRoute(route.name));
         if (this.hasRoute(route.name)) throw new Error("Route already saved");
         this.routes[route.name] = route;
     }

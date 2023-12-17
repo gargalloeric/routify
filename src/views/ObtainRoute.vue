@@ -51,7 +51,7 @@ async function handleRouteSaved(data: { name: string}) {
     await getUserManager().saveRoute(route, data.name);
   }
   catch (error){
-    isSaveReturnedError.value = false;
+    isSaveReturnedError.value = true;
   }
 }
 
