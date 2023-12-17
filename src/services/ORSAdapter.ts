@@ -1,8 +1,9 @@
 // no - ponedlo en un paquete modelo o algo asi
-import { Route } from "../model/Route.ts";
+import { Route, RouteType } from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
 import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.ts";
-import L from "leaflet";
+import type L from "leaflet";
+import { isLatLngValid } from "./Utils.ts";
 
 export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport): Promise<Route> {
         const dataOrigin = await obtainCoordsFromName(origin);
@@ -16,7 +17,9 @@ export async function getRouteFromPlacesNames(origin: string, destiny: string, t
         return new Route(r, originName, destinyName, transport, distance);
 }
 
-export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport): Promise<Route> {
+export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
+    if (!isLatLngValid(origin) || !isLatLngValid(destiny)) throw new Error("Invalid coordinates");
+    
     let originName = "";
     let destinyName = "";
     try {
@@ -27,7 +30,7 @@ export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, tr
     } catch (err) {
         console.log(err)
     }
-    const r = await obtainRoute([origin.lat, origin.lng], [destiny.lat, destiny.lng], transport);
+    const r = await obtainRoute([origin.lat, origin.lng], [destiny.lat, destiny.lng], transport, type);
     const distance = r.features[0].properties.summary.distance / 1000;
     return new Route(r, originName, destinyName, transport, distance);
 
