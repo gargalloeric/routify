@@ -1,4 +1,3 @@
-<!-- App.vue -->
 <script setup lang="ts">
 import Map from "../components/Map.vue";
 import Form from "../components/Form.vue";
@@ -6,10 +5,9 @@ import { ref } from "vue";
 import { Transport } from "../model/Transport.ts";
 import {getRouteFromCoords, getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import Alert from "../components/Alert.vue";
-import {latLng, LatLng} from "leaflet";
+import {latLng} from "leaflet";
 import {calculateRoutePriceWithCar} from "../services/RoutePriceCalculator.ts";
 import {isPriceRequested} from "../main.ts";
-import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
