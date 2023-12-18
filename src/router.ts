@@ -5,6 +5,7 @@ import NotFound from "./views/NotFound.vue";
 import ObtainRoute from "./views/ObtainRoute.vue";
 import RegisterVehicle from "./views/RegisterVehicle.vue";
 import ListVehicleVue from "./views/ListVehicle.vue";
+import ListRoutes from "./views/ListRoutes.vue";
 
 const routes = [
     {
@@ -36,7 +37,12 @@ const routes = [
         path: "/user/vehicle/list",
         name: "List Vehicles",
         component: ListVehicleVue
-    }
+    },
+    {
+        path: "/user/route/list",
+        name: "List Routes",
+        component: ListRoutes
+    },
 ];
 
 const router = createRouter({
