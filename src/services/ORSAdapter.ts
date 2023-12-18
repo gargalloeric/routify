@@ -1,4 +1,3 @@
-// no - ponedlo en un paquete modelo o algo asi
 import { Route, RouteType } from "../model/Route.ts";
 import { Transport } from "../model/Transport.ts";
 import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.ts";
