@@ -98,6 +98,10 @@ export class UserManager {
     logOut() { // TODO following stories...
         this.userInfo = null;
     }
+
+    getListOfRoutes() {
+        throw new Error("Not implemented yet");
+    }
 }
 
 let instance: UserManager;
