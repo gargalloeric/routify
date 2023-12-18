@@ -5,6 +5,7 @@ import {FirebaseAuthService} from "./FirebaseAuthService.ts";
 import {FirebaseDBService} from "./FirebaseDBService.ts";
 import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
 import {Vehicle} from "../model/Vehicle.ts";
+import {Route} from "../model/Route.ts";
 
 
 export class UserManager {
@@ -81,7 +82,7 @@ export class UserManager {
         if (this.userInfo && this.isLoggedIn()) {
             this.userInfo.removeVehicle(matricula)
             await this._dbService.saveUserInfo(this.userInfo)
-        } else throw new Error("User must be logged in to register a vehicle")
+        } else throw new Error("User must be logged in to delete a vehicle")
     }
 
     getListOfVehicles() {
@@ -93,6 +94,23 @@ export class UserManager {
     getUserVehicle(matricula: string) {
         if (this.userInfo) return this.userInfo.getVehicle(matricula);
         else throw new Error("User must be logged in to fetch a vehicle");
+    }
+
+    async saveRoute(route: Route, name: string) : Promise<boolean>{
+        if (this.userInfo && this.isLoggedIn()) {
+            route.name = name;
+            this.userInfo.addRoute(route);
+
+            await this._dbService.saveUserInfo(this.userInfo)
+            return true
+
+        } else throw new Error("User must be logged in to save a route")
+    }
+    async deleteRoute(name: string){
+        if (this.userInfo && this.isLoggedIn()) {
+            this.userInfo.removeRoute(name);
+            await this._dbService.saveUserInfo(this.userInfo);
+        } else throw new Error("User must be logged in to delete a vehicle")
     }
 
     logOut() { // TODO following stories...
