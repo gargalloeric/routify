@@ -118,7 +118,9 @@ export class UserManager {
     }
 
     getListOfRoutes() {
-        throw new Error("Not implemented yet");
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.routes
+        } else throw new Error("User must be logged in to list routes");
     }
 }
 
