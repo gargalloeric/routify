@@ -12,6 +12,7 @@ import {isPriceRequested} from "../main.ts";
 import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
 import {Route} from "../model/Route.ts";
+import SuccessMessage from "../components/SuccessMessage.vue";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
@@ -23,6 +24,7 @@ const isRouteRequested = ref(false);
 const isSaveReturnedError = ref(false);
 
 let route: Route;
+let routeSaved = false;
 
 async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle}) {
   isRequestingRoute.value = true;
@@ -49,12 +51,13 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
 async function handleRouteSaved(data: { name: string}) {
   try {
     await getUserManager().saveRoute(route, data.name);
+    isRouteRequested.value = false;
+    routeSaved = true;
   }
   catch (error){
     isSaveReturnedError.value = true;
   }
 }
-
 
 </script>
 
@@ -62,10 +65,12 @@ async function handleRouteSaved(data: { name: string}) {
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
     <Alert v-if="isSaveReturnedError" @handle-close="isSaveReturnedError = !isSaveReturnedError" msg="Ya existe una ruta con el mismo nombre"></Alert>
+    <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = false" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
+
     <div class="flex md:flex-row sm:flex-col">
       <Form class="mr-5" @route-requested="handleRouteRequest" @route-saved="handleRouteSaved" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested"></Form>
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
-  </div>
+    </div>
 </div>
 </template>
 
