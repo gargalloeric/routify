@@ -65,7 +65,7 @@ async function handleRouteSaved(data: { name: string}) {
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
     <Alert v-if="isSaveReturnedError" @handle-close="isSaveReturnedError = !isSaveReturnedError" msg="Ya existe una ruta con el mismo nombre"></Alert>
-    <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = false" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
+    <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = !routeSaved" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
 
     <div class="flex md:flex-row sm:flex-col">
       <Form class="mr-5" @route-requested="handleRouteRequest" @route-saved="handleRouteSaved" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested"></Form>
