@@ -12,6 +12,25 @@ vi.mock('../src/services/FirebaseAuthService.ts', () => {
     return { FirebaseAuthService }
 });
 
+vi.mock('../src/services/ORS');
+
+vi.mock('../src/services/FirebaseDBService.ts', () => {
+    const FirebaseDBService = vi.fn()
+    FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
+    FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockImplementation((userInfo : UserInfo) => {
+        console.log("holi");
+        userInfo.routes["Test Route 2"] = new Route(
+            undefined,
+            "Madrid",
+            "Valencia, España",
+            Transport.Car,
+            70000,
+            "Test Route 2"
+        );
+    })
+    return { FirebaseDBService }
+});
+
 afterAll(() => {
     vi.clearAllMocks()
     vi.resetAllMocks()
@@ -23,13 +42,21 @@ afterAll(() => {
 // When: se quiere guardar una ruta de Castellón a Valencia para visualizarla más adelante.
 // Then: se almacena la ruta asociada al usuario en la base de datos.
 
+const mockDataOrigin = { properties: { name: 'Castellón de la plana' }, geometry: { coordinates: [39.9864, -0.0513] } }
+const mockDataDestiny = { properties: { name: 'Valencia, España' }, geometry: { coordinates: [39.4699, -0.3763] } }
+const mockDataRoute = { features: [ { properties: { summary: { distance: 70000 } } } ] };
+
+
 test('saveRoute_UserRegisteredDBAvailableRouteNotSaved_SaveRoute', async () => {
-    vi.mock('../src/services/FirebaseDBService.ts', () => {
-        const FirebaseDBService = vi.fn()
-        FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
-        FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockResolvedValue(true)
-        return { FirebaseDBService }
-    });
+    const ORS = await import('../src/services/ORS');
+
+    ORS.obtainCoordsFromName = vi.fn()
+        .mockResolvedValueOnce(mockDataOrigin)
+        .mockResolvedValueOnce(mockDataDestiny);
+
+    ORS.obtainRoute = vi.fn()
+        .mockResolvedValueOnce(mockDataRoute);
+
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
     const route : Route = await getRouteFromPlacesNames("Madrid", "Valencia, España", Transport.Car);
@@ -52,21 +79,14 @@ test('saveRoute_UserRegisteredDBAvailableRouteNotSaved_SaveRoute', async () => {
 // Then: se muestra la excepción RouteAlreadySaved.
 
 test('saveRoute_UserAlreadyHasTheSameRoute_ThrowAlreadySavedException', async () => {
-    vi.mock('../src/services/FirebaseDBService.ts', () => {
-        const FirebaseDBService = vi.fn()
-        FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
-        FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockImplementation((userInfo : UserInfo) => {
-            userInfo.routes["Test Route 2"] = new Route(
-                undefined,
-                "Madrid",
-                "Valencia, España",
-                Transport.Car,
-                2000,
-                "Test Route 2"
-            );
-        })
-        return { FirebaseDBService }
-    });
+    const ORS = await import('../src/services/ORS');
+
+    ORS.obtainCoordsFromName = vi.fn()
+        .mockResolvedValueOnce(mockDataOrigin)
+        .mockResolvedValueOnce(mockDataDestiny);
+
+    ORS.obtainRoute = vi.fn()
+        .mockResolvedValueOnce(mockDataRoute);
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
 
