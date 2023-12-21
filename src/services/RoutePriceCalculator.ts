@@ -2,7 +2,7 @@ import {Route} from "../model/Route.ts";
 import {Vehicle} from "../model/Vehicle.ts";
 import {obtainCoordsFromName} from "./ORS.ts";
 import {getGasStations} from "./GasStations.ts";
-import {getElectricityPrice} from "./ElectricityPrice.ts";
+import {getElectricityPrice} from "./ElectricityPriceREE.ts";
 
 
 export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {

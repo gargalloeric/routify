@@ -7,7 +7,7 @@ import {Vehicle} from "../src/model/Vehicle";
 import {calculateRoutePriceWithCar} from "../src/services/RoutePriceCalculator";
 import {UserInfo} from "../src/model/UserInfo";
 import * as GasStationExports from '../src/services/GasStations'
-import * as ElectricityPriceExports from '../src/services/ElectricityPrice'
+import * as ElectricityPriceExports from '../src/services/ElectricityPriceREE'
 
 
 const mockDataOrigin = { properties: { name: 'Castellón de la plana' }, geometry: { coordinates: [-0.0513, 39.9864] } }
