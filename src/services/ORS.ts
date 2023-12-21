@@ -1,4 +1,5 @@
 import { Transport } from "../model/Transport";
+import { RouteType } from "../model/Route";
 import L from "leaflet";
 
 const BASE_URL = "https://api.openrouteservice.org";
@@ -29,7 +30,6 @@ export async function obtainCoordsFromName(placeName: string): Promise<JSON> {
 }
 
 export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
-
     const { lat, lng } = coords
     const target = new URL(URL_GEOCODE_REVERSE, BASE_URL);
     const resp = await fetch(target.toString() + new URLSearchParams({
@@ -47,13 +47,19 @@ export async function obtainNameFromCoords(coords: L.LatLng): Promise<JSON> {
     return data.features[0];
 }
 
-export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport): Promise<JSON> {
-    const target = new URL(URL_DIRECTIONS + transport, BASE_URL);
-    const resp = await fetch(target.toString()+ "?" + new URLSearchParams({
-        api_key: import.meta.env.VITE_ORS_API,
-        start: start.toString(),
-        end: end.toString()
-    }));
+export async function obtainRoute(start: L.LatLngExpression, end: L.LatLngExpression, transport: Transport, type: RouteType = RouteType.Recommended): Promise<JSON> {
+    const target = new URL(URL_DIRECTIONS + transport + "/geojson", BASE_URL);
+    const resp = await fetch(target.toString(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': import.meta.env.VITE_ORS_API,
+        },
+        body: JSON.stringify({
+            'coordinates': [start, end],
+            'preference': type,
+        })
+    });
 
     if (resp.ok) {
         const route = await resp.json();
