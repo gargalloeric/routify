@@ -25,7 +25,7 @@ const isRouteRequested = ref(false);
 const isSaveReturnedError = ref(false);
 
 let route: Route;
-let routeSaved = false;
+let routeSaved = ref(false);
 
 async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle, type: RouteType}) {
   isRequestingRoute.value = true;
@@ -53,7 +53,7 @@ async function handleRouteSaved(data: { name: string}) {
   try {
     await getUserManager().saveRoute(route, data.name);
     isRouteRequested.value = false;
-    routeSaved = true;
+    routeSaved.value = true;
   }
   catch (error){
     isSaveReturnedError.value = true;
