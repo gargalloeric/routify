@@ -116,6 +116,12 @@ export class UserManager {
     logOut() { // TODO following stories...
         this.userInfo = null;
     }
+
+    getListOfRoutes() {
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.routes
+        } else throw new Error("User must be logged in to list routes");
+    }
 }
 
 let instance: UserManager;
