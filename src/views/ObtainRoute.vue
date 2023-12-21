@@ -11,6 +11,9 @@ import {calculateRoutePriceWithCar} from "../services/RoutePriceCalculator.ts";
 import {isPriceRequested} from "../main.ts";
 import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
+import { RouteType } from "../model/Route";
+import {Route} from "../model/Route.ts";
+import SuccessMessage from "../components/SuccessMessage.vue";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
@@ -18,15 +21,19 @@ const initZoom: number = 17;
 const map = ref();
 const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
+const isRouteRequested = ref(false);
+const isSaveReturnedError = ref(false);
 
-async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle}) {
+let route: Route;
+let routeSaved = ref(false);
+
+async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle, type: RouteType}) {
   isRequestingRoute.value = true;
-  let route;
   try {
     if (/^[A-Za-z]/.test(data.origin.toString()))
-      route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode);
+      route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode, data.type);
     else
-      route = await getRouteFromCoords(latLng(data.origin), latLng(data.destination), data.mode)
+      route = await getRouteFromCoords(latLng(data.origin), latLng(data.destination), data.mode, data.type);
     map.value.clear();
     map.value.drawRoute(route);
     if (data.vehicle != undefined){
@@ -39,6 +46,18 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
     isRequestReturnedError.value = true;
   }
   isRequestingRoute.value = false;
+  isRouteRequested.value = true;
+}
+
+async function handleRouteSaved(data: { name: string}) {
+  try {
+    await getUserManager().saveRoute(route, data.name);
+    isRouteRequested.value = false;
+    routeSaved.value = true;
+  }
+  catch (error){
+    isSaveReturnedError.value = true;
+  }
 }
 
 </script>
@@ -46,10 +65,13 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
 <template>
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
+    <Alert v-if="isSaveReturnedError" @handle-close="isSaveReturnedError = !isSaveReturnedError" msg="Ya existe una ruta con el mismo nombre"></Alert>
+    <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = !routeSaved" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
+
     <div class="flex md:flex-row sm:flex-col">
-      <Form class="mr-5" @route-requested="handleRouteRequest" :is-requesting-route="isRequestingRoute"></Form>
+      <Form class="mr-5" @route-requested="handleRouteRequest" @route-saved="handleRouteSaved" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested"></Form>
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
-  </div>
+    </div>
 </div>
 </template>
 

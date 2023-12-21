@@ -3,10 +3,12 @@ import {databaseFirestore, doc, getDoc, setDoc} from "./FirebaseUtils.ts";
 import {UserInfo} from "../model/UserInfo.ts";
 import {deleteDoc} from "firebase/firestore";
 import {Vehicle} from "../model/Vehicle.ts";
+import {Route} from "../model/Route.ts";
 
 export class FirebaseDBService implements DBService {
     async saveUserInfo(userInfo: UserInfo): Promise<void> {
-        await setDoc(doc(databaseFirestore, "users", userInfo.userId), userInfo.getDataForDb());
+        const data = userInfo.getDataForDb();
+        await setDoc(doc(databaseFirestore, "users", userInfo.userId), data);
     }
 
     async deleteUser(userInfo: UserInfo): Promise<void> {
@@ -32,6 +34,20 @@ export class FirebaseDBService implements DBService {
                 });
             }
 
+            const routesData:  { [id: string]: Route } = docSnap.get('routes');
+            if (routesData) {
+                userInfo.routes = {};
+                Object.keys(routesData).forEach((id) => {
+                    userInfo.routes[id] = new Route(
+                        routesData[id].geoJSON,
+                        routesData[id].origin,
+                        routesData[id].destiny,
+                        routesData[id].transport,
+                        routesData[id].distance,
+                        routesData[id].name
+                    );
+                });
+            }
             return;
         }
         throw new Error("Unable to find user in DB");
