@@ -3,23 +3,20 @@ import { getRouteFromPlacesNames } from "../src/services/ORSAdapter";
 import { Transport } from "../src/model/Transport";
 import { Route, RouteType } from "../src/model/Route";
 
-test('obtainRouteCost_bicycleVehicle_ObtainCost', async () => {
+test('calculateRoutePrice_bicycleVehicle_ObtainCost', async () => {
     const origin = 'Castellón de la plana';
     const destiny = 'Valencia, España';
-    const consumptionAt100 = 2200;
+    const vehile = new Bycicle('mi bicicleta', 2200);
 
     const route = await getRouteFromPlacesNames(origin, destiny, Transport.Bycicle, RouteType.Recommended);
 
-    const cost = calculateRoutePrice(route, consumptionAt100, new BycicleCostStartey());
+    const cost = calculateRoutePrice(route, vehile, new BycicleCostStartey());
 
     expect(cost).toBeCloseTo(1633);
 })
 
-test('obtainRouteCost_emptyRoute_throwInvalidRouteException', () => {
-    const consumptionAt100 = 2200;
+test('calculateRoutePrice_emptyRoute_throwInvalidRouteException', () => {
+    const vehicle = new OnFoot('walking', 2200);    
 
-    const cost = calculateRoutePrice(null, consumptionAt100, new FootCostStartey());
-    
-
-    expect(emptyRoute.getCost(consumptionAt100)).toThrowError('Invalid route');
+    expect(calculateRoutePrice(null, vehicle, new FootCostStartey())).toThrowError('Invalid route');
 })
