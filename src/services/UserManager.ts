@@ -122,6 +122,14 @@ export class UserManager {
             return this.userInfo.routes
         } else throw new Error("User must be logged in to list routes");
     }
+
+    async registerPlaceFromPlaceName(placeName: string): Promise<boolean> {
+        throw new Error("Not Implemented")
+    }
+
+    async deletePlace(placeName: string): Promise<boolean> {
+        throw new Error("Not Implemented")
+    }
 }
 
 let instance: UserManager;
