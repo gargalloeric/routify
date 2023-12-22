@@ -10,18 +10,15 @@ test('obtainRouteCost_bicycleVehicle_ObtainCost', async () => {
 
     const route = await getRouteFromPlacesNames(origin, destiny, Transport.Bycicle, RouteType.Recommended);
 
-    route.setCostStrategy(new CaloriesCostStrategy());
+    const cost = calculateRoutePrice(route, consumptionAt100, new BycicleCostStartey());
 
-    const cost = route.getCost(consumptionAt100);
-
-    expect(cost).toBeCloseTo(1633)
+    expect(cost).toBeCloseTo(1633);
 })
 
 test('obtainRouteCost_emptyRoute_throwInvalidRouteException', () => {
-    const emptyRoute = new Route({} as JSON, '', '', Transport.Foot, 0);
     const consumptionAt100 = 2200;
 
-    emptyRoute.setCostStrategy(new CaloriesCostStrategy());
+    const cost = calculateRoutePrice(null, consumptionAt100, new FootCostStartey());
     
 
     expect(emptyRoute.getCost(consumptionAt100)).toThrowError('Invalid route');
