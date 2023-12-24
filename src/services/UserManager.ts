@@ -6,6 +6,9 @@ import {FirebaseDBService} from "./FirebaseDBService.ts";
 import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
 import {Vehicle} from "../model/Vehicle.ts";
 import {Route} from "../model/Route.ts";
+import {obtainCoordsFromName} from "./ORS.ts";
+import {Coordinates} from "../model/Coordinates.ts";
+import {Place} from "../model/Place.ts";
 
 
 export class UserManager {
@@ -26,8 +29,16 @@ export class UserManager {
         this._dbService = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // SESSION/ACCOUNT MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
     isLoggedIn() : boolean {
         return !!this.userInfo;
+    }
+
+    logOut() { // TODO following stories...
+        this.userInfo = null;
     }
 
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
@@ -63,6 +74,10 @@ export class UserManager {
         } else throw Error("Can't delete account if user is not logged")
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // VEHICLE MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
     async registerVehicle(matricula: string, nombre: string, tipoMotor: string, consumo100Km: number): Promise<boolean> {
         if (this.userInfo && this.isLoggedIn()) {
             const validationMessage = validateVehicleInfo(matricula, nombre, tipoMotor, consumo100Km)
@@ -96,6 +111,10 @@ export class UserManager {
         else throw new Error("User must be logged in to fetch a vehicle");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // ROUTE MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
     async saveRoute(route: Route, name: string) : Promise<boolean>{
         if (this.userInfo && this.isLoggedIn()) {
             route.name = name;
@@ -113,22 +132,38 @@ export class UserManager {
         } else throw new Error("User must be logged in to delete a vehicle")
     }
 
-    logOut() { // TODO following stories...
-        this.userInfo = null;
-    }
-
     getListOfRoutes() {
         if (this.userInfo && this.isLoggedIn()) {
             return this.userInfo.routes
         } else throw new Error("User must be logged in to list routes");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // INTEREST PLACES MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
     async registerPlaceFromPlaceName(placeName: string): Promise<boolean> {
-        throw new Error("Not Implemented")
+        if (this.userInfo && this.isLoggedIn()) {
+            // get coords
+            const dataOrigin = await obtainCoordsFromName(placeName)
+            const latOrigin = dataOrigin.geometry.coordinates[1];
+            const lonOrigin = dataOrigin.geometry.coordinates[0];
+            const coords: Coordinates = new Coordinates(latOrigin, lonOrigin);
+            const place: Place = new Place(placeName, coords);
+            // save to userInfo
+            this.userInfo.addPlace(place);
+            // save to db
+            await this._dbService.saveUserInfo(this.userInfo)
+            return true
+
+        } else throw new Error("User must be logged in to save a route")
     }
 
-    async deletePlace(placeName: string): Promise<boolean> {
-        throw new Error("Not Implemented")
+    async deletePlace(placeName: string): Promise<void> {
+        if (this.userInfo && this.isLoggedIn()) {
+            this.userInfo.removePlace(placeName);
+            await this._dbService.saveUserInfo(this.userInfo);
+        } else throw new Error("User must be logged in to delete a place")
     }
 }
 

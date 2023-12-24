@@ -16,12 +16,10 @@ test('registerPlaceFromPlaceName_UserRegisteredDBAvailablePlaceApiAvailableValid
     // tests methods
     const userManager = getUserManager()
     await userManager.logIn(email, password);
+    await getUserManager().deletePlace(placeName)
 
     const registered = await userManager.registerPlaceFromPlaceName(placeName)
     expect(registered).toBe(true)
-
-    // delete what is done
-    await getUserManager().deletePlace(placeName)
 })
 
 // E02 - Inválido
@@ -39,5 +37,5 @@ test('registerPlaceFromPlaceName_UserRegisteredPlaceApiAvailablePlaceNameNotVali
     const userManager = getUserManager()
     await userManager.logIn(email, password);
 
-    await expect(() => userManager.registerPlaceFromPlaceName(placeName)).rejects.toThrowError('Place not found')
+    await expect(() => userManager.registerPlaceFromPlaceName(placeName)).rejects.toThrowError('Place name not valid')
 })
