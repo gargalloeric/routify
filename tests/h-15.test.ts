@@ -17,8 +17,8 @@ test('calculateRoutePrice_bicycleVehicle_ObtainCost', async () => {
     expect(cost).toBeLessThan(1742);
 })
 
-test('calculateRoutePrice_emptyRoute_throwInvalidRouteException', () => {
+test('calculateRoutePrice_emptyRoute_throwInvalidRouteException', async () => {
     const consumptionAt100 = 2200;
 
-    expect(calculateRoutePrice(null, consumptionAt100, new FootCostStartey())).toThrowError('Invalid route');
+    await expect(calculateRoutePrice(null, consumptionAt100, new FootCostStartey())).rejects.toThrowError('Invalid route');
 })
