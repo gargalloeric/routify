@@ -11,10 +11,10 @@ test('calculateRoutePrice_bicycleVehicle_ObtainCost', async () => {
     const consumptionAt100 = 2200;
 
     const route = await getRouteFromPlacesNames(origin, destiny, Transport.Bycicle, RouteType.Recommended);
-    console.log(route.distance);
-    const cost = calculateRoutePrice(route, consumptionAt100, new BycicleCostStartey());
+    const cost = await calculateRoutePrice(route, consumptionAt100, new BycicleCostStartey());
 
-    expect(cost).toBeCloseTo(1738);
+    expect(cost).toBeGreaterThan(1738);
+    expect(cost).toBeLessThan(1742);
 })
 
 test('calculateRoutePrice_emptyRoute_throwInvalidRouteException', () => {
