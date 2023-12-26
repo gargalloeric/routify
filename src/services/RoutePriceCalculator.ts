@@ -18,8 +18,9 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
 }
 
 export async function calculateRoutePrice(route: Route, consumptionAt100: number, cost: ICostStrategy) {
-    return cost.calculate(route, consumptionAt100);
+    if (!route) throw new Error("Invalid route");
     
+    return cost.calculate(route, consumptionAt100);
 }
 
 async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
