@@ -17,7 +17,7 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
     return routeCost;
 }
 
-export async function calculateRoutePrice(route: Route, consumptionAt100: number, cost: ICostStrategy) {
+export async function calculateRoutePrice(route: Route | null, consumptionAt100: number, cost: ICostStrategy) {
     if (!route) throw new Error("Invalid route");
     
     return cost.calculate(route, consumptionAt100);
