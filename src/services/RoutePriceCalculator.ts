@@ -3,6 +3,7 @@ import {Vehicle} from "../model/Vehicle.ts";
 import {obtainCoordsFromName} from "./ORS.ts";
 import {getGasStations} from "./GasStations.ts";
 import {getElectricityPrice} from "./ElectricityPriceREE.ts";
+import { ICostStrategy } from "./CostStrategy.ts";
 
 
 export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {
@@ -14,6 +15,12 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
     else throw new Error("Unadmited vehicle type, try to update your vehicle or choose another one")
 
     return routeCost;
+}
+
+export async function calculateRoutePrice(route: Route, consumptionAt100: number, cost: ICostStrategy) {
+    // TODO: Implement the function with staretgy pattern
+    throw new Error("Not Implemented");
+    
 }
 
 async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
