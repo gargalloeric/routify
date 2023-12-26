@@ -2,6 +2,8 @@ import { expect, test } from "vitest";
 import { getRouteFromPlacesNames } from "../src/services/ORSAdapter";
 import { Transport } from "../src/model/Transport";
 import { RouteType } from "../src/model/Route";
+import { calculateRoutePrice } from "../src/services/RoutePriceCalculator";
+import { BycicleCostStartey, FootCostStartey } from "../src/services/CostStrategy";
 
 test('calculateRoutePrice_bicycleVehicle_ObtainCost', async () => {
     const origin = 'Castellón de la plana';
