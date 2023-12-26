@@ -6,12 +6,12 @@ export interface ICostStrategy {
 
 export class BycicleCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        throw new Error("Method not implemented.");
+        return (route.distance/100) * consumptionAt100;
     }
 }
 
 export class FootCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        throw new Error("Method not implemented.");
+        return (route.distance/100) * consumptionAt100;
     }
 }

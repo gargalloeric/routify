@@ -18,8 +18,7 @@ export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle)
 }
 
 export async function calculateRoutePrice(route: Route, consumptionAt100: number, cost: ICostStrategy) {
-    // TODO: Implement the function with staretgy pattern
-    throw new Error("Not Implemented");
+    return cost.calculate(route, consumptionAt100);
     
 }
 
