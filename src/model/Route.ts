@@ -12,14 +12,14 @@ export class Route {
     transport: Transport;
     origin: string;
     destiny: string;
-    name: string | undefined;
+    name: string;
     constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string) {
         this.geoJSON = geoJSON;
         this.origin = origin;
         this.destiny = destiny;
         this.distance = distance;
         this.transport = transport;
-        this.name = name;
+        this.name = name ?? `${origin} -> ${destiny}`;
     }
 
     toJSON(): Object {
