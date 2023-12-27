@@ -4,10 +4,12 @@ import {Transport} from "../src/model/Transport";
 import {Route} from "../src/model/Route";
 import {getRouteFromPlacesNames} from "../src/services/ORSAdapter";
 import {Vehicle} from "../src/model/Vehicle";
-import {calculateRoutePriceWithCar} from "../src/services/RoutePriceCalculator";
+import {calculateRoutePrice, calculateRoutePriceWithCar} from "../src/services/RoutePriceCalculator";
 import {UserInfo} from "../src/model/UserInfo";
 import * as GasStationExports from '../src/services/GasStations'
 import * as ElectricityPriceExports from '../src/services/ElectricityPriceREE'
+import { CombustionCostStrategy, ElectricCostStrategy } from "../src/services/CostStrategy";
+import { ListaEESSPrecio } from "../src/services/APITypes";
 
 
 const mockDataOrigin = { properties: { name: 'Castellón de la plana' }, geometry: { coordinates: [-0.0513, 39.9864] } }
@@ -21,7 +23,7 @@ const mockGasStations = [{
         'Longitud (WGS84)': '-0,034917',
         Municipio: 'Castellón de la Plana/Castelló de la Plana',
         'Precio Gasolina 95 E5': '1,599',
-    }];
+    }] as Array<ListaEESSPrecio>;
 
 const mockVehicle1 = { matricula: "1212XLX", nombre: "nave galáctica", tipoMotor: "combustión", consumo100Km: 5 }
 const mockVehicle2 = { matricula: "1414XLX", nombre: "tractor amarillo", tipoMotor: "combustión", consumo100Km: 20 }
@@ -76,7 +78,7 @@ test('obtainRouteCost_UserHasVehicleCostApiOnline_ObtainCost', async () => {
     ORS.obtainCoordsFromName = vi.fn().mockResolvedValueOnce(mockDataOrigin);
 
     // tests methods
-    const price: number = await calculateRoutePriceWithCar(route, vehicle)
+    const price: number = await calculateRoutePrice(route, vehicle.consumo100Km, new CombustionCostStrategy());
     expect(price).toBeLessThan(20)
     expect(price).toBeGreaterThan(1)
 
@@ -98,7 +100,7 @@ test('obtainRouteCost_NoRouteSelected_ThrowsInvalidRouteException', async () => 
     const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
     // tests methods
-    await expect(() => calculateRoutePriceWithCar(null, vehicle)).rejects.toThrowError('Provide a route')
+    await expect(() => calculateRoutePrice(null, vehicle.consumo100Km, new CombustionCostStrategy())).rejects.toThrowError('Invalid route')
 
     // cleanup - remove user - logOut
     userManager.logOut()
@@ -129,7 +131,7 @@ test('obtainRouteCost_UserHasVehicleVehicleIsElectricCostApiOnline_ObtainCost', 
         vi.spyOn(ElectricityPriceExports, 'getElectricityPrice').mockResolvedValueOnce(mockElectricityPrice);
 
         // tests methods
-        const price: number = await calculateRoutePriceWithCar(route, vehicle)
+        const price: number = await calculateRoutePrice(route, vehicle.consumo100Km, new ElectricCostStrategy())
         expect(price).toBeLessThan(5)
         expect(price).toBeGreaterThan(0)
 

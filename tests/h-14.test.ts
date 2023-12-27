@@ -4,7 +4,8 @@ import {Transport} from "../src/model/Transport";
 import {Route} from "../src/model/Route";
 import {getRouteFromPlacesNames} from "../src/services/ORSAdapter";
 import {Vehicle} from "../src/model/Vehicle";
-import {calculateRoutePriceWithCar} from "../src/services/RoutePriceCalculator";
+import {calculateRoutePrice} from "../src/services/RoutePriceCalculator";
+import { CombustionCostStrategy, ElectricCostStrategy } from "../src/services/CostStrategy";
 
 
 // E01 -    Válido
@@ -30,7 +31,7 @@ test('obtainRouteCost_UserHasVehicleCostApiOnline_ObtainCost', async () => {
     const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
     // tests methods
-    const price: number = await calculateRoutePriceWithCar(route, vehicle)
+    const price: number = await calculateRoutePrice(route, vehicle.consumo100Km, new CombustionCostStrategy())
     expect(price).toBeLessThan(20)
     expect(price).toBeGreaterThan(1)
 
@@ -55,7 +56,7 @@ test('obtainRouteCost_NoRouteSelected_ThrowsInvalidRouteException', async () => 
     const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
     // tests methods
-    await expect(() => calculateRoutePriceWithCar(null, vehicle)).rejects.toThrowError('Provide a route')
+    await expect(() => calculateRoutePrice(null, vehicle.consumo100Km, new CombustionCostStrategy())).rejects.toThrowError('Invalid route')
 
     // cleanup - remove user - logOut
     userManager.logOut()
@@ -79,7 +80,7 @@ test('obtainRouteCost_UserHasVehicleVehicleIsElectricCostApiOnline_ObtainCost', 
         const vehicle: Vehicle = userManager.getUserVehicle(matricula)
 
         // tests methods
-        const price: number = await calculateRoutePriceWithCar(route, vehicle)
+        const price: number = await calculateRoutePrice(route, vehicle.consumo100Km, new ElectricCostStrategy())
         expect(price).toBeLessThan(5)
         expect(price).toBeGreaterThan(0)
 
