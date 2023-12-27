@@ -1,60 +1,14 @@
-import {Route} from "../model/Route.ts";
-import {Vehicle} from "../model/Vehicle.ts";
-import {obtainCoordsFromName} from "./ORS.ts";
-import {getGasStations} from "./GasStations.ts";
-import {getElectricityPrice} from "./ElectricityPriceREE.ts";
+import { Route } from "../model/Route.ts";
 import { ICostStrategy } from "./CostStrategy.ts";
-
-
-export async function calculateRoutePriceWithCar(route: Route, vehicle: Vehicle): Promise<number> {
-    if (!vehicle || !route) throw new Error("Provide a route and a vehicle")
-
-    let routeCost: number = -1
-    if (vehicle.tipoMotor == 'combustión') routeCost = await getPriceForCombustionCar(route, vehicle);
-    else if (vehicle.tipoMotor == 'eléctrico') routeCost = await getPriceForElectricCar(route, vehicle);
-    else throw new Error("Unadmited vehicle type, try to update your vehicle or choose another one")
-
-    return routeCost;
-}
+import { ListaEESSPrecio } from "./APITypes.ts";
 
 export async function calculateRoutePrice(route: Route | null, consumptionAt100: number, cost: ICostStrategy) {
     if (!route) throw new Error("Invalid route");
-    
+
     return cost.calculate(route, consumptionAt100);
 }
 
-async function getPriceForCombustionCar(route: Route, vehicle: Vehicle) {
-    const dataOrigin = await obtainCoordsFromName(route.origin);
-    const latOrigin = dataOrigin.geometry.coordinates[1];
-    const lonOrigin = dataOrigin.geometry.coordinates[0];
-
-    const gasStations = await getGasStations();
-
-    let nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 10);
-    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 20);
-    if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 50);
-
-    const sortedGasStations = nearbyGasStations.sort((a, b) => {
-        const distanceA = calculateDistance(latOrigin, lonOrigin, parseFloat(a['Latitud'].replace(',', '.')), parseFloat(a['Longitud (WGS84)'].replace(',', '.')));
-        const distanceB = calculateDistance(latOrigin, lonOrigin, parseFloat(b['Latitud'].replace(',', '.')), parseFloat(b['Longitud (WGS84)'].replace(',', '.')));
-        return distanceA - distanceB;
-    });
-
-    const nearestGasStation = sortedGasStations[0]
-    const nearestFuelPrice = parseFloat(nearestGasStation['Precio Gasolina 95 E5'].replace(',', '.'))
-
-    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * nearestFuelPrice).toFixed(2));
-}
-
-
-async function getPriceForElectricCar(route: Route, vehicle: Vehicle) {
-    const price: number = await getElectricityPrice();
-
-    return parseFloat(((route.distance / 100) * vehicle.consumo100Km * (price / 1000)).toFixed(2));
-}
-
-
-function filterGasStationsByDistance(list, latOrigin, lonOrigin, maxDist) {
+export function filterGasStationsByDistance(list: Array<ListaEESSPrecio>, latOrigin: number, lonOrigin: number, maxDist: number) {
     return list.filter((gasStation) => {
         const latGasStation = parseFloat(gasStation['Latitud'].replace(',', '.'));
         const lonGasStation = parseFloat(gasStation['Longitud (WGS84)'].replace(',', '.'));
@@ -63,8 +17,7 @@ function filterGasStationsByDistance(list, latOrigin, lonOrigin, maxDist) {
     });
 }
 
-
-function calculateDistance(lat1, lon1, lat2, lon2) {
+export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
     const earthRadius = 6371; // Earth radius in kilometers
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
@@ -76,7 +29,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return distance;
 }
 
-
-function deg2rad(deg) {
+export function deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
 }
