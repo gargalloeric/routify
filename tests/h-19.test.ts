@@ -20,3 +20,18 @@ test('deleteRoute_UserRegisteredDBAvailableRouteSaved_deleteRoute', async () => 
 
     expect(() => userManager.deleteRoute("Test Route h-19")).not.toThrowError('Route not found');
 });
+
+// E02 - Inválido
+// Given: no existen rutas almacenadas por el usuario.
+// When: se intenta eliminar la ruta “Castellón” - “Valencia”.
+// Then: se lanza la excepción “RouteNotFoundException”.
+
+test('deleteRoute_UserAlreadyDoesntHaveTheSameRoute_ThrowRouteNotFoundException', async () => {
+    const email: string = 'edu.jose@gmail.com',
+        password: string = 'aS0@28Y?';
+
+    const userManager = getUserManager();
+    await userManager.logIn(email, password);
+
+    expect(() => userManager.deleteRoute("Test Route h-19")).rejects.toThrowError('Route not found');
+});
