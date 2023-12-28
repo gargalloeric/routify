@@ -165,6 +165,10 @@ export class UserManager {
             await this._dbService.saveUserInfo(this.userInfo);
         } else throw new Error("User must be logged in to delete a place")
     }
+
+    getListOfPlaces() {
+        throw new Error("Not implemented");
+    }
 }
 
 let instance: UserManager;
