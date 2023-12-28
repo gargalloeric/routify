@@ -81,12 +81,11 @@ const listOfRoutes = ref<{[id: string]: Route}>({});
 const userManager = getUserManager();
 
 onMounted(() => {
-    listOfRoutes.value = userManager.getListOfRoutes();
+    listOfRoutes.value = window.structuredClone(userManager.getListOfRoutes())
 });
 
 async function handleDelete(name: string){
-  //delete listOfRoutes.value[name];
-  console.log(userManager.getListOfRoutes());
+  delete listOfRoutes.value[name];
   await userManager.deleteRoute(name);
 }
 </script>
