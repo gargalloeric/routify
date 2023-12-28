@@ -119,7 +119,8 @@ export class UserManager {
 
     getListOfRoutes() {
         if (this.userInfo && this.isLoggedIn()) {
-            return this.userInfo.routes;
+            // To pass an object without its reference
+            return window.structuredClone(this.userInfo.routes);
         } else throw new Error("User must be logged in to list routes");
     }
 }
