@@ -13,14 +13,14 @@ test('getListOfPlaces_UserHasTwoPlacesStoredDBAvailable_ObtainListOfPlaces', asy
     const nombre1: string = "Castellón de la Plana",
         nombre2: string = "Universidad Jaume I";
 
-    // Try to register the vehicles if they don't exist
-    await userManager.registerPlaceFromPlaceName(nombre1).catch(() => console.log('Place already registered'));
-    await userManager.registerPlaceFromPlaceName(nombre2).catch(() => console.log('Place already registered'));
+    // Try to register the places if they don't exist
+    await userManager.registerPlaceFromPlaceName(nombre1).catch(() => {});
+    await userManager.registerPlaceFromPlaceName(nombre2).catch(() => {});
 
-    // When: access the list of vehicles
+    // When: access the list of places
     const listOfPlaces = userManager.getListOfPlaces();
 
-    // Then: a list of the stored vehicles is obtained
+    // Then: a list of the stored places is obtained
     expect(Object.keys(listOfPlaces).length).toBe(2);
     expect(listOfPlaces[nombre1]).toBeDefined();
     expect(listOfPlaces[nombre2]).toBeDefined();
@@ -31,7 +31,7 @@ test('getListOfPlaces_UserNotLoggedIn_ThrowUserNotLoggedInException', () => {
     const userManager = getUserManager();
     userManager.logOut();
 
-    // When: access the list of vehicles
+    // When: access the list of places
     // Then: An error is thrown
     expect(() => { userManager.getListOfPlaces() }).toThrowError('User must be logged in to list places');
 })
