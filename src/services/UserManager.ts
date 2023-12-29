@@ -9,6 +9,7 @@ import {Route} from "../model/Route.ts";
 import {obtainCoordsFromName} from "./ORS.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 import {Place} from "../model/Place.ts";
+import L from "leaflet";
 
 
 export class UserManager {
@@ -159,11 +160,19 @@ export class UserManager {
         } else throw new Error("User must be logged in to save a route")
     }
 
+    async registerPlaceFromPlaceCoords(coords: L.LatLng){
+        //TODO
+    }
+
     async deletePlace(placeName: string): Promise<void> {
         if (this.userInfo && this.isLoggedIn()) {
             this.userInfo.removePlace(placeName);
             await this._dbService.saveUserInfo(this.userInfo);
         } else throw new Error("User must be logged in to delete a place")
+    }
+
+    async deletePlaceCoords(coords: L.LatLng){
+        //TODO
     }
 }
 
