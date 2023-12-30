@@ -3,6 +3,7 @@ import { Transport } from "../model/Transport.ts";
 import { obtainCoordsFromName, obtainNameFromCoords, obtainRoute } from "./ORS.ts";
 import type L from "leaflet";
 import { isLatLngValid } from "./Utils.ts";
+import {Coordinates} from "../model/Coordinates.ts";
 
 export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
     const dataOrigin = await obtainCoordsFromName(origin);
@@ -22,9 +23,9 @@ export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, tr
     let originName = "";
     let destinyName = "";
     try {
-        const dataOrigin = await obtainNameFromCoords(origin);
+        const dataOrigin = await obtainNameFromCoords(new Coordinates(origin.lat, origin.lng));
         originName = dataOrigin.properties.name;
-        const dataDestiny = await obtainNameFromCoords(destiny);
+        const dataDestiny = await obtainNameFromCoords(new Coordinates(destiny.lat, destiny.lng));
         destinyName = dataDestiny.properties.name;
     } catch (err) {
         console.log(err)
