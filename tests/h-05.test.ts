@@ -32,10 +32,11 @@ test('registerPlaceFromPlaceCoords_UserRegisteredPlaceApiAvailablePlaceAlreadySa
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
 
-    const placeCoords : Coordinates  = new Coordinates(39.992715699677966, -0.06730591306542232);
+    const placeCoords : Coordinates  = new Coordinates(35.992715699677966, -0.06730591306542232);
     // tests methods
     const userManager = getUserManager();
     await userManager.logIn(email, password);
+    await userManager.registerPlaceFromPlaceCoords(placeCoords).catch(() => {});
 
     await expect(() => userManager.registerPlaceFromPlaceCoords(placeCoords)).rejects.toThrowError('Place already saved');
 });
