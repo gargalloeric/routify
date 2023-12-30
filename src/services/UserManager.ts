@@ -166,7 +166,6 @@ export class UserManager {
             const dataOrigin = await obtainNameFromCoords(coords.reverse());
             const name = dataOrigin.properties.name;
             const place: Place = new Place(name, coords);
-            // save to userInfo
             this.userInfo.addPlace(place);
             // save to db
             await this._dbService.saveUserInfo(this.userInfo)

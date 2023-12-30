@@ -8,6 +8,7 @@ import {Coordinates} from "../model/Coordinates.ts";
 export async function getRouteFromPlacesNames(origin: string, destiny: string, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
     const dataOrigin = await obtainCoordsFromName(origin);
     const dataDestiny = await obtainCoordsFromName(destiny);
+    console.log(dataOrigin);
 
     const originName = dataOrigin.properties.name;
     const destinyName = dataDestiny.properties.name;
