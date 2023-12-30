@@ -33,5 +33,6 @@ test('deleteRoute_UserAlreadyDoesntHaveTheSameRoute_ThrowRouteNotFoundException'
     const userManager = getUserManager();
     await userManager.logIn(email, password);
 
+    await userManager.deleteRoute("Test Route h-19").catch(() => {})
     expect(() => userManager.deleteRoute("Test Route h-19")).rejects.toThrowError('Route not found');
 });
