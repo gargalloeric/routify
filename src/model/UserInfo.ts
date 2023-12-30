@@ -1,5 +1,6 @@
 import {Vehicle} from "./Vehicle.ts";
 import {Route} from "./Route.ts";
+import {Place} from "./Place.ts";
 
 export class UserInfo {
     name: string
@@ -7,12 +8,14 @@ export class UserInfo {
     userId: string
     vehicles: { [id:string] : Vehicle }
     routes: { [id:string] : Route }
+    places: { [id:string] : Place }
     constructor(userId: string, email: string | null, name : string) {
         this.name = name
         this.mail = email
         this.userId = userId
         this.vehicles = {}
         this.routes = {}
+        this.places = {}
     }
 
     getDataForDb():Object {
@@ -20,14 +23,15 @@ export class UserInfo {
         for (const [key, vehicle] of Object.entries(this.vehicles)) vehiclesData[key] = vehicle.toJSON();
         const routesData: { [id: string]: any } = {};
         for (const [key, route] of Object.entries(this.routes)) routesData[key] = route.toJSON();
+        const placesData: { [id: string]: any } = {};
+        for (const [key, place] of Object.entries(this.places)) placesData[key] = place.toJSON();
         return {
             name: this.name,
             vehicles: vehiclesData,
-            routes: routesData
+            routes: routesData,
+            places: placesData
         }
     }
-
-
 
     hasVehicle(matricula: string) {
         return !!this.vehicles[matricula];
@@ -62,4 +66,18 @@ export class UserInfo {
         return true;
     }
 
+    addPlace(place: Place) {
+        if (this.hasPlace(place.name)) throw new Error("Place already saved");
+        this.places[place.name] = place;
+    }
+
+    removePlace(name: string){
+        if (!this.hasPlace(name)) return false;
+        delete this.places[name];
+        return true;
+    }
+
+    private hasPlace(name: string) {
+        return !!this.places[name];
+    }
 }
