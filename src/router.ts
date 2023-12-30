@@ -6,8 +6,6 @@ import ObtainRoute from "./views/ObtainRoute.vue";
 import RegisterVehicle from "./views/RegisterVehicle.vue";
 import ListVehicleVue from "./views/ListVehicle.vue";
 import ListRoutes from "./views/ListRoutes.vue";
-import ListPlaces from "./views/ListPlaces.vue";
-import RegisterPlace from "./views/RegisterPlace.vue";
 
 const routes = [
     {
@@ -44,16 +42,6 @@ const routes = [
         path: "/user/route/list",
         name: "List Routes",
         component: ListRoutes
-    },
-    {
-        path: "/user/place/list",
-        name: "List Places",
-        component: ListPlaces
-    },
-    {
-        path: "/registerPlace",
-        name: "Register Place",
-        component: RegisterPlace
     },
 ];
 

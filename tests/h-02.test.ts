@@ -13,5 +13,5 @@ test('logInUser_InvalidPassword_notLogInUser', async () => {
     let email: string = 'inexistente.jose@gmail.com',
         password: string = 'S438w?'
 
-    await expect(getUserManager().logIn(email, password)).rejects.toThrowError('Password not valid')
+    await expect(() => getUserManager().logIn(email, password)).rejects.toThrowError('Password not valid')
 })

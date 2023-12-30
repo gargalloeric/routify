@@ -4,8 +4,6 @@ import {UserInfo} from "../model/UserInfo.ts";
 import {deleteDoc} from "firebase/firestore";
 import {Vehicle} from "../model/Vehicle.ts";
 import {Route} from "../model/Route.ts";
-import {Place} from "../model/Place.ts";
-import {Coordinates} from "../model/Coordinates.ts";
 
 export class FirebaseDBService implements DBService {
     async saveUserInfo(userInfo: UserInfo): Promise<void> {
@@ -48,17 +46,6 @@ export class FirebaseDBService implements DBService {
                         routesData[id].distance,
                         routesData[id].name
                     );
-                });
-            }
-
-            const placesData:  { [id: string]: Place } = docSnap.get('places');
-            if (placesData) {
-                userInfo.places = {};
-                Object.keys(placesData).forEach((id) => {
-                    userInfo.places[id] = new Place(
-                        placesData[id].name,
-                        new Coordinates(placesData[id].coords.lat, placesData[id].coords.lon)
-                    )
                 });
             }
             return;
