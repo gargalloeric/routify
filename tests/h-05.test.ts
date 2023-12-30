@@ -17,7 +17,7 @@ test('registerPlaceFromPlaceCoords_UserRegisteredDBAvailablePlaceApiAvailableVal
     // tests methods
     const userManager = getUserManager();
     await userManager.logIn(email, password);
-    await getUserManager().deletePlace("Escola Superior de Tecnologia i Ciències Experimentals");
+    await getUserManager().deletePlace("Escola Superior de Tecnologia i Ciències Experimentals").catch(() => {});
 
     const registered = await userManager.registerPlaceFromPlaceCoords(placeCoords);
     expect(registered).toBe(true);
