@@ -182,6 +182,11 @@ export class UserManager {
         } else throw new Error("User must be logged in to delete a place")
     }
 
+    getListOfPlaces() {
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.places
+        } else throw new Error("User must be logged in to list places");
+    }
 }
 
 let instance: UserManager;
