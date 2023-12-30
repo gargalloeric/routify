@@ -184,7 +184,7 @@ export class UserManager {
 
     getListOfPlaces() {
         if (this.userInfo && this.isLoggedIn()) {
-            return this.userInfo.places
+            return window.structuredClone(this.userInfo.places);
         } else throw new Error("User must be logged in to list places");
     }
 }
