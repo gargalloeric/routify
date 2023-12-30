@@ -176,8 +176,9 @@ export class UserManager {
 
     async deletePlace(placeName: string): Promise<void> {
         if (this.userInfo && this.isLoggedIn()) {
-            this.userInfo.removePlace(placeName);
-            await this._dbService.saveUserInfo(this.userInfo);
+            if (this.userInfo.removePlace(placeName))
+                await this._dbService.saveUserInfo(this.userInfo);
+            else throw new Error("Place not found");
         } else throw new Error("User must be logged in to delete a place")
     }
 

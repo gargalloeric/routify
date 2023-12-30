@@ -20,6 +20,12 @@ test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableValidInputs_deletePl
 
 });
 
+// E02 - Inválido
+// Given: el usuario {nombre:”Jose”, email:”edu.jose@gmail.com”, password:”aS0@28Y?”} está logueado y no existen lugares de interés almacenados.
+// When: se intenta eliminar el lugar de interés “Castellón de la Plana”.
+// Then: se lanza la excepción “InterestPlaceNotFoundException”.
+
+
 test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableNoPlacesOnDB_ThrowPlaceNotFoundException', async () => {
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
