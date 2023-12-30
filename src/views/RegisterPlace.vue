@@ -2,6 +2,8 @@
 import {ref} from "vue";
 import {getUserManager} from "../services/UserManager";
 import Alert from "../components/Alert.vue";
+import {Coordinates} from "../model/Coordinates.ts";
+import router from "../router.ts";
 
 let nombre = "";
 let lat = 39.12;
@@ -17,7 +19,8 @@ async function register() {
     if (tipo_registro.value == "nombre")
       await getUserManager().registerPlaceFromPlaceName(nombre);
     else
-      throw new Error("Implement register by coordinates")
+      await getUserManager().registerPlaceFromPlaceCoords(new Coordinates(lat, lon));
+    await router.push({path: '/user/place/list'})
   }
   catch (error){
     console.log(error);
