@@ -18,6 +18,18 @@ test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableValidInputs_deletePl
 
     expect(() => getUserManager().deletePlace("Castellón de la Plana")).not.toThrowError('Place not found');
 
+});
+
+test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableNoPlacesOnDB_ThrowPlaceNotFoundException', async () => {
+    const email: string = 'edu.jose@gmail.com',
+        password: string = 'aS0@28Y?';
+
+    // tests methods
+    const userManager = getUserManager();
+    await userManager.logIn(email, password);
+
+    expect(() => getUserManager().deletePlace("Castellón de la Plana")).rejects.toThrowError('Place not found');
+
     await userManager.registerPlaceFromPlaceName("Castellón de la Plana");
 });
 
