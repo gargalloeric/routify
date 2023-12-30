@@ -80,6 +80,6 @@ const listOfRoutes = ref({});
 const userManager = getUserManager();
 
 onMounted(() => {
-    listOfRoutes.value = userManager.getListOfRoutes();
+    listOfRoutes.value = window.structuredClone(userManager.getListOfRoutes());
 })
 </script>
