@@ -135,7 +135,7 @@ export class UserManager {
 
     getListOfRoutes() {
         if (this.userInfo && this.isLoggedIn()) {
-            return window.structuredClone(this.userInfo.routes);
+            return this.userInfo.routes;
         } else throw new Error("User must be logged in to list routes");
     }
 
@@ -165,6 +165,7 @@ export class UserManager {
             // get coords
             const dataOrigin = await obtainNameFromCoords(coords.reverse());
             const name = dataOrigin.properties.name;
+            console.log(name);
             const place: Place = new Place(name, coords);
             this.userInfo.addPlace(place);
             // save to db
@@ -184,7 +185,7 @@ export class UserManager {
 
     getListOfPlaces() {
         if (this.userInfo && this.isLoggedIn()) {
-            return window.structuredClone(this.userInfo.places);
+            return this.userInfo.places;
         } else throw new Error("User must be logged in to list places");
     }
 }

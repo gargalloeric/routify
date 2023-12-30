@@ -59,7 +59,7 @@ const listOfPlaces = ref({});
 const userManager = getUserManager();
 
 onMounted(() => {
-    listOfPlaces.value = userManager.getListOfPlaces();
+    listOfPlaces.value = window.structuredClone(userManager.getListOfPlaces());
     console.log(listOfPlaces.value)
 })
 

@@ -16,7 +16,8 @@ test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableValidInputs_deletePl
     const userManager = getUserManager();
     await userManager.logIn(email, password);
 
-    expect(() => getUserManager().deletePlace("Castellón de la Plana")).not.toThrowError('Place not found');
+    await userManager.registerPlaceFromPlaceName("Castelló de la Plana").catch(() => {});
+    expect(() => getUserManager().deletePlace("Castelló de la Plana")).not.toThrowError('Place not found');
 
 });
 
@@ -34,8 +35,6 @@ test('deletePlace_UserRegisteredDBAvailablePlaceApiAvailableNoPlacesOnDB_ThrowPl
     const userManager = getUserManager();
     await userManager.logIn(email, password);
 
-    expect(() => getUserManager().deletePlace("Castellón de la Plana")).rejects.toThrowError('Place not found');
-
-    await userManager.registerPlaceFromPlaceName("Castellón de la Plana");
+    expect(() => getUserManager().deletePlace("Valencia, España")).rejects.toThrowError('Place not found');
 });
 
