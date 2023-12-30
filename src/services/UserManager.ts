@@ -6,10 +6,10 @@ import {FirebaseDBService} from "./FirebaseDBService.ts";
 import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
 import {Vehicle} from "../model/Vehicle.ts";
 import {Route} from "../model/Route.ts";
-import {obtainCoordsFromName} from "./ORS.ts";
+import {obtainCoordsFromName, obtainNameFromCoords} from "./ORS.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 import {Place} from "../model/Place.ts";
-import L from "leaflet";
+import L, {LatLng, latLng} from "leaflet";
 
 
 export class UserManager {
@@ -160,8 +160,19 @@ export class UserManager {
         } else throw new Error("User must be logged in to save a route")
     }
 
-    async registerPlaceFromPlaceCoords(coords: L.LatLng){
-        //TODO
+    async registerPlaceFromPlaceCoords(coords: Coordinates){
+        if (this.userInfo && this.isLoggedIn()) {
+            // get coords
+            const dataOrigin = await obtainNameFromCoords(coords.reverse());
+            const name = dataOrigin.properties.name;
+            const place: Place = new Place(name, coords);
+            // save to userInfo
+            this.userInfo.addPlace(place);
+            // save to db
+            await this._dbService.saveUserInfo(this.userInfo)
+            return true
+
+        } else throw new Error("User must be logged in to save a route")
     }
 
     async deletePlace(placeName: string): Promise<void> {
@@ -171,9 +182,6 @@ export class UserManager {
         } else throw new Error("User must be logged in to delete a place")
     }
 
-    async deletePlaceCoords(coords: L.LatLng){
-        //TODO
-    }
 }
 
 let instance: UserManager;

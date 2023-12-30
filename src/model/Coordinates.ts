@@ -15,4 +15,8 @@ export class Coordinates {
             lon: this.lon
         };
     }
+
+    reverse(){
+        return new Coordinates(this.lon, this.lat);
+    }
 }
