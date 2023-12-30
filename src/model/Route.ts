@@ -1,5 +1,4 @@
 import {Transport} from "./Transport.ts";
-import {GeoJSON} from "leaflet";
 
 export enum RouteType {
     Recommended = 'recommended',
@@ -25,7 +24,6 @@ export class Route {
 
     toJSON(): Object {
         return {
-            //geoJSON : this.geoJSON,
             origin : this.origin,
             destiny : this.destiny,
             distance : this.distance,
