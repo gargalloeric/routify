@@ -6,14 +6,15 @@ import { ref } from "vue";
 import { Transport } from "../model/Transport.ts";
 import {getRouteFromCoords, getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import Alert from "../components/Alert.vue";
-import {latLng, LatLng} from "leaflet";
-import {calculateRoutePriceWithCar} from "../services/RoutePriceCalculator.ts";
+import {latLng} from "leaflet";
+import {calculateRoutePrice} from "../services/RoutePriceCalculator.ts";
 import {isPriceRequested} from "../main.ts";
 import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
 import { RouteType } from "../model/Route";
 import {Route} from "../model/Route.ts";
 import SuccessMessage from "../components/SuccessMessage.vue";
+import { BycicleCostStartey, CombustionCostStrategy, ElectricCostStrategy, FootCostStartey, ICostStrategy } from "../services/CostStrategy";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
@@ -26,8 +27,29 @@ const isSaveReturnedError = ref(false);
 
 let route: Route;
 let routeSaved = ref(false);
+let costStrategy: ICostStrategy;
+
+function handleCostStrategy(mode: Transport, vehicle: Vehicle) {
+  switch(mode) {
+    case Transport.Foot:
+      costStrategy = new FootCostStartey();
+      return;
+    case Transport.Bycicle:
+      costStrategy = new BycicleCostStartey();
+      return;
+  }
+
+  if (vehicle.tipoMotor === 'combustión') {
+    console.log('Combustión')
+    costStrategy = new CombustionCostStrategy();
+  } else {
+    console.log('Electrico')
+    costStrategy = new ElectricCostStrategy();
+  }
+}
 
 async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle, type: RouteType}) {
+  handleCostStrategy(data.mode, data.vehicle);
   isRequestingRoute.value = true;
   try {
     if (/^[A-Za-z]/.test(data.origin.toString()))
@@ -37,7 +59,7 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
     map.value.clear();
     map.value.drawRoute(route);
     if (data.vehicle != undefined){
-      isPriceRequested.price = await calculateRoutePriceWithCar(route, data.vehicle);
+      isPriceRequested.price = await calculateRoutePrice(route, data.vehicle.consumo100Km, costStrategy);
       isPriceRequested.value = true;
     }
   } catch (error) {

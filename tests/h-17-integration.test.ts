@@ -18,7 +18,6 @@ vi.mock('../src/services/FirebaseDBService.ts', () => {
     const FirebaseDBService = vi.fn()
     FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
     FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockImplementation((userInfo : UserInfo) => {
-        console.log("holi");
         userInfo.routes["Test Route 2"] = new Route(
             undefined,
             "Madrid",

@@ -21,11 +21,12 @@ test('registerVehicle_UserRegisteredDBAvailableValidInputs_RegisterVehicle', asy
     // tests methods
     const userManager = getUserManager()
     await userManager.logIn(email, password);
+    await getUserManager().deleteVehicle(matricula).catch(() => {})
     const registered = await userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km)
     expect(registered).toBe(true)
 
     // delete what is done
-    await getUserManager().deleteVehicle(matricula)
+    await getUserManager().deleteVehicle(matricula).catch(() => {})
 })
 
 // E03 - Inválido

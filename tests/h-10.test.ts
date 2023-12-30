@@ -26,9 +26,9 @@ test('getListOfVehicles_TwoVehiclesStored_ObtainListOfVehicles', async () => {
         consumo100Km3: number = 10;
 
     // Try to register the vehicles if they don't exist
-    await userManager.registerVehicle(matricula1, nombre1, tipoMotor1, consumo100Km1).catch(() => console.log('Vehicle already registered'));
-    await userManager.registerVehicle(matricula2, nombre2, tipoMotor2, consumo100Km2).catch(() => console.log('Vehicle already registered'));
-    await userManager.registerVehicle(matricula3, nombre3, tipoMotor3, consumo100Km3).catch(() => console.log('Vehicle already registered'));
+    await userManager.registerVehicle(matricula1, nombre1, tipoMotor1, consumo100Km1).catch(() => {});
+    await userManager.registerVehicle(matricula2, nombre2, tipoMotor2, consumo100Km2).catch(() => {});
+    await userManager.registerVehicle(matricula3, nombre3, tipoMotor3, consumo100Km3).catch(() => {});
 
     // When: access the list of vehicles
     const listOfVehicles = userManager.getListOfVehicles();

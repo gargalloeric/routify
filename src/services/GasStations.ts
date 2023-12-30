@@ -1,6 +1,8 @@
+import { ListaEESSPrecio } from "./APITypes";
+
 const GAS_PRICE_URL = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/";
 
-let instanceOfGasStations: string = '';
+let instanceOfGasStations: Array<ListaEESSPrecio>;
 let instanceOfGasStationsLastUpdateTime: number = 0;
 export async function getGasStations() {
     const currentTime = new Date().getTime();
