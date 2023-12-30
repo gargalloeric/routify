@@ -135,7 +135,7 @@ export class UserManager {
 
     getListOfRoutes() {
         if (this.userInfo && this.isLoggedIn()) {
-            return this.userInfo.routes
+            return window.structuredClone(this.userInfo.routes);
         } else throw new Error("User must be logged in to list routes");
     }
 
