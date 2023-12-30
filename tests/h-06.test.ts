@@ -16,7 +16,7 @@ test('registerPlaceFromPlaceName_UserRegisteredDBAvailablePlaceApiAvailableValid
     // tests methods
     const userManager = getUserManager()
     await userManager.logIn(email, password);
-    await getUserManager().deletePlace(placeName)
+    await getUserManager().deletePlace(placeName).catch(() => {});
 
     const registered = await userManager.registerPlaceFromPlaceName(placeName)
     expect(registered).toBe(true)
