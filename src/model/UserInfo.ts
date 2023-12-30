@@ -61,7 +61,7 @@ export class UserInfo {
     }
 
     removeRoute(name: string){
-        if (!this.hasRoute(name)) return false;
+        if (!this.hasRoute(name)) throw new Error("Route not found");
         delete this.routes[name];
         return true;
     }
