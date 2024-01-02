@@ -1,13 +1,38 @@
-import { expect, test } from "vitest";
+import {afterAll, expect, test, vi} from "vitest";
 import {getUserManager} from "../src/services/UserManager";
 import {Vehicle} from "../src/model/Vehicle";
+import {UserInfo} from "../src/model/UserInfo";
 
+vi.mock('../src/services/FirebaseAuthService.ts', () => {
+    const FirebaseAuthService = vi.fn()
+    FirebaseAuthService.prototype.logIn = vi.fn().mockImplementation((email, password) => {
+        return new UserInfo("1", email, "Jose")});
+    return { FirebaseAuthService }
+});
+
+afterAll(() => {
+    vi.clearAllMocks()
+    vi.resetAllMocks()
+});
 
 // E01 - Válido
 // Given: hay un vehículo con los datos {“nombre”: “nave galáctica”, “tipo-motor”: “combustión”, “consumo-100-km”: “5”} almacenado
 // When: se intenta modificar el tipo de motor del vehículo con el nombre ‘nave galáctica’ a eléctrico
 // Then: se modifican y se guardan los cambios sobre el vehículo con nombre ‘nave galáctica’, que pasan a ser {“nombre”: “nave galáctica”, “tipo-motor”: “eléctrico”, “consumo-100-km”: “5”}
 test('updateVehicle_UserRegisteredDBAvailableValidInputs_UpdateVehicle', async () => {
+    vi.mock('../src/services/FirebaseDBService.ts', () => {
+        const FirebaseDBService = vi.fn()
+        FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
+        FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockImplementation((userInfo : UserInfo) => {
+            userInfo.vehicles["1313XLX"] = new Vehicle(
+                "1313XLJ",
+                "nave galáctica",
+                "combustión",
+                5
+            );
+        })
+        return { FirebaseDBService }
+    });
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
 
