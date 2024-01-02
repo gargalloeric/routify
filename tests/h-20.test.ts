@@ -23,7 +23,7 @@ test('markVehicleAsFavourite_UserHasVehicleAlreadyMarked_throwAlreadyFavouriteEx
     await userManager.markVehicleAsFavourite(matricula1).catch(() => {})
 
     // Try to mark - throw error
-    await expect(() => userManager.markVehicleAsFavourite(matricula1)).rejects.toThrowError('Vehicle already marked as favourite');
+    await expect(() => userManager.markVehicleAsFavourite(matricula1)).rejects.toThrowError('already marked as favourite');
 });
 
 // E02 - Válido

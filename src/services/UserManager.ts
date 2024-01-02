@@ -9,6 +9,7 @@ import {Route} from "../model/Route.ts";
 import {obtainCoordsFromName, obtainNameFromCoords} from "./ORS.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 import {Place} from "../model/Place.ts";
+import {GenericElement} from "../model/GenericElement.ts";
 
 
 export class UserManager {
@@ -194,37 +195,57 @@ export class UserManager {
     // FAVOURITE ELEMENTS MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    async markVehicleAsFavourite(matricula: string): Promise<boolean> {
+    async markElementAsFavourite(element: GenericElement): Promise<boolean> {
         if (this.userInfo && this.isLoggedIn()) {
-            if (this.userInfo.getVehicle(matricula).markAsFav()) {
+            if (element.markAsFav()) {
                 await this._dbService.saveUserInfo(this.userInfo)
                 return true
 
-            } else throw Error("Vehicle already marked as favourite")
+            } else throw Error("Element already marked as favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async unmarkElementAsFavourite(element: GenericElement): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            if (element.unmarkAsFav()) {
+                await this._dbService.saveUserInfo(this.userInfo)
+                return true
+
+            } else throw Error("Element already marked as not favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async markVehicleAsFavourite(matricula: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getVehicle(matricula))
         } else throw new Error("User must be logged in to mark elements as favourite");
     }
      async unmarkVehicleAsFavourite(matricula: string): Promise<boolean> {
         if (this.userInfo && this.isLoggedIn()) {
-            if (this.userInfo.getVehicle(matricula).unmarkAsFav()) {
-                await this._dbService.saveUserInfo(this.userInfo)
-                return true
-
-            } else throw Error("Vehicle already marked as not favourite")
+            return await this.unmarkElementAsFavourite(this.userInfo.getVehicle(matricula))
         } else throw new Error("User must be logged in to mark elements as favourite");
     }
 
-    markPlaceAsFavourite(name: string): Promise<boolean> {
-        throw new Error("Not implemented")
+    async markPlaceAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getPlace(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
-    unmarkPlaceAsFavourite(name: string): Promise<boolean> {
-        throw new Error("Not implemented")
+    async unmarkPlaceAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.unmarkElementAsFavourite(this.userInfo.getPlace(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
 
-    markRouteAsFavourite(name: string): Promise<boolean> {
-        throw new Error("Not implemented")
+    async markRouteAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getRoute(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
-    unmarkRouteAsFavourite(name: string): Promise<boolean> {
-        throw new Error("Not implemented")
+    async unmarkRouteAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.unmarkElementAsFavourite(this.userInfo.getRoute(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
 }
 

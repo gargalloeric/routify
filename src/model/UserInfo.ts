@@ -80,4 +80,12 @@ export class UserInfo {
     private hasPlace(name: string) {
         return !!this.places[name];
     }
+
+    getPlace(name: string): Place {
+        return this.places[name];
+    }
+
+    getRoute(name: string): Route {
+        return this.routes[name];
+    }
 }
