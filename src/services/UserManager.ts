@@ -188,6 +188,10 @@ export class UserManager {
             return this.userInfo.places;
         } else throw new Error("User must be logged in to list places");
     }
+
+    async setDefaultVehicle(matricula : string){
+        //TODO
+    }
 }
 
 let instance: UserManager;
