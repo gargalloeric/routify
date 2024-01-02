@@ -4,7 +4,7 @@ import Footer from "./components/Footer.vue";
 import router from "./router.ts";
 
 
-router.push({path: '/'});
+router.push({path: '/login'});
 </script>
 <router-view id="router-view"/>
 <template>
@@ -12,6 +12,3 @@ router.push({path: '/'});
     <router-view id="router-view"/>
     <Footer></Footer>
 </template>
-
-<style scoped>
-</style>
