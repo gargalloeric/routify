@@ -66,13 +66,18 @@ export class UserManager {
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 
-    async deleteAccount(): Promise<void> {
+    async deleteAccount(): Promise<boolean> {
         if (this.userInfo) {
-            await this._dbService.deleteUser(this.userInfo)
-            await this._authService.deleteSignedInUser(this.userInfo)
-            this.userInfo = null
-
-        } else throw Error("Can't delete account if user is not logged")
+            try {
+                await this._dbService.deleteUser(this.userInfo)
+                await this._authService.deleteSignedInUser(this.userInfo)
+                this.userInfo = null
+                return true;
+            } catch (err) {
+                console.log(err);
+                return false;
+            }
+        } else throw Error("User not logged in")
     }
 
     async setDefaultTypeOfRoute(type: RouteType): Promise<boolean> {
