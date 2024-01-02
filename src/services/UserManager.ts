@@ -190,7 +190,11 @@ export class UserManager {
     }
 
     async setDefaultVehicle(matricula : string){
-        //TODO
+        if (this.userInfo && this.isLoggedIn()) {
+            const vehicle : Vehicle = this.userInfo.getVehicle(matricula);
+            this.userInfo.setDefaultVehicle(vehicle);
+            await this._dbService.saveUserInfo(this.userInfo);
+        }
     }
 }
 

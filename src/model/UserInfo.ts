@@ -77,6 +77,18 @@ export class UserInfo {
         return true;
     }
 
+    setDefaultVehicle(vehicle: Vehicle){
+        if (this.hasVehicle(vehicle.matricula)){
+            if (this.hasVehicle("default")){
+                if (this.vehicles["default"].matricula == vehicle.matricula)
+                    throw new Error("Vehicle is already default");
+                else this.vehicles["default"] = vehicle;
+            }
+            else this.vehicles["default"] = vehicle;
+        }
+        else throw new Error("Invalid vehicle")
+    }
+
     private hasPlace(name: string) {
         return !!this.places[name];
     }
