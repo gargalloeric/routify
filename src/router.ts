@@ -8,6 +8,7 @@ import ListVehicleVue from "./views/ListVehicle.vue";
 import ListRoutes from "./views/ListRoutes.vue";
 import ListPlaces from "./views/ListPlaces.vue";
 import RegisterPlace from "./views/RegisterPlace.vue";
+import UpdateVehicle from "./views/UpdateVehicle.vue";
 
 const routes = [
     {
@@ -55,6 +56,12 @@ const routes = [
         name: "Register Place",
         component: RegisterPlace
     },
+    {
+        path: "/updateVehicle/:matricula",
+        name: "Update Vehicle",
+        component: UpdateVehicle,
+        props: true
+    }
 ];
 
 const router = createRouter({
