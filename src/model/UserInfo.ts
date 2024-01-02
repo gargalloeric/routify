@@ -9,6 +9,7 @@ export class UserInfo {
     vehicles: { [id:string] : Vehicle }
     routes: { [id:string] : Route }
     places: { [id:string] : Place }
+    defaultVehicle: string
     constructor(userId: string, email: string | null, name : string) {
         this.name = name
         this.mail = email
@@ -29,7 +30,8 @@ export class UserInfo {
             name: this.name,
             vehicles: vehiclesData,
             routes: routesData,
-            places: placesData
+            places: placesData,
+            defaultVehicle: this.defaultVehicle
         }
     }
 
@@ -77,14 +79,11 @@ export class UserInfo {
         return true;
     }
 
-    setDefaultVehicle(vehicle: Vehicle){
-        if (this.hasVehicle(vehicle.matricula)){
-            if (this.hasVehicle("default")){
-                if (this.vehicles["default"].matricula == vehicle.matricula)
-                    throw new Error("Vehicle is already default");
-                else this.vehicles["default"] = vehicle;
-            }
-            else this.vehicles["default"] = vehicle;
+    setDefaultVehicle(matricula : string){
+        if (this.hasVehicle(matricula)){
+            if (this.defaultVehicle == matricula) throw new Error('Vehicle is already default');
+            else
+            this.defaultVehicle = matricula;
         }
         else throw new Error("Invalid vehicle")
     }

@@ -61,6 +61,9 @@ export class FirebaseDBService implements DBService {
                     )
                 });
             }
+
+            userInfo.defaultVehicle= docSnap.get('defaultVehicle');
+
             return;
         }
         throw new Error("Unable to find user in DB");

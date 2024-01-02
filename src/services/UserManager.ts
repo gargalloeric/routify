@@ -191,10 +191,15 @@ export class UserManager {
 
     async setDefaultVehicle(matricula : string){
         if (this.userInfo && this.isLoggedIn()) {
-            const vehicle : Vehicle = this.userInfo.getVehicle(matricula);
-            this.userInfo.setDefaultVehicle(vehicle);
+            this.userInfo.setDefaultVehicle(matricula);
             await this._dbService.saveUserInfo(this.userInfo);
         }
+    }
+
+    getDefaultVehicle(){
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.defaultVehicle;
+        } else throw new Error("User must be logged in to list places");
     }
 }
 

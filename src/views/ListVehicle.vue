@@ -10,7 +10,7 @@
                 <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vehiculo por defecto</label>
                 <select v-model="defaultVehicle" id="transport"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <option v-for="vehicle in listOfVehicles" :value="vehicle">
+                  <option v-for="vehicle in listOfVehicles" :value="vehicle.matricula">
                     🚗{{ vehicle.nombre }}
                   </option>
                 </select>
@@ -78,19 +78,14 @@ import {RouteType} from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
 const listOfVehicles = ref<{[id: string]: Vehicle}>({});
 const userManager = getUserManager();
-let defaultVehicle = ref<Vehicle>({});
+let defaultVehicle = ref<string>(userManager.getDefaultVehicle());
 
 onMounted(() => {
     listOfVehicles.value = window.structuredClone(userManager.getListOfVehicles());
-    defaultVehicle.value = listOfVehicles.value['default'];
-    delete listOfVehicles.value['default'];
 })
 
-let count = 0;
 watch(defaultVehicle, async () => {
-  if (count != 0)
-    await userManager.setDefaultVehicle(defaultVehicle.value.matricula);
-  count++;
+  await userManager.setDefaultVehicle(defaultVehicle.value);
 })
 async function handleDelete(matricula: string) {
     delete listOfVehicles.value[matricula];
