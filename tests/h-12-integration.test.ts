@@ -52,6 +52,7 @@ test('updateVehicle_UserRegisteredDBAvailableValidInputs_UpdateVehicle', async (
 
     // delete what is done
     await getUserManager().deleteVehicle(matricula).catch(() => {})
+    vi.doUnmock('../src/services/FirebaseDBService.ts');
 });
 
 // E03 - Inválido
@@ -60,6 +61,19 @@ test('updateVehicle_UserRegisteredDBAvailableValidInputs_UpdateVehicle', async (
 // Then: se lanza la excepción InvalidVehicleException.
 
 test('updateVehicle_UserRegisteredDBAvailableInValidInputs_ThrowInvalidVehicle', async () => {
+    vi.mock('../src/services/FirebaseDBService.ts', () => {
+        const FirebaseDBService = vi.fn()
+        FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
+        FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockImplementation((userInfo : UserInfo) => {
+            userInfo.vehicles["1313XLX"] = new Vehicle(
+                "1313XLJ",
+                "nave galáctica",
+                "combustión",
+                5
+            );
+        })
+        return { FirebaseDBService }
+    });
     const email: string = 'edu.jose@gmail.com',
         password: string = 'aS0@28Y?';
 
