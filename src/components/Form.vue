@@ -10,7 +10,7 @@ formRoute.origin = "";
 formRoute.destination = "";
 const userManager = getUserManager();
 
-let routeType: RouteType = RouteType.Recommended;
+let routeType: RouteType = userManager.userInfo?.defaultTypeOfRoute ?? RouteType.Recommended;
 let mode: string | Vehicle = "driving-car";
 let vehicles = ref({});
 let size = 0;
