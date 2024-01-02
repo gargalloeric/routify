@@ -6,6 +6,15 @@
                 <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Tus Vehiculos</h5>
             </div>
             <div class="flow-root">
+              <div class="mb-5">
+                <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vehiculo por defecto</label>
+                <select v-model="defaultVehicle" id="transport"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option v-for="vehicle in listOfVehicles" :value="vehicle">
+                    🚗{{ vehicle.nombre }}
+                  </option>
+                </select>
+              </div>
                 <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                     <li v-for="vehicle in listOfVehicles" class="py-3 sm:py-4">
                         <div class="flex items-center">
@@ -60,19 +69,31 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import { getUserManager } from '../services/UserManager';
 import router from "../router.ts";
 import { Vehicle } from '../model/Vehicle';
+import Form from "../components/Form.vue";
+import {RouteType} from "../model/Route.ts";
+import {Transport} from "../model/Transport.ts";
 const listOfVehicles = ref<{[id: string]: Vehicle}>({});
 const userManager = getUserManager();
+let defaultVehicle = ref<Vehicle>({});
 
 onMounted(() => {
-    listOfVehicles.value = userManager.getListOfVehicles();
+    listOfVehicles.value = window.structuredClone(userManager.getListOfVehicles());
+    defaultVehicle.value = listOfVehicles.value['default'];
+    delete listOfVehicles.value['default'];
 })
 
+let count = 0;
+watch(defaultVehicle, async () => {
+  if (count != 0)
+    await userManager.setDefaultVehicle(defaultVehicle.value.matricula);
+  count++;
+})
 async function handleDelete(matricula: string) {
-    delete listOfVehicles.value[matricula]
+    delete listOfVehicles.value[matricula];
     await userManager.deleteVehicle(matricula);   
 }
 </script>
