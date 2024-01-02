@@ -80,13 +80,10 @@ export class UserInfo {
     }
 
     setDefaultVehicle(matricula : string){
-        if (this.hasVehicle(matricula)){
-            if (this.defaultVehicle == matricula) throw new Error('Vehicle is already default');
-            else
-            this.defaultVehicle = matricula;
+        if (this.defaultVehicle == matricula) throw new Error('Vehicle is already default');
+        else
+        this.defaultVehicle = matricula;
         }
-        else throw new Error("Invalid vehicle")
-    }
 
     private hasPlace(name: string) {
         return !!this.places[name];
