@@ -29,6 +29,14 @@
                                 </p>
                             </div>
                             <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                <button type="button" v-if="!vehicle['isFav']"
+                                        @click="markAsFavourite(vehicle['matricula'])" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m11.479 1.712 2.367 4.8a.532.532 0 0 0 .4.292l5.294.769a.534.534 0 0 1 .3.91l-3.83 3.735a.534.534 0 0 0-.154.473l.9 5.272a.535.535 0 0 1-.775.563l-4.734-2.49a.536.536 0 0 0-.5 0l-4.73 2.487a.534.534 0 0 1-.775-.563l.9-5.272a.534.534 0 0 0-.154-.473L2.158 8.48a.534.534 0 0 1 .3-.911l5.294-.77a.532.532 0 0 0 .4-.292l2.367-4.8a.534.534 0 0 1 .96.004Z"/></svg>
+                                </button>
+                                <button type="button" v-if="vehicle['isFav']"
+                                        @click="unmarkAsFavourite(vehicle['matricula'])" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20"><path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/></svg>
+                                </button>
                                 <div class="inline-flex rounded-md shadow-sm" role="group">
                                     <button type="button"
                                         class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
@@ -73,22 +81,43 @@ import {onMounted, ref, watch} from 'vue';
 import { getUserManager } from '../services/UserManager';
 import router from "../router.ts";
 import { Vehicle } from '../model/Vehicle';
+
 import Form from "../components/Form.vue";
 import {RouteType} from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
-const listOfVehicles = ref<{[id: string]: Vehicle}>({});
+
+const listOfVehicles = ref();
 const userManager = getUserManager();
 let defaultVehicle = ref<string>(userManager.getDefaultVehicle());
 
 onMounted(() => {
-    listOfVehicles.value = window.structuredClone(userManager.getListOfVehicles());
+  generateListOfVehicles();
 })
+
+function generateListOfVehicles() {
+  listOfVehicles.value = Object.values(userManager.getListOfVehicles()).map(obj => obj);
+  listOfVehicles.value.sort((a: Vehicle, b: Vehicle) => {
+    const isFavA = a.isFav || false;
+    const isFavB = b.isFav || false;
+    return isFavB - isFavA;
+  });
+}
 
 watch(defaultVehicle, async () => {
   await userManager.setDefaultVehicle(defaultVehicle.value);
 })
 async function handleDelete(matricula: string) {
-    delete listOfVehicles.value[matricula];
-    await userManager.deleteVehicle(matricula);   
+    await userManager.deleteVehicle(matricula);
+    generateListOfVehicles()
+}
+
+async function markAsFavourite(matricula: string) {
+  await userManager.markVehicleAsFavourite(matricula);
+  generateListOfVehicles()
+}
+
+async function unmarkAsFavourite(matricula: string) {
+  await userManager.unmarkVehicleAsFavourite(matricula);
+  generateListOfVehicles()
 }
 </script>

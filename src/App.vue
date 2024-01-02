@@ -2,11 +2,11 @@
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import router from "./router.ts";
+import {getUserManager} from "./services/UserManager.ts";
 
-
-router.push({path: '/'});
+if (getUserManager().isLoggedIn()) router.push({path: '/'});
+else router.push({path: '/logIn'});
 </script>
-<router-view id="router-view"/>
 <template>
     <Header class="drop-shadow-md"></Header>
     <router-view id="router-view"/>

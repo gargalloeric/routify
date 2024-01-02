@@ -33,6 +33,7 @@ export class FirebaseDBService implements DBService {
                         vehiclesData[id].tipoMotor,
                         vehiclesData[id].consumo100Km
                     );
+                    if (vehiclesData[id].isFav) userInfo.vehicles[id].markAsFav();
                 });
             }
 
