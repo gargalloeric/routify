@@ -189,6 +189,31 @@ export class UserManager {
             return this.userInfo.places;
         } else throw new Error("User must be logged in to list places");
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // FAVOURITE ELEMENTS MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
+    markVehicleAsFavourite(matricula: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
+    unmarkVehicleAsFavourite(matricula: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
+
+    markPlaceAsFavourite(name: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
+    unmarkPlaceAsFavourite(name: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
+
+    markRouteAsFavourite(name: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
+    unmarkRouteAsFavourite(name: string): Promise<boolean> {
+        throw new Error("Not implemented")
+    }
 }
 
 let instance: UserManager;
