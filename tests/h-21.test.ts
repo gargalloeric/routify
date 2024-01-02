@@ -23,11 +23,17 @@ test('defaultVehicle_UserRegisteredDBAvailableVehicleAlreadyDefault_ThrowVehicle
     await userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km).catch(() => {})
     await userManager.setDefaultVehicle(matricula).catch(() => {});
 
-    await expect(userManager.setDefaultVehicle(matricula)).rejects.toThrowError("Vehicle already is default");
+    await expect(userManager.setDefaultVehicle(matricula)).rejects.toThrowError("Vehicle is already default");
 
     // delete what is done
     await getUserManager().deleteVehicle(matricula).catch(() => {})
 });
+
+// E02 - Válido
+// Given: el vehículo/modo de transporte no está marcado como por defecto
+// When: se intenta marcar como por defecto.
+// Then: se marca como por defecto.
+// And: el vehículo/modo de transporte que estaba marcado por defecto deja de estarlo.
 
 test('defaultVehicle_UserRegisteredDBAvailableVehicleNotDefault_DefaultVehicle', async () => {
     const email: string = 'edu.jose@gmail.com',
@@ -44,7 +50,7 @@ test('defaultVehicle_UserRegisteredDBAvailableVehicleNotDefault_DefaultVehicle',
     await getUserManager().deleteVehicle(matricula).catch(() => {})
     await userManager.registerVehicle(matricula, nombre, tipoMotor, consumo100Km).catch(() => {})
 
-    await expect(userManager.setDefaultVehicle(matricula)).not.toThrowError();
+    await expect(() => userManager.setDefaultVehicle(matricula)).not.toThrowError();
 
     // delete what is done
     await getUserManager().deleteVehicle(matricula).catch(() => {})
