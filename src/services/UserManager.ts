@@ -9,7 +9,6 @@ import {Route} from "../model/Route.ts";
 import {obtainCoordsFromName, obtainNameFromCoords} from "./ORS.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 import {Place} from "../model/Place.ts";
-import L, {LatLng, latLng} from "leaflet";
 
 
 export class UserManager {
@@ -38,8 +37,10 @@ export class UserManager {
         return !!this.userInfo;
     }
 
-    logOut() { // TODO following stories...
-        this.userInfo = null;
+    logOut() {
+        if (this.userInfo) {
+            this.userInfo = null;
+        } else throw Error("User must be logged in to log out")
     }
 
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
