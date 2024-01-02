@@ -3,7 +3,7 @@ import {databaseFirestore, doc, getDoc, setDoc} from "./FirebaseUtils.ts";
 import {UserInfo} from "../model/UserInfo.ts";
 import {deleteDoc} from "firebase/firestore";
 import {Vehicle} from "../model/Vehicle.ts";
-import {Route} from "../model/Route.ts";
+import {Route, RouteType} from "../model/Route.ts";
 import {Place} from "../model/Place.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 
@@ -22,6 +22,8 @@ export class FirebaseDBService implements DBService {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             userInfo.name = docSnap.get('name');
+
+            userInfo.defaultTypeOfRoute = docSnap.get('defaultTypeOfRoute') ?? RouteType.Recommended
 
             const vehiclesData: { [id: string]: Vehicle } = docSnap.get('vehicles');
             if (vehiclesData) {
