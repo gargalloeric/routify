@@ -20,7 +20,7 @@ test('markVehicleAsFavourite_UserHasVehicleAlreadyMarked_throwAlreadyFavouriteEx
     const matricula1: string = "1212XLX", nombre1: string = "nave galáctica", tipoMotor1: string = "combustión", consumo100Km1: number = 5;
     await userManager.registerVehicle(matricula1, nombre1, tipoMotor1, consumo100Km1).catch(() => {});
     // Given vehicle is marked
-    userManager.markVehicleAsFavourite(matricula1).catch(() => {})
+    await userManager.markVehicleAsFavourite(matricula1).catch(() => {})
 
     // Try to mark - throw error
     await expect(() => userManager.markVehicleAsFavourite(matricula1)).rejects.toThrowError('Vehicle already marked as favourite');

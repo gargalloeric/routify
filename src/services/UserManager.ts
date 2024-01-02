@@ -194,11 +194,23 @@ export class UserManager {
     // FAVOURITE ELEMENTS MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    markVehicleAsFavourite(matricula: string): Promise<boolean> {
-        throw new Error("Not implemented")
+    async markVehicleAsFavourite(matricula: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            if (this.userInfo.getVehicle(matricula).markAsFav()) {
+                await this._dbService.saveUserInfo(this.userInfo)
+                return true
+
+            } else throw Error("Vehicle already marked as favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
-    unmarkVehicleAsFavourite(matricula: string): Promise<boolean> {
-        throw new Error("Not implemented")
+     async unmarkVehicleAsFavourite(matricula: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            if (this.userInfo.getVehicle(matricula).unmarkAsFav()) {
+                await this._dbService.saveUserInfo(this.userInfo)
+                return true
+
+            } else throw Error("Vehicle already marked as not favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
 
     markPlaceAsFavourite(name: string): Promise<boolean> {
