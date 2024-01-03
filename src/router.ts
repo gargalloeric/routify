@@ -8,6 +8,7 @@ import ListVehicleVue from "./views/ListVehicle.vue";
 import ListRoutes from "./views/ListRoutes.vue";
 import ListPlaces from "./views/ListPlaces.vue";
 import RegisterPlace from "./views/RegisterPlace.vue";
+import UpdateVehicle from "./views/UpdateVehicle.vue";
 import ProfileViewVue from "./views/ProfileView.vue";
 
 const routes = [
@@ -57,10 +58,16 @@ const routes = [
         component: RegisterPlace
     },
     {
+        path: "/updateVehicle/:matricula",
+        name: "Update Vehicle",
+        component: UpdateVehicle,
+        props: true
+    },
+    {
         path: "/profile",
         name: "Profile",
         component: ProfileViewVue
-    },
+    }
 ];
 
 const router = createRouter({
