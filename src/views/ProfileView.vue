@@ -5,6 +5,7 @@ import TrashIcon from '../components/TrashIcon.vue';
 import { RouteType } from "../model/Route";
 import { ref } from 'vue';
 import SuccessMessage from "../components/SuccessMessage.vue";
+import router from '../router';
 
 const userManager = getUserManager();
 const username = userManager.userInfo?.name;
@@ -14,6 +15,7 @@ let preferredRouteType = userManager.userInfo?.defaultTypeOfRoute
 async function handleDeleteClick() {
     await userManager.deleteAccount();
     userManager.logOut();
+    router.push({path: '/login'});
 }
 
 async function handlePreferenceSave() {
