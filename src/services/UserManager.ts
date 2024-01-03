@@ -1,20 +1,20 @@
-import {UserInfo} from "../model/UserInfo.ts";
-import {AuthService} from "./AuthService.ts";
-import {DBService} from "./DBService.ts";
-import {FirebaseAuthService} from "./FirebaseAuthService.ts";
-import {FirebaseDBService} from "./FirebaseDBService.ts";
-import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
-import {Vehicle} from "../model/Vehicle.ts";
-import {Route} from "../model/Route.ts";
-import {obtainCoordsFromName, obtainNameFromCoords} from "./ORS.ts";
-import {Coordinates} from "../model/Coordinates.ts";
-import {Place} from "../model/Place.ts";
-import L, {LatLng, latLng} from "leaflet";
+import { UserInfo } from "../model/UserInfo.ts";
+import { AuthService } from "./AuthService.ts";
+import { DBService } from "./DBService.ts";
+import { FirebaseAuthService } from "./FirebaseAuthService.ts";
+import { FirebaseDBService } from "./FirebaseDBService.ts";
+import { validateLogInInfo, validateRegistrationInfo, validateVehicleInfo } from "./Validators.ts";
+import { Vehicle } from "../model/Vehicle.ts";
+import { Route, RouteType } from "../model/Route.ts";
+import { obtainCoordsFromName, obtainNameFromCoords } from "./ORS.ts";
+import { Coordinates } from "../model/Coordinates.ts";
+import { Place } from "../model/Place.ts";
+import {GenericElement } from "../model/GenericElement.ts";
 
 
 export class UserManager {
 
-    userInfo : UserInfo | null;
+    userInfo: UserInfo | null;
     private _authService: AuthService;
     private _dbService: DBService;
 
@@ -34,12 +34,14 @@ export class UserManager {
     // SESSION/ACCOUNT MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    isLoggedIn() : boolean {
+    isLoggedIn(): boolean {
         return !!this.userInfo;
     }
 
-    logOut() { // TODO following stories...
-        this.userInfo = null;
+    logOut() {
+        if (this.userInfo) {
+            this.userInfo = null;
+        } else throw Error("User must be logged in to log out")
     }
 
     async register(name: string, email: string, password: string, repPassword: string): Promise<string> {
@@ -66,13 +68,31 @@ export class UserManager {
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 
-    async deleteAccount(): Promise<void> {
+    async deleteAccount(): Promise<boolean> {
         if (this.userInfo) {
-            await this._dbService.deleteUser(this.userInfo)
-            await this._authService.deleteSignedInUser(this.userInfo)
-            this.userInfo = null
+            try {
+                await this._dbService.deleteUser(this.userInfo)
+                await this._authService.deleteSignedInUser(this.userInfo)
+                this.userInfo = null
+                return true;
+            } catch (err) {
+                console.log(err);
+                return false;
+            }
+        } else throw Error("User not logged in")
+    }
 
-        } else throw Error("Can't delete account if user is not logged")
+    async setDefaultTypeOfRoute(type: RouteType): Promise<boolean> {
+        if (this.userInfo) {
+            try {
+                this.userInfo.defaultTypeOfRoute = type;
+                this._dbService.saveUserInfo(this.userInfo);
+                return true
+            } catch (_) {
+                return false;
+            }
+        } else throw Error('User not logged in');
+
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -109,7 +129,11 @@ export class UserManager {
     }
 
     getUserVehicle(matricula: string) {
-        if (this.userInfo) return this.userInfo.getVehicle(matricula);
+        if (this.userInfo){
+            const vehicle : Vehicle = this.userInfo.getVehicle(matricula);
+            if (vehicle)
+                return vehicle;
+        }
         else throw new Error("User must be logged in to fetch a vehicle");
     }
 
@@ -117,7 +141,7 @@ export class UserManager {
     // ROUTE MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    async saveRoute(route: Route, name: string) : Promise<boolean>{
+    async saveRoute(route: Route, name: string): Promise<boolean> {
         if (this.userInfo && this.isLoggedIn()) {
             route.name = name;
             this.userInfo.addRoute(route);
@@ -127,7 +151,7 @@ export class UserManager {
 
         } else throw new Error("User must be logged in to save a route")
     }
-    async deleteRoute(name: string){
+    async deleteRoute(name: string) {
         if (this.userInfo && this.isLoggedIn()) {
             this.userInfo.removeRoute(name);
             await this._dbService.saveUserInfo(this.userInfo);
@@ -161,7 +185,7 @@ export class UserManager {
         } else throw new Error("User must be logged in to save a route")
     }
 
-    async registerPlaceFromPlaceCoords(coords: Coordinates){
+    async registerPlaceFromPlaceCoords(coords: Coordinates) {
         if (this.userInfo && this.isLoggedIn()) {
             // get coords
             const dataOrigin = await obtainNameFromCoords(coords.reverse());
@@ -187,6 +211,88 @@ export class UserManager {
         if (this.userInfo && this.isLoggedIn()) {
             return this.userInfo.places;
         } else throw new Error("User must be logged in to list places");
+    }
+
+    async updateUserVehicle(vehicle: Vehicle){
+        if (this.userInfo && this.isLoggedIn()) {
+            const validationMessage = validateVehicleInfo(vehicle.matricula, vehicle.nombre, vehicle.tipoMotor, vehicle.consumo100Km);
+            if (validationMessage) throw new Error(validationMessage)
+
+            this.userInfo.updateVehicle(vehicle);
+
+            await this._dbService.saveUserInfo(this.userInfo)
+
+        } else throw new Error("User must be logged in to register a vehicle")
+    }
+
+    async setDefaultVehicle(matricula : string){
+        if (this.userInfo && this.isLoggedIn()) {
+            this.userInfo.setDefaultVehicle(matricula);
+            await this._dbService.saveUserInfo(this.userInfo);
+        }
+    }
+
+    getDefaultVehicle(){
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.defaultVehicle;
+        } else throw new Error("User must be logged in to list places");
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // FAVOURITE ELEMENTS MANAGEMENT
+    // -----------------------------------------------------------------------------------------------------------------
+
+    async markElementAsFavourite(element: GenericElement): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            if (element.markAsFav()) {
+                await this._dbService.saveUserInfo(this.userInfo)
+                return true
+
+            } else throw Error("Element already marked as favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async unmarkElementAsFavourite(element: GenericElement): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            if (element.unmarkAsFav()) {
+                await this._dbService.saveUserInfo(this.userInfo)
+                return true
+
+            } else throw Error("Element already marked as not favourite")
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async markVehicleAsFavourite(matricula: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getVehicle(matricula))
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+     async unmarkVehicleAsFavourite(matricula: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.unmarkElementAsFavourite(this.userInfo.getVehicle(matricula))
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async markPlaceAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getPlace(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+    async unmarkPlaceAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.unmarkElementAsFavourite(this.userInfo.getPlace(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+
+    async markRouteAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.markElementAsFavourite(this.userInfo.getRoute(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
+    }
+    async unmarkRouteAsFavourite(name: string): Promise<boolean> {
+        if (this.userInfo && this.isLoggedIn()) {
+            return await this.unmarkElementAsFavourite(this.userInfo.getRoute(name))
+        } else throw new Error("User must be logged in to mark elements as favourite");
     }
 }
 

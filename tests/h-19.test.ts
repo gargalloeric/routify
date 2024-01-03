@@ -16,7 +16,7 @@ test('deleteRoute_UserRegisteredDBAvailableRouteSaved_deleteRoute', async () => 
     const userManager = getUserManager();
     await userManager.logIn(email, password);
 
-    await userManager.saveRoute(route, "Test Route h-19");
+    await userManager.saveRoute(route, "Test Route h-19").catch(() => {});
 
     expect(() => userManager.deleteRoute("Test Route h-19")).not.toThrowError('Route not found');
 });

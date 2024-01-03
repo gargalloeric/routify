@@ -3,7 +3,7 @@ import {databaseFirestore, doc, getDoc, setDoc} from "./FirebaseUtils.ts";
 import {UserInfo} from "../model/UserInfo.ts";
 import {deleteDoc} from "firebase/firestore";
 import {Vehicle} from "../model/Vehicle.ts";
-import {Route} from "../model/Route.ts";
+import {Route, RouteType} from "../model/Route.ts";
 import {Place} from "../model/Place.ts";
 import {Coordinates} from "../model/Coordinates.ts";
 
@@ -23,6 +23,8 @@ export class FirebaseDBService implements DBService {
         if (docSnap.exists()) {
             userInfo.name = docSnap.get('name');
 
+            userInfo.defaultTypeOfRoute = docSnap.get('defaultTypeOfRoute') ?? RouteType.Recommended
+
             const vehiclesData: { [id: string]: Vehicle } = docSnap.get('vehicles');
             if (vehiclesData) {
                 userInfo.vehicles = {};
@@ -33,6 +35,7 @@ export class FirebaseDBService implements DBService {
                         vehiclesData[id].tipoMotor,
                         vehiclesData[id].consumo100Km
                     );
+                    if (vehiclesData[id].isFav) userInfo.vehicles[id].markAsFav();
                 });
             }
 
@@ -61,6 +64,10 @@ export class FirebaseDBService implements DBService {
                     )
                 });
             }
+
+            userInfo.defaultVehicle= docSnap.get('defaultVehicle');
+            if (!userInfo.defaultVehicle) userInfo.defaultVehicle = "driving-car";
+
             return;
         }
         throw new Error("Unable to find user in DB");

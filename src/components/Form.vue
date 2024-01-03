@@ -10,18 +10,25 @@ formRoute.origin = "";
 formRoute.destination = "";
 const userManager = getUserManager();
 
-let routeType: RouteType = RouteType.Recommended;
-let mode: string | Vehicle = "driving-car";
-let vehicles = ref({});
+
+const defaultVehicle = userManager.getDefaultVehicle();
+
+let mode: string | Vehicle = defaultVehicle;
+
+let vehicles = ref<{[id:string] : Vehicle}>(userManager.getListOfVehicles());
+let routeType: RouteType = userManager.userInfo?.defaultTypeOfRoute ?? RouteType.Recommended;
+
 let size = 0;
-if (userManager.isLoggedIn()) {
-  vehicles.value = userManager.getListOfVehicles();
-  for (let v in vehicles.value) {
-    if (size == 0)
-      mode = userManager.getUserVehicle(v);
-    size++;
+
+for (let v in vehicles.value) {
+  if (defaultVehicle == "driving-car" && size==0){
+    mode = vehicles.value[v];
   }
+  if (v == defaultVehicle)
+    mode = vehicles.value[v];
+  size++;
 }
+
 let vehicle: Vehicle;
 let name = "";
 const props = defineProps<{
@@ -77,10 +84,10 @@ function saveRoute() {
         <label for="transport" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transporte</label>
         <select v-model="mode" id="transport"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option v-if="userManager.isLoggedIn() && size > 0" v-for="vehicle in vehicles" :value="vehicle">
-            🚗{{ vehicle.nombre }}
+          <option v-for="vehicle in vehicles" :value="vehicle">
+            🚗{{ vehicle['nombre'] }}
           </option>
-          <option v-else :value="Transport.Car">🚗 Coche</option>
+          <option v-if="size == 0" :value="Transport.Car">🚗 Coche</option>
           <option :value="Transport.Foot">🚶 A Pie</option>
           <option :value="Transport.Bycicle">🚴 Bicicleta</option>
         </select>
