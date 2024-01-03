@@ -85,9 +85,6 @@ import {onMounted, ref, watch} from 'vue';
 import { getUserManager } from '../services/UserManager';
 import router from "../router.ts";
 import { Vehicle } from '../model/Vehicle';
-
-import Form from "../components/Form.vue";
-import {RouteType} from "../model/Route.ts";
 import {Transport} from "../model/Transport.ts";
 
 const listOfVehicles = ref();
