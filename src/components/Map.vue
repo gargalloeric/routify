@@ -30,7 +30,16 @@ onMounted(() => {
   map.value.on('click', onMapClick);
 });
 
-let markers : L.Marker[] = [L.marker(latLng([0, 0, 0])), L.marker([0, 0, 0])];
+let greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker([0, 0, 0]).bindPopup("Destino")];
 
 function drawRoute(route: Route) {
   const geoJSON = route.geoJSON;
@@ -55,6 +64,7 @@ function clear() {
 let click = 1;
 let counter = 0;
 function onMapClick(e: LeafletMouseEvent) { // first 2 clicks will set the markers on each position, the rest will substitute the initial markers
+  clear();
   let index;
   if (counter < 2){
     index = counter;
@@ -63,7 +73,7 @@ function onMapClick(e: LeafletMouseEvent) { // first 2 clicks will set the marke
     click = (click + 1) % 2
     index = click;
   }
-  markers[index].setLatLng(e.latlng).addTo(map.value);
+  markers[index].openPopup().setLatLng(e.latlng).addTo(map.value);
   if (index == 0) formRoute.origin = [e.latlng.lng, e.latlng.lat];
   else formRoute.destination = [e.latlng.lng, e.latlng.lat];
   counter++;
