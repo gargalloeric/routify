@@ -15,7 +15,12 @@ let preferredRouteType = userManager.userInfo?.defaultTypeOfRoute
 async function handleDeleteClick() {
     await userManager.deleteAccount();
     userManager.logOut();
-    router.push({path: '/login'});
+    await router.push({path: '/login'});
+}
+
+function handleLogOutClick() {
+  userManager.logOut();
+  router.push({path: '/login'});
 }
 
 async function handlePreferenceSave() {
@@ -54,6 +59,11 @@ async function handlePreferenceSave() {
             <hr class="border-red-500" />
             <h2 class="text-2xl font-bold text-red-500">Zona de peligro</h2>
             <div class="flex flex-row justify-center">
+                <button type="button" @click="handleLogOutClick"
+                        class="bg-yellow-400 hover:text-white border border-yellow-600 inline-flex items-center gap-2 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"/></svg>
+                  Cerrar Sesión
+                </button>
                 <button type="button" @click="handleDeleteClick"
                     class="text-red-500 hover:text-white border border-red-500 inline-flex items-center gap-2 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                     <TrashIcon class="w-5 h-5"></TrashIcon>
