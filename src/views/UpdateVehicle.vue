@@ -25,6 +25,7 @@ async function update() {
   }
   catch (error){
     console.log(error);
+    isUpdatingVehicle.value = false;
     returnedError.value = true;
   }
 }
