@@ -10,13 +10,13 @@ export interface ICostStrategy {
 
 export class BycicleCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        return (route.distance / 100) * consumptionAt100;
+        return parseFloat(((route.distance / 100) * consumptionAt100).toFixed(2));
     }
 }
 
 export class FootCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        return (route.distance / 100) * consumptionAt100;
+        return parseFloat(((route.distance / 100) * consumptionAt100).toFixed(2));
     }
 }
 
