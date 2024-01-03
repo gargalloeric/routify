@@ -64,6 +64,9 @@ export class UserManager {
 
         await this._dbService.fetchUserInfo(this.userInfo)
 
+        if (!this.userInfo.defaultVehicle)
+            await this.setDefaultVehicle("driving-car");
+
         if (this.userInfo.mail) return this.userInfo.mail
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }

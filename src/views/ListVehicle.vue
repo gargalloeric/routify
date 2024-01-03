@@ -93,8 +93,11 @@ const listOfVehicles = ref();
 const userManager = getUserManager();
 let defaultVehicle = ref<string>(userManager.getDefaultVehicle());
 
+
 onMounted(() => {
   generateListOfVehicles();
+  if (listOfVehicles.value.length > 0 && defaultVehicle.value == "driving-car")
+    defaultVehicle.value = listOfVehicles.value[0]['matricula'];
 })
 
 function generateListOfVehicles() {
