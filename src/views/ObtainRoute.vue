@@ -24,7 +24,7 @@ const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
 const isRouteRequested = ref(false);
 const isSaveReturnedError = ref(false);
-const DEFAULT_CONSUMPTION_AT_100 = 750;
+const DEFAULT_CONSUMPTION_AT_100 = 750; // This works for foot and bycicle mode, it's a default value.
 
 let route: Route;
 let routeSaved = ref(false);
