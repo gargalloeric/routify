@@ -64,6 +64,7 @@ export class FirebaseDBService implements DBService {
             }
 
             userInfo.defaultVehicle= docSnap.get('defaultVehicle');
+            if (!userInfo.defaultVehicle) userInfo.defaultVehicle = "driving-car";
 
             return;
         }

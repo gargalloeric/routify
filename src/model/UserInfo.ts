@@ -10,13 +10,14 @@ export class UserInfo {
     routes: { [id:string] : Route }
     places: { [id:string] : Place }
     defaultVehicle: string
-    constructor(userId: string, email: string | null, name : string) {
+    constructor(userId: string, email: string | null, name : string, defaultVehicle? : string) {
         this.name = name
         this.mail = email
         this.userId = userId
         this.vehicles = {}
         this.routes = {}
         this.places = {}
+        this.defaultVehicle = defaultVehicle ?? "driving-car"
     }
 
     getDataForDb():Object {
@@ -46,6 +47,7 @@ export class UserInfo {
 
     removeVehicle(matricula: string) {
         if (!this.hasVehicle(matricula)) return false
+        if (matricula == this.defaultVehicle) this.defaultVehicle = "driving-car";
         delete this.vehicles[matricula]
         return true
     }
