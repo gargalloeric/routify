@@ -12,6 +12,3 @@ else router.push({path: '/logIn'});
     <router-view id="router-view"/>
     <Footer></Footer>
 </template>
-
-<style scoped>
-</style>

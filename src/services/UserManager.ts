@@ -1,20 +1,20 @@
-import {UserInfo} from "../model/UserInfo.ts";
-import {AuthService} from "./AuthService.ts";
-import {DBService} from "./DBService.ts";
-import {FirebaseAuthService} from "./FirebaseAuthService.ts";
-import {FirebaseDBService} from "./FirebaseDBService.ts";
-import {validateLogInInfo, validateRegistrationInfo, validateVehicleInfo} from "./Validators.ts";
-import {Vehicle} from "../model/Vehicle.ts";
-import {Route} from "../model/Route.ts";
-import {obtainCoordsFromName, obtainNameFromCoords} from "./ORS.ts";
-import {Coordinates} from "../model/Coordinates.ts";
-import {Place} from "../model/Place.ts";
-import {GenericElement} from "../model/GenericElement.ts";
+import { UserInfo } from "../model/UserInfo.ts";
+import { AuthService } from "./AuthService.ts";
+import { DBService } from "./DBService.ts";
+import { FirebaseAuthService } from "./FirebaseAuthService.ts";
+import { FirebaseDBService } from "./FirebaseDBService.ts";
+import { validateLogInInfo, validateRegistrationInfo, validateVehicleInfo } from "./Validators.ts";
+import { Vehicle } from "../model/Vehicle.ts";
+import { Route, RouteType } from "../model/Route.ts";
+import { obtainCoordsFromName, obtainNameFromCoords } from "./ORS.ts";
+import { Coordinates } from "../model/Coordinates.ts";
+import { Place } from "../model/Place.ts";
+import {GenericElement } from "../model/GenericElement.ts";
 
 
 export class UserManager {
 
-    userInfo : UserInfo | null;
+    userInfo: UserInfo | null;
     private _authService: AuthService;
     private _dbService: DBService;
 
@@ -34,7 +34,7 @@ export class UserManager {
     // SESSION/ACCOUNT MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    isLoggedIn() : boolean {
+    isLoggedIn(): boolean {
         return !!this.userInfo;
     }
 
@@ -68,13 +68,31 @@ export class UserManager {
         else throw Error("Unexpected error - user has no mail - auth failed¿?")
     }
 
-    async deleteAccount(): Promise<void> {
+    async deleteAccount(): Promise<boolean> {
         if (this.userInfo) {
-            await this._dbService.deleteUser(this.userInfo)
-            await this._authService.deleteSignedInUser(this.userInfo)
-            this.userInfo = null
+            try {
+                await this._dbService.deleteUser(this.userInfo)
+                await this._authService.deleteSignedInUser(this.userInfo)
+                this.userInfo = null
+                return true;
+            } catch (err) {
+                console.log(err);
+                return false;
+            }
+        } else throw Error("User not logged in")
+    }
 
-        } else throw Error("Can't delete account if user is not logged")
+    async setDefaultTypeOfRoute(type: RouteType): Promise<boolean> {
+        if (this.userInfo) {
+            try {
+                this.userInfo.defaultTypeOfRoute = type;
+                this._dbService.saveUserInfo(this.userInfo);
+                return true
+            } catch (_) {
+                return false;
+            }
+        } else throw Error('User not logged in');
+
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -123,7 +141,7 @@ export class UserManager {
     // ROUTE MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------
 
-    async saveRoute(route: Route, name: string) : Promise<boolean>{
+    async saveRoute(route: Route, name: string): Promise<boolean> {
         if (this.userInfo && this.isLoggedIn()) {
             route.name = name;
             this.userInfo.addRoute(route);
@@ -133,7 +151,7 @@ export class UserManager {
 
         } else throw new Error("User must be logged in to save a route")
     }
-    async deleteRoute(name: string){
+    async deleteRoute(name: string) {
         if (this.userInfo && this.isLoggedIn()) {
             this.userInfo.removeRoute(name);
             await this._dbService.saveUserInfo(this.userInfo);
@@ -167,7 +185,7 @@ export class UserManager {
         } else throw new Error("User must be logged in to save a route")
     }
 
-    async registerPlaceFromPlaceCoords(coords: Coordinates){
+    async registerPlaceFromPlaceCoords(coords: Coordinates) {
         if (this.userInfo && this.isLoggedIn()) {
             // get coords
             const dataOrigin = await obtainNameFromCoords(coords.reverse());

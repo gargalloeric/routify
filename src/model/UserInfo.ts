@@ -1,26 +1,28 @@
 import {Vehicle} from "./Vehicle.ts";
-import {Route} from "./Route.ts";
+import {Route, RouteType} from "./Route.ts";
 import {Place} from "./Place.ts";
 
 export class UserInfo {
     name: string
     mail: string | null
     userId: string
+    defaultTypeOfRoute: RouteType
     vehicles: { [id:string] : Vehicle }
     routes: { [id:string] : Route }
     places: { [id:string] : Place }
     defaultVehicle: string
-    constructor(userId: string, email: string | null, name : string, defaultVehicle? : string) {
+    constructor(userId: string, email: string | null, name : string, defaultVehicle? : string, defaultTypeOfRoute?: RouteType) {
         this.name = name
         this.mail = email
         this.userId = userId
         this.vehicles = {}
         this.routes = {}
         this.places = {}
+        this.defaultTypeOfRoute = defaultTypeOfRoute ?? RouteType.Recommended
         this.defaultVehicle = defaultVehicle ?? "driving-car"
     }
 
-    getDataForDb():Object {
+    getDataForDb(): Object {
         const vehiclesData: { [id: string]: any } = {};
         for (const [key, vehicle] of Object.entries(this.vehicles)) vehiclesData[key] = vehicle.toJSON();
         const routesData: { [id: string]: any } = {};
@@ -32,6 +34,7 @@ export class UserInfo {
             vehicles: vehiclesData,
             routes: routesData,
             places: placesData,
+            defaultTypeOfRoute: this.defaultTypeOfRoute,
             defaultVehicle: this.defaultVehicle
         }
     }

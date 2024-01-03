@@ -10,12 +10,14 @@ formRoute.origin = "";
 formRoute.destination = "";
 const userManager = getUserManager();
 
-let routeType: RouteType = RouteType.Recommended;
+
 const defaultVehicle = userManager.getDefaultVehicle();
 
 let mode: string | Vehicle = defaultVehicle;
 
 let vehicles = ref<{[id:string] : Vehicle}>(userManager.getListOfVehicles());
+let routeType: RouteType = userManager.userInfo?.defaultTypeOfRoute ?? RouteType.Recommended;
+
 let size = 0;
 
 for (let v in vehicles.value) {

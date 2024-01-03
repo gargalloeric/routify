@@ -9,6 +9,7 @@ import ListRoutes from "./views/ListRoutes.vue";
 import ListPlaces from "./views/ListPlaces.vue";
 import RegisterPlace from "./views/RegisterPlace.vue";
 import UpdateVehicle from "./views/UpdateVehicle.vue";
+import ProfileViewVue from "./views/ProfileView.vue";
 
 const routes = [
     {
@@ -61,6 +62,11 @@ const routes = [
         name: "Update Vehicle",
         component: UpdateVehicle,
         props: true
+    },
+    {
+        path: "/profile",
+        name: "Profile",
+        component: ProfileViewVue
     }
 ];
 
