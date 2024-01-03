@@ -18,7 +18,7 @@ test('deleteVehicle_UserLoggedInVehicleExists_VehicleDeleted', async () => {
     expect(result).toBe(true);
 
     // We can't delete a vehicle that doesn't exists
-    result = await userManager.deleteVehicle(matricula);
+    result = await userManager.deleteVehicle(matricula).catch(() => {});
     expect(result).toBe(false);
 
 })

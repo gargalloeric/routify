@@ -33,6 +33,7 @@ export class FirebaseDBService implements DBService {
                         vehiclesData[id].tipoMotor,
                         vehiclesData[id].consumo100Km
                     );
+                    if (vehiclesData[id].isFav) userInfo.vehicles[id].markAsFav();
                 });
             }
 
@@ -61,6 +62,10 @@ export class FirebaseDBService implements DBService {
                     )
                 });
             }
+
+            userInfo.defaultVehicle= docSnap.get('defaultVehicle');
+            if (!userInfo.defaultVehicle) userInfo.defaultVehicle = "driving-car";
+
             return;
         }
         throw new Error("Unable to find user in DB");

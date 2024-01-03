@@ -9,13 +9,15 @@ export class UserInfo {
     vehicles: { [id:string] : Vehicle }
     routes: { [id:string] : Route }
     places: { [id:string] : Place }
-    constructor(userId: string, email: string | null, name : string) {
+    defaultVehicle: string
+    constructor(userId: string, email: string | null, name : string, defaultVehicle? : string) {
         this.name = name
         this.mail = email
         this.userId = userId
         this.vehicles = {}
         this.routes = {}
         this.places = {}
+        this.defaultVehicle = defaultVehicle ?? "driving-car"
     }
 
     getDataForDb():Object {
@@ -29,7 +31,8 @@ export class UserInfo {
             name: this.name,
             vehicles: vehiclesData,
             routes: routesData,
-            places: placesData
+            places: placesData,
+            defaultVehicle: this.defaultVehicle
         }
     }
 
@@ -44,6 +47,7 @@ export class UserInfo {
 
     removeVehicle(matricula: string) {
         if (!this.hasVehicle(matricula)) return false
+        if (matricula == this.defaultVehicle) this.defaultVehicle = "driving-car";
         delete this.vehicles[matricula]
         return true
     }
@@ -87,7 +91,21 @@ export class UserInfo {
         return true;
     }
 
+    setDefaultVehicle(matricula : string){
+        if (this.defaultVehicle == matricula) throw new Error('Vehicle is already default');
+        else
+        this.defaultVehicle = matricula;
+        }
+
     private hasPlace(name: string) {
         return !!this.places[name];
+    }
+
+    getPlace(name: string): Place {
+        return this.places[name];
+    }
+
+    getRoute(name: string): Route {
+        return this.routes[name];
     }
 }
