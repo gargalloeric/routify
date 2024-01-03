@@ -67,6 +67,13 @@ test('defaultVehicle_UserRegisteredDBAvailableVehicleNotDefault_DefaultVehicle',
         tipoMotor: string = "combustión",
         consumo100Km: number = 5;
 
+    vi.mock('../src/services/FirebaseDBService.ts', () => {
+        const FirebaseDBService = vi.fn()
+        FirebaseDBService.prototype.saveUserInfo = vi.fn().mockResolvedValue(true)
+        FirebaseDBService.prototype.fetchUserInfo = vi.fn().mockResolvedValue(true)
+        return { FirebaseDBService }
+    });
+
     // tests methods
     const userManager = getUserManager()
     await userManager.logIn(email, password);
@@ -77,4 +84,5 @@ test('defaultVehicle_UserRegisteredDBAvailableVehicleNotDefault_DefaultVehicle',
 
     // delete what is done
     await getUserManager().deleteVehicle(matricula).catch(() => {})
+    vi.doUnmock('../src/services/FirebaseDBService.ts');
 });
