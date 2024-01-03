@@ -51,7 +51,17 @@ export class UserInfo {
     }
 
     getVehicle(matricula: string): Vehicle {
-        return this.vehicles[matricula]
+        if (this.hasVehicle(matricula))
+            return this.vehicles[matricula];
+        else
+            throw new Error('Vehicle not found');
+    }
+
+    updateVehicle(vehicle: Vehicle){
+        if (this.hasVehicle(vehicle.matricula))
+            this.vehicles[vehicle.matricula] = vehicle;
+        else
+            throw new Error('Invalid Vehicle');
     }
 
     hasRoute(nombre: string){
