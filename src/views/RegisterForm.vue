@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import {getUserManager} from "../services/UserManager.ts";
 import router from "../router.ts";
+import {redirectedFromLogInOrRegister} from "../main.ts";
 
 const name = ref("")
 const mail = ref("")
@@ -16,7 +17,7 @@ async function submitRegistration() {
         errorMessage.value = error.message;
       });
   if (mailRet) {
-    console.log("call parent - no errors") // TODO... manage changes¿?
+    redirectedFromLogInOrRegister.redirected = true;
     await router.push({path: '/'})
   }
 }
