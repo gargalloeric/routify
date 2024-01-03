@@ -13,9 +13,11 @@
                             <div class="flex-shrink-0">
                             </div>
                             <div class="flex-1 min-w-0 ms-4">
+                              <button @click="viewRoute(route)">
                                 <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
                                     {{ route['name'] }}
                                 </p>
+                              </button>
                                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                                     {{ getSpanishName(route['transport']) }}
                                 </p>
@@ -71,9 +73,11 @@
 import { onMounted, ref } from 'vue';
 import { getUserManager } from '../services/UserManager';
 import router from "../router.ts";
-import {Route} from "../model/Route.ts";
+import {Route, RouteType} from "../model/Route.ts";
 import {getSpanishName, Transport} from "../model/Transport.ts";
 import {Vehicle} from "../model/Vehicle.ts";
+import drawRoute from '../components/Map.vue'
+import {formRoute} from "../main.ts";
 
 const listOfRoutes = ref();
 const userManager = getUserManager();
@@ -105,5 +109,11 @@ async function unmarkAsFavourite(name: string) {
   await userManager.unmarkRouteAsFavourite(name);
   generateListOfRoutes()
 }
+
+function viewRoute(route: Route){
+  router.push({name: 'HomeRoute',
+    params: {route: route['name']}})
+}
+
 
 </script>

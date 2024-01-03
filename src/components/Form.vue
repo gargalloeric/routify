@@ -6,10 +6,13 @@ import { Vehicle } from "../model/Vehicle.ts";
 import { RouteType } from '../model/Route';
 import { Transport } from '../model/Transport';
 
+//formRoute.origin = "";
+//formRoute.destination = "";
+const userManager = getUserManager();
 formRoute.origin = "";
 formRoute.destination = "";
-const userManager = getUserManager();
 
+isPriceRequested.value = false;
 
 const defaultVehicle = userManager.getDefaultVehicle();
 

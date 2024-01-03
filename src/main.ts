@@ -8,8 +8,8 @@ import { reactive } from 'vue'
 createApp(App).use(router).mount('#app')
 
 export let formRoute = reactive({
-    origin: Object(),
-    destination: Object()
+    origin: "",
+    destination: ""
 });
 
 export  let isPriceRequested = reactive({
