@@ -109,7 +109,11 @@ export class UserManager {
     }
 
     getUserVehicle(matricula: string) {
-        if (this.userInfo) return this.userInfo.getVehicle(matricula);
+        if (this.userInfo){
+            const vehicle : Vehicle = this.userInfo.getVehicle(matricula);
+            if (vehicle)
+                return vehicle;
+        }
         else throw new Error("User must be logged in to fetch a vehicle");
     }
 
@@ -187,6 +191,18 @@ export class UserManager {
         if (this.userInfo && this.isLoggedIn()) {
             return this.userInfo.places;
         } else throw new Error("User must be logged in to list places");
+    }
+
+    async updateUserVehicle(vehicle: Vehicle){
+        if (this.userInfo && this.isLoggedIn()) {
+            const validationMessage = validateVehicleInfo(vehicle.matricula, vehicle.nombre, vehicle.tipoMotor, vehicle.consumo100Km);
+            if (validationMessage) throw new Error(validationMessage)
+
+            this.userInfo.updateVehicle(vehicle);
+
+            await this._dbService.saveUserInfo(this.userInfo)
+
+        } else throw new Error("User must be logged in to register a vehicle")
     }
 }
 
