@@ -16,7 +16,7 @@ const layerGroup = ref();
 onMounted(() => {
    map.value = L.map("map", {
     center: props.initLatLang,
-    zoom: props.zoom,
+    zoom: props.zoom
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -39,7 +39,7 @@ let greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker([0, 0, 0]).bindPopup("Destino")];
+let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker(latLng([0, 0, 0]))];
 
 function drawRoute(route: Route) {
   map.value.removeLayer(markers[0]);
