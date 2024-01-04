@@ -10,27 +10,26 @@ export interface ICostStrategy {
 
 export class BycicleCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        return (route.distance / 100) * consumptionAt100;
+        return parseFloat(((route.distance / 100) * consumptionAt100).toFixed(2));
     }
 }
 
 export class FootCostStartey implements ICostStrategy {
     calculate(route: Route, consumptionAt100: number): number {
-        return (route.distance / 100) * consumptionAt100;
+        return parseFloat(((route.distance / 100) * consumptionAt100).toFixed(2));
     }
 }
 
 export class CombustionCostStrategy implements ICostStrategy {
     async calculate(route: Route, consumptionAt100: number): Promise<number> {
-        const dataOrigin = await obtainCoordsFromName(route.origin);
-        const latOrigin = dataOrigin.geometry.coordinates[1];
-        const lonOrigin = dataOrigin.geometry.coordinates[0];
+        const latOrigin = route.originCords.lat;
+        const lonOrigin = route.originCords.lon;
 
         const gasStations = await getGasStations();
 
         let nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 10);
-        if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 20);
-        if (!nearbyGasStations) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 50);
+        if (nearbyGasStations.length < 1) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 20);
+        if (nearbyGasStations.length < 1) nearbyGasStations = filterGasStationsByDistance(gasStations, latOrigin, lonOrigin, 50);
 
         const sortedGasStations = nearbyGasStations.sort((a, b) => {
             const distanceA = calculateDistance(latOrigin, lonOrigin, parseFloat(a['Latitud'].replace(',', '.')), parseFloat(a['Longitud (WGS84)'].replace(',', '.')));

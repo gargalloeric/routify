@@ -10,12 +10,19 @@ import ListPlaces from "./views/ListPlaces.vue";
 import RegisterPlace from "./views/RegisterPlace.vue";
 import UpdateVehicle from "./views/UpdateVehicle.vue";
 import ProfileViewVue from "./views/ProfileView.vue";
+import ThanksView from "./views/ThanksView.vue";
 
 const routes = [
     {
         path: "/",
         name: "Home",
         component: ObtainRoute,
+    },
+    {
+        path: "/:route",
+        name: "HomeRoute",
+        component: ObtainRoute,
+        props: true
     },
     {
         path: "/register",
@@ -67,6 +74,11 @@ const routes = [
         path: "/profile",
         name: "Profile",
         component: ProfileViewVue
+    },
+    {
+        path: "/creators",
+        name: "Creators",
+        component: ThanksView
     }
 ];
 
