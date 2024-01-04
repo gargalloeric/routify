@@ -27,6 +27,7 @@ const initZoom: number = 17;
 const map = ref();
 const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
+const isGasReturnedError = ref(false);
 const isRouteRequested = ref(false);
 const isSaveReturnedError = ref(false);
 const DEFAULT_CONSUMPTION_AT_100 = 750; // This works for foot and bycicle mode, it's a default value.
@@ -79,14 +80,17 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
     if (data.vehicle != undefined){
       isPriceRequested.price = await calculateRoutePrice(route, data.vehicle.consumo100Km, costStrategy);
       isPriceRequested.value = true;
-    } else {
+    } else if (data.mode != "driving-car") {
       isPriceRequested.price = await calculateRoutePrice(route, DEFAULT_CONSUMPTION_AT_100, costStrategy);
       isPriceRequested.value = true;
     }
   } catch (error) {
     // TODO: Make appear a popup with the error saying a route couldn't be found.
-    console.log(error)
-    isRequestReturnedError.value = true;
+    if(error.message.includes("Cannot read properties of undefined (reading 'Precio Gasolina 95 E5')"))
+      isGasReturnedError.value = true;
+    else
+      isRequestReturnedError.value = true;
+    console.log(error.message)
   }
   isRequestingRoute.value = false;
   isRouteRequested.value = true;
@@ -108,6 +112,7 @@ async function handleRouteSaved(data: { name: string}) {
 <template>
   <div class="m-5">
     <Alert v-if="isRequestReturnedError" @handle-close="isRequestReturnedError = !isRequestReturnedError" msg="No se ha podido encontrar una ruta."></Alert>
+    <Alert v-if="isGasReturnedError" @handle-close="isGasReturnedError = !isGasReturnedError" msg="No hay gasolineras españolas cercanas"></Alert>
     <Alert v-if="isSaveReturnedError" @handle-close="isSaveReturnedError = !isSaveReturnedError" msg="Ya existe una ruta con el mismo nombre"></Alert>
     <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = !routeSaved" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
 
