@@ -24,6 +24,7 @@ const isRequestingRoute = ref(false);
 const isRequestReturnedError = ref(false);
 const isRouteRequested = ref(false);
 const isSaveReturnedError = ref(false);
+const DEFAULT_CONSUMPTION_AT_100 = 750; // This works for foot and bycicle mode, it's a default value.
 
 let route: Route;
 let routeSaved = ref(false);
@@ -60,6 +61,9 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
     map.value.drawRoute(route);
     if (data.vehicle != undefined){
       isPriceRequested.price = await calculateRoutePrice(route, data.vehicle.consumo100Km, costStrategy);
+      isPriceRequested.value = true;
+    } else {
+      isPriceRequested.price = await calculateRoutePrice(route, DEFAULT_CONSUMPTION_AT_100, costStrategy);
       isPriceRequested.value = true;
     }
   } catch (error) {
