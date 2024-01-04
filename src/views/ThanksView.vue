@@ -23,7 +23,7 @@
         <div class="text-blue-600 underline"><a href="https://github.com/Mehdi1017" target="_blank">
           El Mehdi Gassa</a></div>
         <div class="text-sm text-gray-500 dark:text-gray-400">
-          Loving front end developement</div>
+          Loving backend developement</div>
       </div>
       <img class="w-10 h-10 rounded-full" src="https://avatars.githubusercontent.com/u/49795916?v=4" alt="">
     </div>
@@ -35,7 +35,7 @@
         <div class="text-blue-600 underline"><a href="https://github.com/elbence" target="_blank">
           Juan José Porcar</a></div>
         <div class="text-sm text-gray-500 dark:text-gray-400">
-          Chief software injinir</div>
+          Chief software engineer</div>
       </div>
     </div>
 
