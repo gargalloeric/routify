@@ -5,6 +5,7 @@ import { getUserManager } from "../services/UserManager"
 import { Vehicle } from "../model/Vehicle.ts";
 import { RouteType } from '../model/Route';
 import { Transport } from '../model/Transport';
+import PriceIcon from './PriceIcon.vue';
 
 //formRoute.origin = "";
 //formRoute.destination = "";
@@ -145,10 +146,8 @@ function saveRoute() {
     </div>
     <div v-if="isPriceRequested.value" class="mb-5">
       <p>El precio de la ruta es: </p>
-      <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
+      <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex gap-1 items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+        <price-icon class="h-4 w-4"></price-icon>
         {{ isPriceRequested.price }}
         <span v-if="mode === 'foot-walking' || mode === 'cycling-regular'">Cal</span><span v-else>€</span>
       </span>
