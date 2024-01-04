@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import L, {latLng, LeafletMouseEvent} from "leaflet";
+import L, {geoJSON, latLng, LeafletMouseEvent} from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {onMounted, ref} from 'vue';
 import { Route } from "../model/Route";
@@ -42,17 +42,19 @@ let greenIcon = new L.Icon({
 let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker([0, 0, 0]).bindPopup("Destino")];
 
 function drawRoute(route: Route) {
+  map.value.removeLayer(markers[0]);
+  map.value.removeLayer(markers[1]);
   const geoJSON = route.geoJSON;
 
   const puntos = geoJSON.features[0].geometry.coordinates
 
   let geoJSONLayer = L.geoJSON(geoJSON).addTo(layerGroup.value);
 
-  markers[0].setLatLng(puntos[0].reverse())
-    .addTo(geoJSONLayer);
+  markers[0].setLatLng(puntos[0].reverse()).openPopup()
+    .addTo(map.value);
 
-  markers[1].setLatLng(puntos[puntos.length - 1].reverse())
-      .addTo(geoJSONLayer);
+  markers[1].setLatLng(puntos[puntos.length - 1].reverse()).openPopup()
+      .addTo(map.value);
 
   map.value.fitBounds(geoJSONLayer.getBounds());
 }
