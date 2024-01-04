@@ -124,7 +124,7 @@ function saveRoute() {
       </div>
     </form>
     <div class="mb-5">
-      <span v-if="isPriceRequested.value">El precio de la ruta es: {{ isPriceRequested.price }}€</span>
+      <p v-if="isPriceRequested.value">El precio de la ruta es: {{ isPriceRequested.price }} <span v-if="mode === 'foot-walking' || mode === 'cycling-regular'">Cal</span><span v-else>€</span></p>
     </div>
     <hr class="mb-5" />
     <form @submit.prevent="saveRoute" v-if="getUserManager().isLoggedIn() && props.isRouteRequested">

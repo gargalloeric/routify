@@ -6,6 +6,7 @@ import { RouteType } from "../model/Route";
 import { ref } from 'vue';
 import SuccessMessage from "../components/SuccessMessage.vue";
 import router from '../router';
+import ExitIcon from '../components/ExitIcon.vue';
 
 const userManager = getUserManager();
 const username = userManager.userInfo?.name;
@@ -15,7 +16,12 @@ let preferredRouteType = userManager.userInfo?.defaultTypeOfRoute
 async function handleDeleteClick() {
     await userManager.deleteAccount();
     userManager.logOut();
-    router.push({path: '/login'});
+    await router.push({ path: '/login' });
+}
+
+function handleLogOutClick() {
+    userManager.logOut();
+    router.push({ path: '/login' });
 }
 
 async function handlePreferenceSave() {
@@ -25,10 +31,18 @@ async function handlePreferenceSave() {
 
 <template>
     <div class="m-5 p-5 bg-white rounded-lg shadow m-4 dark:bg-gray-800">
-        <SuccessMessage v-if="confUpdated" @handle-close="confUpdated = !confUpdated" msg="Se ha actualizado la configuración"></SuccessMessage>
-        <div class="flex gap-3 items-center mb-5">
-            <UserIcon class="h-9 w-9"></UserIcon>
-            <h1 class="text-4xl font-extrabold dark:text-white">{{ username }}</h1>
+        <SuccessMessage v-if="confUpdated" @handle-close="confUpdated = !confUpdated"
+            msg="Se ha actualizado la configuración"></SuccessMessage>
+        <div class="flex flex-row justify-between">
+            <div class="flex gap-3 items-center mb-5">
+                <UserIcon class="h-9 w-9"></UserIcon>
+                <h1 class="text-4xl font-extrabold dark:text-white">{{ username }}</h1>
+            </div>
+            <button type="button" @click="handleLogOutClick"
+                class="text-blue-700 hover:text-white border border-blue-700 inline-flex items-center gap-1 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                <ExitIcon class="w-4 h-4"></ExitIcon>
+                Cerrar Sesión
+            </button>
         </div>
         <div class="mb-5">
             <form class="max-w-sm mx-auto" @submit.prevent="handlePreferenceSave">
@@ -58,8 +72,7 @@ async function handlePreferenceSave() {
                     class="text-red-500 hover:text-white border border-red-500 inline-flex items-center gap-2 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                     <TrashIcon class="w-5 h-5"></TrashIcon>
                     Borrar Cuenta
-                </button>
-            </div>
+            </button>
         </div>
     </div>
-</template>
+</div></template>

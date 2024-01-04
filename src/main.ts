@@ -4,6 +4,9 @@ import App from './App.vue'
 import router from './router'
 import { reactive } from 'vue'
 
+export let redirectedFromLogInOrRegister = reactive({
+    redirected: false
+});
 
 createApp(App).use(router).mount('#app')
 
