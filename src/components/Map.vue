@@ -39,7 +39,15 @@ let greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker(latLng([0, 0, 0]))];
+let redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker(latLng([0, 0, 0]), {icon: redIcon})];
 
 function drawRoute(route: Route) {
   map.value.removeLayer(markers[0]);
