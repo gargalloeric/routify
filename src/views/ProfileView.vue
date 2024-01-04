@@ -14,14 +14,16 @@ const confUpdated = ref(false);
 let preferredRouteType = userManager.userInfo?.defaultTypeOfRoute
 
 async function handleDeleteClick() {
-    await userManager.deleteAccount();
-    userManager.logOut();
-    await router.push({ path: '/login' });
+    const ok = confirm('¿Seguro que quieres eliminar tu cuenta?');
+    if (ok) {
+        await userManager.deleteAccount();
+        await router.push({ path: '/login' });
+    }
 }
 
-function handleLogOutClick() {
+async function handleLogOutClick() {
     userManager.logOut();
-    router.push({ path: '/login' });
+    await router.push({ path: '/login' });
 }
 
 async function handlePreferenceSave() {
