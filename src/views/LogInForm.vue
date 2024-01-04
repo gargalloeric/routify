@@ -26,7 +26,9 @@ async function submitLogIn() {
 </script>
 
 <template>
-  <div class="mt-20 mb-20 max-w-sm mx-auto">
+  <div class="mt-14 mb-20 max-w-2xl mx-auto">
+    <p class="text-2xl font-bold text-center">Inicia sesión para acceder a nuestros servicios!</p>
+    <div class="flex justify-center items-center mt-5">
     <form @submit.prevent="submitLogIn">
       <div class="mb-5">
         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -62,6 +64,10 @@ async function submitLogIn() {
           <span v-else>Iniciar Sesión</span>
         </button>
     </form>
+    <div>
+      <img class="max-h-64 ml-8 rounded-xl" src="/src/assets/logInMap.png" alt="Map Img">
+    </div>
+    </div>
   </div>
 </template>
 
