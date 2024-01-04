@@ -62,7 +62,7 @@ async function submitRegistration() {
       <p class="mb-4 ms-2 text-sm font-medium text-red-600 dark:text-gray-300">
         {{ errorMessage }}</p>
       <p class="mb-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-        ¿Ya tienes cuenta? <span class="link" @click="router.push({ path: '/logIn' })">Inicia sesión</span></p>
+        ¿Ya tienes cuenta? <span class="link cursor-pointer" @click="router.push({ path: '/logIn' })">Inicia sesión</span></p>
         <button type="submit" :disabled="isRegistering"
           class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">
           <svg v-if="isRegistering" aria-hidden="true" role="status"
