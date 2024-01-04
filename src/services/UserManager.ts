@@ -164,6 +164,12 @@ export class UserManager {
         } else throw new Error("User must be logged in to list routes");
     }
 
+    getRoute(name: string){
+        if (this.userInfo && this.isLoggedIn()) {
+            return this.userInfo.routes[name];
+        } else throw new Error("User must be logged in to get route");
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // INTEREST PLACES MANAGEMENT
     // -----------------------------------------------------------------------------------------------------------------

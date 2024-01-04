@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import L, {latLng, LeafletMouseEvent} from "leaflet";
+import L, {geoJSON, latLng, LeafletMouseEvent} from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {onMounted, ref} from 'vue';
 import { Route } from "../model/Route";
@@ -30,20 +30,31 @@ onMounted(() => {
   map.value.on('click', onMapClick);
 });
 
-let markers : L.Marker[] = [L.marker(latLng([0, 0, 0])), L.marker([0, 0, 0])];
+let greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+let markers : L.Marker[] = [L.marker(latLng([0, 0, 0]),{icon: greenIcon}).bindPopup("Origen"), L.marker([0, 0, 0]).bindPopup("Destino")];
 
 function drawRoute(route: Route) {
+  map.value.removeLayer(markers[0]);
+  map.value.removeLayer(markers[1]);
   const geoJSON = route.geoJSON;
 
   const puntos = geoJSON.features[0].geometry.coordinates
 
   let geoJSONLayer = L.geoJSON(geoJSON).addTo(layerGroup.value);
 
-  markers[0].setLatLng(puntos[0].reverse())
-    .addTo(geoJSONLayer);
+  markers[0].setLatLng(puntos[0].reverse()).openPopup()
+    .addTo(map.value);
 
-  markers[1].setLatLng(puntos[puntos.length - 1].reverse())
-      .addTo(geoJSONLayer);
+  markers[1].setLatLng(puntos[puntos.length - 1].reverse()).openPopup()
+      .addTo(map.value);
 
   map.value.fitBounds(geoJSONLayer.getBounds());
 }
@@ -55,6 +66,7 @@ function clear() {
 let click = 1;
 let counter = 0;
 function onMapClick(e: LeafletMouseEvent) { // first 2 clicks will set the markers on each position, the rest will substitute the initial markers
+  clear();
   let index;
   if (counter < 2){
     index = counter;
@@ -63,7 +75,7 @@ function onMapClick(e: LeafletMouseEvent) { // first 2 clicks will set the marke
     click = (click + 1) % 2
     index = click;
   }
-  markers[index].setLatLng(e.latlng).addTo(map.value);
+  markers[index].openPopup().setLatLng(e.latlng).addTo(map.value);
   if (index == 0) formRoute.origin = [e.latlng.lng, e.latlng.lat];
   else formRoute.destination = [e.latlng.lng, e.latlng.lat];
   counter++;

@@ -2,13 +2,13 @@
 <script setup lang="ts">
 import Map from "../components/Map.vue";
 import Form from "../components/Form.vue";
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import { Transport } from "../model/Transport.ts";
 import {getRouteFromCoords, getRouteFromPlacesNames} from "../services/ORSAdapter.ts";
 import Alert from "../components/Alert.vue";
-import {latLng} from "leaflet";
+import L, {latLng} from "leaflet";
 import {calculateRoutePrice} from "../services/RoutePriceCalculator.ts";
-import {isPriceRequested} from "../main.ts";
+import {formRoute, isPriceRequested} from "../main.ts";
 import {getUserManager} from "../services/UserManager"
 import {Vehicle} from "../model/Vehicle.ts";
 import { RouteType } from "../model/Route";
@@ -17,6 +17,11 @@ import SuccessMessage from "../components/SuccessMessage.vue";
 import { BycicleCostStartey, CombustionCostStrategy, ElectricCostStrategy, FootCostStartey, ICostStrategy } from "../services/CostStrategy";
 
 // TODO: Make initialLatLang the user location or a default coordinates fallback.
+
+const props = defineProps<{
+  route: string
+}>();
+
 const initLatLang: L.LatLngExpression = [39.98541896850344, -0.05080976072749943];
 const initZoom: number = 17;
 const map = ref();
@@ -30,7 +35,18 @@ let route: Route;
 let routeSaved = ref(false);
 let costStrategy: ICostStrategy;
 
-function handleCostStrategy(mode: Transport, vehicle: Vehicle) {
+
+
+onMounted(() => {
+  if (props.route){
+    const route: Route = getUserManager().getRoute(props.route);
+    formRoute.origin = route.origin;
+    formRoute.destination = route.destiny;
+    const data = {origin : route.origin, destination: route.destiny, mode: route.transport, vehicle: undefined, type: RouteType.Recommended}
+    handleRouteRequest(data);
+  }
+});
+function handleCostStrategy(mode: Transport, vehicle: Vehicle | undefined) {
   switch(mode) {
     case Transport.Foot:
       costStrategy = new FootCostStartey();
@@ -39,17 +55,18 @@ function handleCostStrategy(mode: Transport, vehicle: Vehicle) {
       costStrategy = new BycicleCostStartey();
       return;
   }
-
-  if (vehicle.tipoMotor === 'combustión') {
-    console.log('Combustión')
-    costStrategy = new CombustionCostStrategy();
-  } else {
-    console.log('Electrico')
-    costStrategy = new ElectricCostStrategy();
+  if(vehicle){
+    if (vehicle.tipoMotor === 'combustión') {
+      console.log('Combustión')
+      costStrategy = new CombustionCostStrategy();
+    } else {
+      console.log('Electrico')
+      costStrategy = new ElectricCostStrategy();
+    }
   }
 }
 
-async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle, type: RouteType}) {
+async function handleRouteRequest(data: { origin: any, destination: any, mode: Transport, vehicle: Vehicle | undefined, type: RouteType}) {
   handleCostStrategy(data.mode, data.vehicle);
   isRequestingRoute.value = true;
   try {

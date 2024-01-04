@@ -19,6 +19,12 @@ const routes = [
         component: ObtainRoute,
     },
     {
+        path: "/:route",
+        name: "HomeRoute",
+        component: ObtainRoute,
+        props: true
+    },
+    {
         path: "/register",
         name: "RegisterForm",
         component: RegisterForm,
