@@ -11,7 +11,7 @@ const props = defineProps<{
 }>();
 
 const userManager = getUserManager();
-let vehicle : Vehicle = userManager.getUserVehicle(props.matricula);
+let vehicle : Vehicle = window.structuredClone(userManager.getUserVehicle(props.matricula));
 
 let isRegisteringVehicle = false;
 let returnedError = ref(false);
@@ -19,7 +19,7 @@ let returnedError = ref(false);
 async function update() {
   try {
     isRegisteringVehicle = true;
-    await userManager.updateUserVehicle(vehicle);
+    await userManager.updateUserVehicle(new Vehicle(vehicle.matricula, vehicle.nombre, vehicle.tipoMotor, vehicle.consumo100Km));
     isRegisteringVehicle = false;
     router.push({path: '/user/vehicle/list'})
   }
