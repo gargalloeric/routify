@@ -16,7 +16,8 @@ export class Route extends GenericElement {
     originCords: Coordinates;
     destiny: string;
     name: string | undefined;
-    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string, originCords? : Coordinates) {
+    duration: number
+    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string, originCords? : Coordinates, duration? : number) {
         super();
         this.geoJSON = geoJSON;
         this.origin = origin;
@@ -25,6 +26,7 @@ export class Route extends GenericElement {
         this.transport = transport;
         this.name = name;
         this.originCords = originCords ?? new Coordinates(0,0);
+        this.duration = duration ?? 0;
     }
 
     toJSON(): Object {

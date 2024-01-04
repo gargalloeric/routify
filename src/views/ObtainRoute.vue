@@ -36,6 +36,8 @@ let route: Route;
 let routeSaved = ref(false);
 let costStrategy: ICostStrategy;
 
+let duration = ref(0);
+let distance = ref(0);
 
 
 onMounted(() => {
@@ -75,8 +77,13 @@ async function handleRouteRequest(data: { origin: any, destination: any, mode: T
       route = await getRouteFromPlacesNames(data.origin.toString(), data.destination.toString(), data.mode, data.type);
     else
       route = await getRouteFromCoords(latLng(data.origin), latLng(data.destination), data.mode, data.type);
+
+    distance.value = route.distance;
+    duration.value = route.duration;
+
     map.value.clear();
     map.value.drawRoute(route);
+
     if (data.vehicle != undefined){
       isPriceRequested.price = await calculateRoutePrice(route, data.vehicle.consumo100Km, costStrategy);
       isPriceRequested.value = true;
@@ -117,7 +124,7 @@ async function handleRouteSaved(data: { name: string}) {
     <SuccessMessage v-if="routeSaved" @handle-close="routeSaved = !routeSaved" msg="Se ha guardado la ruta correctamente"></SuccessMessage>
 
     <div class="flex md:flex-row sm:flex-col">
-      <Form class="mr-5" @route-requested="handleRouteRequest" @route-saved="handleRouteSaved" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested"></Form>
+      <Form class="mr-5" @route-requested="handleRouteRequest" @route-saved="handleRouteSaved" :is-requesting-route="isRequestingRoute" :is-route-requested="isRouteRequested" :duration="duration" :distance="distance"></Form>
       <Map class="rounded-lg" :init-lat-lang="initLatLang" :zoom="initZoom" ref="map"></Map>
     </div>
 </div>

@@ -35,8 +35,11 @@ for (let v in vehicles.value) {
 let vehicle: Vehicle;
 let name = "";
 const props = defineProps<{
-  isRequestingRoute: boolean
-  isRouteRequested: boolean
+  isRequestingRoute: boolean,
+  isRouteRequested: boolean,
+  duration: number,
+  distance: number
+
 }>();
 
 const emit = defineEmits(['route-requested', 'route-saved'])
@@ -123,10 +126,33 @@ function saveRoute() {
         </button>
       </div>
     </form>
-    <div class="mb-5">
-      <p v-if="isPriceRequested.value">El precio de la ruta es: {{ isPriceRequested.price }} <span v-if="mode === 'foot-walking' || mode === 'cycling-regular'">Cal</span><span v-else>€</span></p>
+    <hr v-if="isRouteRequested" class="mb-5" />
+    <div v-if="isRouteRequested" class="mb-5">
+      <p>La duracion de la ruta es: </p>
+      <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+        </svg>
+        {{props.duration.toFixed(2)}} horas
+      </span>
     </div>
-    <hr class="mb-5" />
+    <div v-if="isRouteRequested" class="mb-5">
+      <p>La distancia de la ruta es: </p>
+      <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+        {{props.distance.toFixed(2)}} km
+      </span>
+    </div>
+    <div v-if="isPriceRequested.value" class="mb-5">
+      <p>El precio de la ruta es: </p>
+      <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        {{ isPriceRequested.price }}
+        <span v-if="mode === 'foot-walking' || mode === 'cycling-regular'">Cal</span><span v-else>€</span>
+      </span>
+    </div>
+    <hr v-if="isPriceRequested.value" class="mb-5" />
     <form @submit.prevent="saveRoute" v-if="getUserManager().isLoggedIn() && props.isRouteRequested">
       <div class="mb-5">
         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
