@@ -32,6 +32,6 @@ export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, tr
     }
     const r = await obtainRoute([origin.lat, origin.lng], [destiny.lat, destiny.lng], transport, type);
     const distance = r.features[0].properties.summary.distance / 1000;
-    return new Route(r, originName, destinyName, transport, distance);
+    return new Route(r, originName, destinyName, transport, distance, undefined, new Coordinates(origin.lng, origin.lat));
 
 }

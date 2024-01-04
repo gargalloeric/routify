@@ -1,5 +1,6 @@
 import {Transport} from "./Transport.ts";
 import {GenericElement} from "./GenericElement.ts";
+import {Coordinates} from "./Coordinates.ts";
 
 export enum RouteType{
     Recommended = 'recommended',
@@ -12,9 +13,10 @@ export class Route extends GenericElement {
     distance: number;
     transport: Transport;
     origin: string;
+    originCords: Coordinates;
     destiny: string;
     name: string | undefined;
-    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string) {
+    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string, originCords? : Coordinates) {
         super();
         this.geoJSON = geoJSON;
         this.origin = origin;
@@ -22,6 +24,7 @@ export class Route extends GenericElement {
         this.distance = distance;
         this.transport = transport;
         this.name = name;
+        this.originCords = originCords ?? new Coordinates(0,0);
     }
 
     toJSON(): Object {
