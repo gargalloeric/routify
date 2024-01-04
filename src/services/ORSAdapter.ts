@@ -14,7 +14,8 @@ export async function getRouteFromPlacesNames(origin: string, destiny: string, t
 
     const r = await obtainRoute(dataOrigin.geometry.coordinates, dataDestiny.geometry.coordinates, transport, type);
     const distance = r.features[0].properties.summary.distance / 1000;
-    return new Route(r, originName, destinyName, transport, distance);
+    let coordinates = new Coordinates(dataOrigin.geometry.coordinates[1], dataOrigin.geometry.coordinates[0])
+    return new Route(r, originName, destinyName, transport, distance, undefined, coordinates);
 }
 
 export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
