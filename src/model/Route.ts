@@ -15,9 +15,10 @@ export class Route extends GenericElement {
     origin: string;
     originCords: Coordinates;
     destiny: string;
+    destinyCords: Coordinates;
     name: string | undefined;
     duration: number
-    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string, originCords? : Coordinates, duration? : number) {
+    constructor(geoJSON: JSON, origin: string, destiny: string, transport: Transport, distance: number, name?: string, originCords? : Coordinates, destinyCords?: Coordinates,  duration? : number) {
         super();
         this.geoJSON = geoJSON;
         this.origin = origin;
@@ -26,6 +27,7 @@ export class Route extends GenericElement {
         this.transport = transport;
         this.name = name;
         this.originCords = originCords ?? new Coordinates(0,0);
+        this.destinyCords = destinyCords ?? new Coordinates(0, 0);
         this.duration = duration ?? 0;
     }
 
@@ -37,7 +39,10 @@ export class Route extends GenericElement {
                 destiny : this.destiny,
                 distance : this.distance,
                 transport : this.transport,
-                name : this.name
+                name : this.name,
+                originCords:  this.originCords.toJSON(),
+                destinyCords: this.destinyCords.toJSON(),
+                duration: this.duration
             });
     }
 }

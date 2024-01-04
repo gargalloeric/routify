@@ -38,7 +38,8 @@ const props = defineProps<{
   isRequestingRoute: boolean,
   isRouteRequested: boolean,
   duration: number,
-  distance: number
+  distance: number,
+  isRequestingInfo: boolean
 
 }>();
 
@@ -126,8 +127,8 @@ function saveRoute() {
         </button>
       </div>
     </form>
-    <hr v-if="isRouteRequested" class="mb-5" />
-    <div v-if="isRouteRequested" class="mb-5">
+    <hr v-if="isRequestingInfo" class="mb-5" />
+    <div v-if="isRequestingInfo" class="mb-5">
       <p>La duracion de la ruta es: </p>
       <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
         <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -136,7 +137,7 @@ function saveRoute() {
         {{props.duration.toFixed(2)}} horas
       </span>
     </div>
-    <div v-if="isRouteRequested" class="mb-5">
+    <div v-if="isRequestingInfo" class="mb-5">
       <p>La distancia de la ruta es: </p>
       <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500 ">
         {{props.distance.toFixed(2)}} km
