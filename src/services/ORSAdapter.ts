@@ -14,8 +14,12 @@ export async function getRouteFromPlacesNames(origin: string, destiny: string, t
 
     const r = await obtainRoute(dataOrigin.geometry.coordinates, dataDestiny.geometry.coordinates, transport, type);
     const distance = r.features[0].properties.summary.distance / 1000;
-    let coordinates = new Coordinates(dataOrigin.geometry.coordinates[1], dataOrigin.geometry.coordinates[0])
-    return new Route(r, originName, destinyName, transport, distance, undefined, coordinates);
+    const duration = r.features[0].properties.summary.duration / 3600;
+
+    let originCoordinates = new Coordinates(dataOrigin.geometry.coordinates[1], dataOrigin.geometry.coordinates[0]);
+    let destinationCoordinates = new Coordinates(dataDestiny.geometry.coordinates[1], dataDestiny.geometry.coordinates[0]);
+
+    return new Route(r, originName, destinyName, transport, distance, undefined, originCoordinates, destinationCoordinates, duration);
 }
 
 export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, transport: Transport, type: RouteType = RouteType.Recommended): Promise<Route> {
@@ -32,7 +36,10 @@ export async function getRouteFromCoords(origin: L.LatLng, destiny: L.LatLng, tr
         console.log(err)
     }
     const r = await obtainRoute([origin.lat, origin.lng], [destiny.lat, destiny.lng], transport, type);
+
     const distance = r.features[0].properties.summary.distance / 1000;
-    return new Route(r, originName, destinyName, transport, distance, undefined, new Coordinates(origin.lng, origin.lat));
+    const duration = r.features[0].properties.summary.duration / 3600;
+
+    return new Route(r, originName, destinyName, transport, distance, undefined, new Coordinates(origin.lng, origin.lat), new Coordinates(destiny.lng, destiny.lat), duration);
 
 }

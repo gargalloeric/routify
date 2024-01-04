@@ -49,7 +49,11 @@ export class FirebaseDBService implements DBService {
                         routesData[id].destiny,
                         routesData[id].transport,
                         routesData[id].distance,
-                        routesData[id].name
+                        routesData[id].name,
+                        new Coordinates(routesData[id].originCords.lat, routesData[id].originCords.lon),
+                        new Coordinates(routesData[id].destinyCords.lat, routesData[id].destinyCords.lon),
+                        routesData[id].duration
+
                     );
                 });
             }

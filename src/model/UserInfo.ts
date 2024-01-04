@@ -26,7 +26,9 @@ export class UserInfo {
         const vehiclesData: { [id: string]: any } = {};
         for (const [key, vehicle] of Object.entries(this.vehicles)) vehiclesData[key] = vehicle.toJSON();
         const routesData: { [id: string]: any } = {};
-        for (const [key, route] of Object.entries(this.routes)) routesData[key] = route.toJSON();
+        for (const [key, route] of Object.entries(this.routes)){
+            routesData[key] = route.toJSON();
+        }
         const placesData: { [id: string]: any } = {};
         for (const [key, place] of Object.entries(this.places)) placesData[key] = place.toJSON();
         return {
