@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { getUserManager } from "../services/UserManager.ts";
 import router from "../router.ts";
+import {redirectedFromLogInOrRegister} from "../main.ts";
 
 const mail = ref("")
 const passwd = ref("")
@@ -17,7 +18,7 @@ async function submitLogIn() {
       isLogging.value = false;
     });
   if (mailRet) {
-    console.log("call parent - no errors") // TODO... manage changes¿?
+    redirectedFromLogInOrRegister.redirected = true;
     isLogging.value = false;
     await router.push({ path: '/' })
   }
@@ -88,4 +89,5 @@ async function submitLogIn() {
 
 .text-right {
   text-align: right;
-}</style>
+}
+</style>

@@ -18,27 +18,27 @@
         <ul
           class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <li>
-            <a @click="handleUserButton('/')"
+            <a @click="handleUserButton('/', $refs.homeLi)" ref="homeLi"
               class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               aria-current="page">Home</a>
           </li>
           <li>
-            <a @click="handleUserButton('/user/vehicle/list')"
+            <a @click="handleUserButton('/user/vehicle/list', $refs.vehicleLi)" ref="vehicleLi"
                class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
               Mis Vehículos</a>
           </li>
           <li>
-            <a @click="handleUserButton('/user/route/list')"
+            <a @click="handleUserButton('/user/route/list', $refs.routesLi)" ref="routesLi"
              class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
             Mis Rutas</a>
           </li>
           <li>
-            <a @click="handleUserButton('/user/place/list')"
+            <a @click="handleUserButton('/user/place/list', $refs.placesLi)" ref="placesLi"
                class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
               Mis Lugares</a>
           </li>
           <li>
-            <a @click="handleUserButton('/profile')"
+            <a @click="handleUserButton('/profile', $refs.profileLi)" ref="profileLi"
                class="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
               Profile</a>
           </li>
@@ -49,22 +49,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref, watch} from 'vue';
 import router from "../router.ts";
 import {getUserManager} from "../services/UserManager.ts";
+import {redirectedFromLogInOrRegister} from "../main.ts";
 
   const menu = ref();
+  const homeLi = ref();
+  let prev = null;
 
   function toggleMenu() {
     menu.value.classList.toggle('hidden');
   }
 
-  function handleUserButton(path: string) {
+  function handleUserButton(path: string, el) {
     if (getUserManager().isLoggedIn()) {
       router.push({path: path})
+      handleListColor(el);
     } else {
       router.push({path: '/logIn'})
     }
+  }
+
+  watch(redirectedFromLogInOrRegister, () => {
+    if (redirectedFromLogInOrRegister.redirected) {
+      handleListColor(homeLi.value);
+      redirectedFromLogInOrRegister.redirected = false;
+    }
+  })
+
+  function handleListColor(el) {
+    if (!!prev) {
+      prev.classList.toggle('text-gray-900');
+      prev.classList.toggle('text-blue-700');
+    }
+    prev = el
+    el.classList.toggle('text-gray-900');
+    el.classList.toggle('text-blue-700');
   }
 </script>
 
